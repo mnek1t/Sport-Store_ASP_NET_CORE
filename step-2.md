@@ -5,7 +5,7 @@
 - [Adding Navigation Controls](#adding-navigation-controls)
 - [Building the Shopping Cart](#building-the-shopping-cart)
 
-## TODO
+## Implementation details
 
 ###  Adding Navigation Controls
 
@@ -271,6 +271,8 @@
         
 - Restart ASP.NET Core and request http://localhost:5000.
 
+- Commit changes.
+
 ###  Building the Shopping Cart
 
 - Add a new `_CartLayout.cshtml` file in the `SportsStore/Views/Shared` folder for the`Cart` views.
@@ -532,3 +534,5 @@
     Clicking the `Continue Shopping button` returns the user to the product page they came from.
 
     ![](Images/10.1.png)
+
+- Commit changes.
