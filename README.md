@@ -21,12 +21,12 @@ Visual Studio 2022 is the most convenient tool to get the task done, however, if
 
 The task consists of four steps. The description of the each step of the task are in the corresponding `step-k.md` file in the branch `sports-store-application-k`.
 
-| # | Feature branch name | 
-| ------ | ------ |
-| 1 | sports-store-application-1 |
-| 2 | sports-store-application-2 |
-| 3 | sports-store-application-3 |
-| 4 | sports-store-application-4 |
+| # | Feature branch name | Step Description |
+| ------ | ------ | ------ |
+| 1 | sports-store-application-1 | step-1.md |
+| 2 | sports-store-application-2 | step-2.md |
+| 3 | sports-store-application-3 | step-3.md |
+| 4 | sports-store-application-4 | step-4.md |
 
 
 _*This task was developed based on an example from the book by [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). If you are having difficulty completing the task, contact the source._
