@@ -20,7 +20,7 @@
     $ cd C:/RepositoryPathInFileSystem/sports-store-application
 
 ```
-- Switch to the sports-store-application-1 branch.
+- Switch to the `sports-store-application-1` branch.
 
 ```
     $ git checkout sports-store-application-1
