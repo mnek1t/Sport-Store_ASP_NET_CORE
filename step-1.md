@@ -360,11 +360,11 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ```
 public class HomeController : Controller 
 { 
-… 
+    . . . 
     private readonly IStoreRepository _repository; 
     public HomeController(ILogger<HomeController> logger, IStoreRepository repository)
     { 
-    … 
+    . . .
         _repository = repository ?? throw new ArgumentNullException(nameof(repository)); 
     } 
 
