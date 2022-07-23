@@ -16,7 +16,7 @@
 ```
     $ git checkout sports-store-application-2
 
-    $ git merge sports-store-application-1 --ff
+    $ git merge main
 
 ```
 - Switch to the `sports-store-application-2` branch and do a fast-forward merge according to changes from the main branch.
