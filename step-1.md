@@ -1,6 +1,7 @@
-#  Creating "Sport Store" Application. Part 1
+#  SPORTS STORE Application. Part 1.
 
 ## Description
+
 - [Creating the Projects](#creating-the-projects)
 - [Adding Data to the Application](#adding-data-to-the-application)
 - [Displaying a List of Products](#displaying-a-list-of-products)
@@ -9,11 +10,44 @@
 
 ## TODO
 
-###  Creating the Projects
+### Creating the Projects
 
-- Clone the [repository](https://gitlab.com/autocode-aspnet-coretasks/sports-store-app-1) from GitLab. 
+- Clone the remote repository from GitLab to your local drive and go to the appropriate directory.
 
-- Create `SportsStore` ASP.NET Core MVC Application (you can use `Web App Model-View-Controller` template)
+```
+    $ git clone https://gitlab.com/UserName/sports-store-application.git
+
+    $ cd C:/RepositoryPathInFileSystem/sports-store-application
+
+```
+- Create a new solution `SportsStore` in the directory of the cloned repository.
+
+```
+    $ dotnet new sln --name SportsStore
+
+```
+- Create `SportsStore` ASP.NET Core MVC Application in the directory of the cloned repository.
+
+```
+    $ dotnet new mvc --name SportsStore
+
+```
+- Add the `SportsStore` project to the `SportsStore` solution.
+
+```
+    $ dotnet sln add SportsStore/SportsStore.csproj
+
+```
+- Add changes and commit.
+
+```
+    $ git add .
+
+    $ git commit -m "Add initial version of SportsStore."
+
+```
+
+- Continue your work in Visual Studio.
 
 - To prepare application services and the request pipeline, change the `Startup` class adding the line app.UseStatusCodePages() as shown below: 
 
@@ -119,7 +153,6 @@ public class Product
     public string Category { get; set; } 
 } 
 ```
-
 
 ### Adding Data to the Application
 
