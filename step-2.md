@@ -397,7 +397,6 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 ...
 ```
 
-
 - To implement the cart feature, add the `Cart`class and the `CartLine` class (in the `Models` folder) in the `SportsStore` project. 
 
 ```
@@ -550,19 +549,19 @@ public class CartViewModel
 ```
 - Restart ASP.NET Core and request http://localhost:5000. As a result, the basic functions of the shopping cart should be in place. First, products are listed along with the button that adds them to the cart. You can see that by restarting ASP.NET Core and requesting http://localhost:5000.  
 
-![](Images/1.1.png)
+![](Images/2.01.png)
 
 Then, when the user clicks the `Add To Cart` button, the selected product is added to their cart:
     
-![](Images/3.1.png)
+![](Images/2.05.png)
 
 and the summary of the cart is displayed, as shown below:
 
-![](Images/4.1.png)
+![](Images/2.07.png)
 
 Clicking the `Continue Shopping button` returns the user to the product page they came from.
 
-![](Images/10.1.png)
+![](Images/2.08.png)
 
 - Commit changes.
 
