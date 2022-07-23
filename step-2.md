@@ -565,3 +565,24 @@ Clicking the `Continue Shopping button` returns the user to the product page the
 ![](Images/10.1.png)
 
 - Commit changes.
+
+- Push the local branch to the remote branch.
+
+```
+$ git push --set-upstream origin sports-store-application-2
+
+```
+- Switch to the main branch and do a merge according to changes from the sports-store-application-1 branch.
+
+```
+$ git checkout main
+
+$ git merge sports-store-application-2
+```
+- Push the changes from the local main branch to the remote branch.
+
+```
+$ git push
+
+```
+- Move on to the `Part 3` of the task.
