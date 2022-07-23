@@ -87,15 +87,15 @@ SeedData.EnsurePopulated(app);
 | /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Chess) | #5 |
 
 Image #1   
-![](Images/1.1.png)
+![](Images/2.01.png)
 Image #2  
-![](Images/6.1.png)
+![](Images/2.02.png)
 Image #3 
-![](Images/7.1.png)
+![](Images/2.03.png)
 Image #4  
-![](Images/8.1.png)
+![](Images/2.04.png)
 Image #5 
-![](Images/3.1.png)
+![](Images/2.05.png)
 
     
 - To start generating more complex URLs, it's necessary to receive additional information from the view without having to add extra properties to the tag helper class. Add `Prefixed Values` in the `PageLinkTagHelper` to receive properties with a common prefix all together in a single collection.
@@ -330,7 +330,7 @@ public class CartController : Controller
 
 - Restart ASP.NET Core and request http://localhost:5000.
 
-    ![](Images/9.1.png)
+    ![](Images/2.06.png)
 
 - To create the buttons that will add products to the cart, add the `UrlExtensions` class (`Infrastructure` folder) and define the `PathAndQuery` extension method in it.
 
