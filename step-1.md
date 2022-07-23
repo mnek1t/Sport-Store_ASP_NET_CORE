@@ -1,14 +1,12 @@
 #  Sports Store Application. Part 1.
 
-## Description
+## Implementation details
 
 - [Creating the Projects](#creating-the-projects)
 - [Adding Data to the Application](#adding-data-to-the-application)
 - [Displaying a List of Products](#displaying-a-list-of-products)
 - [Adding Pagination](#adding-pagination)
 - [Styling the Content](#styling-the-content)
-
-## Implementation details
 
 ### Creating the Projects
 
