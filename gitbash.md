@@ -1,3 +1,7 @@
+This task uses the following branching model:
+
+- The `main` branch always contains workable code that should compile without errors or warnings. All requirements of the current step must be fulfilled.
+- The feature branch is where most of the work for the current step takes place. Changes in a commit may contain warnings, but should not contain errors. Changes that belong to one task or are logically complete are recommended to be uploaded as a separate commit.
 Клонируем содержимое удаленного репозитррия
     
     $ git clone https://gitlab.com/UserName/sports-store-application.git
