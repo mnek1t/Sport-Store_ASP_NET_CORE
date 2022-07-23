@@ -21,7 +21,7 @@ Visual Studio 2022 is the most convenient tool to get the task done, however, if
 
 The task consists of four steps. The description of the each step of the task are in the corresponding `step-k.md` file in the branch `sports-store-application-k`.
 
-| # | Feature branch name | Step Description |
+| # | Feature Branch Name | Step Description |
 | ------ | ------ | ------ |
 | 1 | sports-store-application-1 | step-1.md |
 | 2 | sports-store-application-2 | step-2.md |
