@@ -12,7 +12,7 @@
 
 ### Creating the Projects
 
-- Clone the remote repository from GitLab to your local drive and go to the appropriate directory.
+- Clone the remote repository from GitLab to your local drive and go to the cloned repository.
 
 ```
     $ git clone https://gitlab.com/UserName/sports-store-application.git
@@ -38,10 +38,14 @@
     $ dotnet sln add SportsStore/SportsStore.csproj
 
 ```
-- Add changes and commit.
+- Add and view changes and than commit.
 
 ```
     $ git add .
+
+    $ git status
+
+    git diff --staged
 
     $ git commit -m "Add initial version of SportsStore."
 
@@ -153,6 +157,8 @@ public class Product
     public string Category { get; set; } 
 } 
 ```
+
+- Commit changes.
 
 ### Adding Data to the Application
 
@@ -345,6 +351,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     SeedData.EnsurePopulated(app);
 }
 ```
+- Commit changes.
 
 ###  Displaying a List of Products
 
@@ -383,6 +390,8 @@ public class HomeController : Controller
 - Build the solution. Restart ASP.NET Core and request http://localhost:5000
 *Just run the app using F5 button. The port can differ from the one shown above. You might need to set the _SportsStore_ project as the startup in _Visual Studio_ before running this.
 If the database settings were not changed, during the first run a database will be created for C:/Users/"username" folder.
+
+- Commit changes.
 
 ###  Adding Pagination
 
@@ -470,7 +479,6 @@ namespace SportsStore.Infrastructure
 }
 ```
 
-
 -  Register the `PageLinkTagHelper` tag helper in the `SportsStore/Views` folder.
 
 ```
@@ -543,6 +551,7 @@ app.UseEndpoints(endpoints =>
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 ```
+- Commit changes.
 
 ###  Styling the Content
 
@@ -679,3 +688,25 @@ public class PageLinkTagHelper : TagHelper
 </div>
 ```
 - Run the application. 
+
+- Commit changes.
+
+- Push the local branch to the remote branch.
+
+```
+$ git push --set-upstream origin sports-store-application-1
+
+```
+- Switch to the main branch and do a fast-forward merge according to changes from the sports-store-application-1 branch.
+
+```
+$ git checkout main
+
+$ git merge sports-store-application-1 --ff
+```
+- Push the changes from the local main branch to the remote branch.
+
+```
+$ git push
+
+```
