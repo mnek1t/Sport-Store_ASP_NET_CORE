@@ -1,4 +1,4 @@
-#  SPORTS STORE Application. Part 1.
+#  Sports Store Application. Part 1.
 
 ## Description
 
