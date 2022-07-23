@@ -9,7 +9,7 @@
 
 - Go to the cloned repository of the previous step `Part 1`. 
 
-- Switch to the `sports-store-application-2` branch.
+- Switch to the `sports-store-application-2` branch and do a fast-forward merge according to changes from the `main` branch.
 
 ```
 $ git checkout sports-store-application-2
@@ -17,7 +17,7 @@ $ git checkout sports-store-application-2
 $ git merge main
 
 ```
-- Switch to the `sports-store-application-2` branch and do a fast-forward merge according to changes from the main branch.
+- Continue your work in Visual Studio.
 
 - Modify the `ProductsListViewModel` class (add the `CurrentCategory` property).
 
