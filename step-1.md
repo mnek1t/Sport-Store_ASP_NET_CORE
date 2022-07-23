@@ -13,46 +13,46 @@
 - Clone the remote repository from GitLab to your local drive and go to the cloned repository.
 
 ```
-    $ git clone https://gitlab.com/UserName/sports-store-application.git
+$ git clone https://gitlab.com/UserName/sports-store-application.git
 
-    $ cd C:/RepositoryPathInFileSystem/sports-store-application
+$ cd C:/RepositoryPathInFileSystem/sports-store-application
 
 ```
 - Switch to the `sports-store-application-1` branch.
 
 ```
-    $ git checkout sports-store-application-1
+$ git checkout sports-store-application-1
 
 ```
 
 - Create a new solution `SportsStore` in the directory of the cloned repository.
 
 ```
-    $ dotnet new sln --name SportsStore
+$ dotnet new sln --name SportsStore
 
 ```
 - Create `SportsStore` ASP.NET Core MVC Application in the directory of the cloned repository.
 
 ```
-    $ dotnet new mvc --name SportsStore
+$ dotnet new mvc --name SportsStore
 
 ```
 - Add the `SportsStore` project to the `SportsStore` solution.
 
 ```
-    $ dotnet sln add SportsStore/SportsStore.csproj
+$ dotnet sln add SportsStore/SportsStore.csproj
 
 ```
 - Add and view changes and than commit.
 
 ```
-    $ git add .
+$ git add .
 
-    $ git status
+$ git status
 
-    git diff --staged
+git diff --staged
 
-    $ git commit -m "Add initial version of SportsStore."
+$ git commit -m "Add initial version of SportsStore."
 
 ```
 
