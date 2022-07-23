@@ -6,6 +6,7 @@ The `SportsStore*` application is the classic approach taken by online stores ev
 
 ## Application Features
 
+As a result of completing this task, you will receive an application that implements the following features:
 - an online product catalog that customers can browse by category and page;
 - a shopping cart where users can add and remove products;
 - a checkout where customers can enter delivery details;
@@ -15,7 +16,7 @@ The `SportsStore*` application is the classic approach taken by online stores ev
 ## .NET Platform
 The task uses the .NET Core CLI command line tool and references applications that target .NET 6.
 
-Visual Studio 2022 is the most convenient tool to get the task done, however, if your work machine is not configured to run the IDE, development can be done with Visual Studio Code and the .NET Core SDK.
+Visual Studio 2022 is the most convenient tool to get the task done, however, if your work machine is not configured to run this IDE, development can be done with Visual Studio Code and the .NET Core SDK (or ather IDE).
 
 ## Branching
 
