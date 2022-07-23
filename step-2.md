@@ -1,4 +1,4 @@
-#  Creating "Sport Store" Application. Part 2
+#  Sport Store Application. Part 2
 
 ## Description
 
