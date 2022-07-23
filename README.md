@@ -11,7 +11,6 @@ As a result of completing this task, you will receive an application that implem
 - a shopping cart where users can add and remove products;
 - a checkout where customers can enter delivery details;
 - an administration area that includes create, read, update, and delete (CRUD) tools for manage directory;
-- a secure application so that only administrators who are logged in can make changes.
 
 ## .NET Platform
 The task uses the .NET Core CLI command line tool and references applications that target .NET 6.
