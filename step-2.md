@@ -9,9 +9,17 @@
 
 ###  Adding Navigation Controls
 
-- Download the repository [sports-store-app-2[(https://gitlab.com/autocode-aspnet-coretasks/sports-store-app-2)]. 
-- Add the project you've created in the previous task to the solution.
-- Use [`SportsStore` ASP.NET Core MVC Application](https://gitlab.com/autocode-aspnet-coretasks/sport-store-app-1.git)
+- Go to the cloned repository of the previous step` Part 1`. 
+
+- Switch to the `sports-store-application-2` branch.
+
+```
+    $ git checkout sports-store-application-2
+
+    $ git merge sports-store-application-1 --ff
+
+```
+- Switch to the `sports-store-application-2` branch and do a fast-forward merge according to changes from the main branch.
 
 - Modify the `ProductsListViewModel` class (add the `CurrentCategory` property).
 
