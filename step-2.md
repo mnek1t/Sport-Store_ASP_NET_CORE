@@ -9,7 +9,7 @@
 
 ###  Adding Navigation Controls
 
-- Go to the cloned repository of the previous step` Part 1`. 
+- Go to the cloned repository of the previous step `Part 1`. 
 
 - Switch to the `sports-store-application-2` branch.
 
