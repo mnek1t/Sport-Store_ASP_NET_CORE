@@ -12,9 +12,9 @@
 - Switch to the `sports-store-application-2` branch.
 
 ```
-    $ git checkout sports-store-application-2
+$ git checkout sports-store-application-2
 
-    $ git merge main
+$ git merge main
 
 ```
 - Switch to the `sports-store-application-2` branch and do a fast-forward merge according to changes from the main branch.
