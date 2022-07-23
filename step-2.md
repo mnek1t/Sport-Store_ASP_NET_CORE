@@ -1,11 +1,9 @@
 #  Sport Store Application. Part 2
 
-## Description
+## Implementation details
 
 - [Adding Navigation Controls](#adding-navigation-controls)
 - [Building the Shopping Cart](#building-the-shopping-cart)
-
-## Implementation details
 
 ###  Adding Navigation Controls
 
