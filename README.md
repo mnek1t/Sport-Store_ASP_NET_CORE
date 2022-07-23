@@ -29,6 +29,4 @@ The task consists of four steps. The description of the each step of the task ar
 | 4 | sports-store-application-4 |
 
 
- *_This task was developed based on an example from the book by [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392)_.
-
-If you are having difficulty completing the task, refer to the book [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392).
+ *_This task was developed based on an example from the book by [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). If you are having difficulty completing the task, contact the source. _
