@@ -8,7 +8,7 @@
 - [Adding Pagination](#adding-pagination)
 - [Styling the Content](#styling-the-content)
 
-## TODO
+## Implementation details
 
 ### Creating the Projects
 
