@@ -20,6 +20,13 @@
     $ cd C:/RepositoryPathInFileSystem/sports-store-application
 
 ```
+- Switch to the sports-store-application-1 branch.
+
+```
+    $ git checkout sports-store-application-1
+
+```
+
 - Create a new solution `SportsStore` in the directory of the cloned repository.
 
 ```
