@@ -17,6 +17,8 @@ The task uses the .NET Core CLI command line tool and references applications th
 
 Visual Studio 2022 is the most convenient tool to get the task done, however, if your work machine is not configured to run the IDE, development can be done with Visual Studio Code and the .NET Core SDK.
 
-The description of the each step of the task can be found in the corresponding `step-k.md` file in the branch `sports-store-application-k`.
+## Task completion steps
+
+The task consists of four steps. The description of the each step of the task can be found in the corresponding `step-k.md` file in the branch `sports-store-application-k`.
 
  *_This task was developed based on an example from the book by [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392)_.
