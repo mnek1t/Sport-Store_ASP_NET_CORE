@@ -384,8 +384,7 @@ public static class SeedData
 }
 ```
 
-- To seed the database when the application starts, add a call to the `EnsurePopulated` method from the `Startup` class.
-
+- To seed the database when the application starts, add a call to the `EnsurePopulated` method from the `Progrem` file.
 
 ```
 using Microsoft.EntityFrameworkCore;
@@ -463,6 +462,7 @@ $ git status
 $ git add *.cs *.json *.proj
 $ git diff --staged
 $ git commit -m "Add displaying a list of products."
+```
 
 </details> 
 
@@ -473,7 +473,7 @@ $ git commit -m "Add displaying a list of products."
 
 </summary>  
 
-- To add pagination, change the _Controller_ class
+- To add pagination, change the `Controller` class by adding following code.
 ```
 ...
 public const int PageSize = 4; 
@@ -486,8 +486,7 @@ public ViewResult Index(int productPage = 1)
 ...
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000. To view another page, append query string parameters to the end of the URL like this http://localhost:5000/?productPage=2
-
+- Restart application and request http://localhost:5000. To view another page, append query string parameters to the end of the URL like this http://localhost:5000/?productPage=2
 
 - Create the `PagingInfo` class in the `SportsStore/Models/ViewModels` folder.
 
@@ -501,52 +500,39 @@ public class PagingInfo
 }
 ```
 
-- Create the _Infrastructure_ folder in the project.
+- Create the `Infrastructure` folder in the project.
 
 -  Create the `PageLinkTagHelper` tag helper class in the `SportsStore/Infrastructure` folder.
 
 ```
-namespace SportsStore.Infrastructure
+[HtmlTargetElement("div", Attributes = "page-model")]
+public class PageLinkTagHelper : TagHelper
 {
-    [HtmlTargetElement("div", Attributes = "page-model")]
-    public class PageLinkTagHelper : TagHelper
+    private IUrlHelperFactory urlHelperFactory;
+
+    public PageLinkTagHelper(IUrlHelperFactory helperFactory)
     {
-        private IUrlHelperFactory _urlHelperFactory;
+        urlHelperFactory = helperFactory;
+    }
 
-        public PageLinkTagHelper(IUrlHelperFactory helperFactory)
+    [ViewContext] 
+    [HtmlAttributeNotBound] 
+    public ViewContext? ViewContext { get; set; }
+    public PagingInfo? PageModel { get; set; }
+    public string? PageAction { get; set; }
+
+    public override void Process(TagHelperContext context,
+        TagHelperOutput output)
+    {
+        if (ViewContext != null && PageModel != null)
         {
-            _urlHelperFactory = helperFactory ?? throw new ArgumentNullException(nameof(helperFactory));
-        }
-
-        [ViewContext]
-        [HtmlAttributeNotBound]
-        public ViewContext ViewContext { get; set; }
-        public PagingInfo PageModel { get; set; }
-        public string PageAction { get; set; }
-        public bool PageClassesEnabled { get; set; } = false;
-        public string PageClass { get; set; }
-        public string PageClassNormal { get; set; }
-        public string PageClassSelected { get; set; }
-
-        public override void Process(TagHelperContext context, TagHelperOutput output)
-        {
-            IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
-
+            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
             TagBuilder result = new TagBuilder("div");
-
             for (int i = 1; i <= PageModel.TotalPages; i++)
             {
                 TagBuilder tag = new TagBuilder("a");
-
-                tag.Attributes["href"] = urlHelper.Action(PageAction, new { productPage = i });
-
-                if (PageClassesEnabled)
-                {
-                    tag.AddCssClass(PageClass);
-                    tag.AddCssClass(i == PageModel.CurrentPage
-                        ? PageClassSelected : PageClassNormal);
-                }
-
+                tag.Attributes["href"] = urlHelper.Action(PageAction,
+                    new { productPage = i });
                 tag.InnerHtml.Append(i.ToString());
                 result.InnerHtml.AppendHtml(tag);
             }
@@ -557,7 +543,7 @@ namespace SportsStore.Infrastructure
 }
 ```
 
--  Register the `PageLinkTagHelper` tag helper in the `SportsStore/Views` folder.
+-  Register the `PageLinkTagHelper` tag helper in the `ViewImports.cshtml` File in the SportsStore/Views Folder
 
 ```
 ...
@@ -572,7 +558,8 @@ namespace SportsStore.Infrastructure
 public class ProductsListViewModel
 {
     public IEnumerable<Product> Products { get; set; }
-    public PagingInfo PagingInfo { get; set; }
+        = Enumerable.Empty<Product>();
+    public PagingInfo PagingInfo { get; set; } = new();
 }
 ```
 
