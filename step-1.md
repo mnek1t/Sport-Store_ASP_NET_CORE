@@ -566,6 +566,7 @@ public class ProductsListViewModel
 - Update the `Index` action method in the `HomeController.cs` file in the `SportsStore/Controllers` folder.
 
 ```
+. . .
 public ViewResult Index(int productPage = 1)
             => View(new ProductsListViewModel
             {
@@ -580,13 +581,13 @@ public ViewResult Index(int productPage = 1)
                     TotalItems = _repository.Products.Count()
                 }
             });
+. . .
 ```
-
 -  Update the `Index.cshtml` file.
 ```
 @model ProductsListViewModel
 
-@foreach (var p in Model.Products) 
+@foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())  
 {
     <div>
         <h3>@p.Name</h3>
@@ -598,23 +599,26 @@ public ViewResult Index(int productPage = 1)
 
 and add an HTML element that the tag helper will process to create the page links.
 
-`<div page-model="@Model.PagingInfo" page-action="Index"></div>`
-
-- Restart ASP.NET Core and request http://localhost:5000
-
-- To improve the URL (while used http://localhost/?productPage=2), create a scheme (the Configure method of the Startup class) that follows the pattern of composable URLs that make sense to a user: http://localhost/Page2:
+```
+<div page-model="@Model?.PagingInfo" page-action="Index"></div>
 
 ```
-app.UseEndpoints(endpoints => 
-            {
-                endpoints.MapControllerRoute("pagination", 
-                    "Products/Page{productPage}", 
-                    new { Controller = "Home", action = "Index" }); 
+- Build project, restart application and request http://localhost:5000.
 
-                endpoints.MapControllerRoute( 
-                    name: "default", 
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+- To improve the URL (while used http://localhost/?productPage=2), add a new route in the Program.cs file, that follows the pattern of composable URLs that make sense to a user: http://localhost/Page2:
+
+```
+var builder = WebApplication.CreateBuilder(args);
+
+. . . 
+
+app.MapControllerRoute("pagination", 
+    "Products/Page{productPage}", 
+    new { Controller = "Home", action = "Index" }); 
+
+. . .
+
+app.Run();
 ```
 - Add and view changes and than commit.
 
