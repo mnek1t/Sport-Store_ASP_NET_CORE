@@ -218,28 +218,31 @@ public class StoreDbContext: DbContext
     public StoreDbContext(DbContextOptions<StoreDbContext> options)
         : base(options) { }
 
-    public DbSet<Product> Products { get; set; }
+    public DbSet<Product> Products => Set<Product>();
 }
 ```
 - To configure Entity Framework Core, add the following code to the `Program` file: 
 
 ```
-public Startup(IConfiguration config) 
-{
-    Configuration = config;
-}
+using Microsoft.EntityFrameworkCore;
+using SportsStore.Models;
 
-public IConfiguration Configuration { get; }
+var builder = WebApplication.CreateBuilder(args);
 
-public void ConfigureServices(IServiceCollection services) 
-{
-    services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();
 
-    services.AddDbContext<StoreDbContext>(opts => {
-        opts.UseSqlServer(
-            Configuration["ConnectionStrings:SportsStoreConnection"]);
-    });
-}
+builder.Services.AddDbContext<StoreDbContext>(opts => {
+    opts.UseSqlServer(
+        builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+});
+
+var app = builder.Build();
+
+app.UseStaticFiles();
+
+app.MapDefaultControllerRoute();
+
+app.Run();
 ```
 
 - Create the `IStoreRepository` interface in the `SportsStore/Models/Repository` folder.
@@ -267,11 +270,31 @@ public class EFStoreRepository : IStoreRepository
 }
 ```
 
-- Open the `Startup.cs` file in the `SportsStore` folder. Find the `ConfigureServices` method and add `RepositoryService` as shown below: 
-`services.AddScoped<IStoreRepository, EFStoreRepository>();`
+- Add `RepositoryService` to the Program.cs file shown below: 
 
-- Add a database migration in _Package Manager Console _
-`dotnet ef migrations add Initial`
+```
+using Microsoft.EntityFrameworkCore;
+using SportsStore.Models;
+...
+
+builder.Services.AddDbContext<StoreDbContext>(opts => {
+    opts.UseSqlServer(
+        builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+});
+
+builder.Services.AddScoped<IStoreRepository, EFStoreRepository>(); 
+
+...
+
+app.Run();
+```
+
+- Add a database migration.
+
+```
+$ dotnet ef migrations add Initial
+
+```
 
 - To populate the database and provide some sample data, add a class file called `SeedData.cs` to the `Models/Data` folder.
 
@@ -281,7 +304,7 @@ public static class SeedData
     public static void EnsurePopulated(IApplicationBuilder app)
     {
         StoreDbContext context = app.ApplicationServices
-            .CreateScope().ServiceProvider.GetRequiredService<StoreDbContext>();
+                    .CreateScope().ServiceProvider.GetRequiredService<StoreDbContext>();
 
         if (context.Database.GetPendingMigrations().Any())
         {
@@ -363,15 +386,23 @@ public static class SeedData
 
 - To seed the database when the application starts, add a call to the `EnsurePopulated` method from the `Startup` class.
 
+
 ```
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
-{
-    ...
-    SeedData.EnsurePopulated(app);
-}
+using Microsoft.EntityFrameworkCore;
+using SportsStore.Models;
+...
+
+var builder = WebApplication.CreateBuilder(args);
+
+...
+
+SeedData.EnsurePopulated(app);
+
+app.Run();
+
 ```
 
-- Add and view changes and than commit.
+- Build projectThan add and view changes and than commit.
 
 ```
 $ dotnet build
@@ -379,7 +410,24 @@ $ git status
 $ git add *.cs *.json *.proj
 $ git diff --staged
 $ git commit -m "Add data to application."
+
 ```
+- Build project and run it.
+
+```
+$ dotnet build
+$ dotnet run
+
+```
+- Than add and view changes and than commit.
+
+```
+$ git status
+$ git add *.cs *.cshtml *.csproj
+$ git diff --staged
+$ git commit -m "Add initial version of SportsStore App."
+```
+
 </details> 
 
 <details>
