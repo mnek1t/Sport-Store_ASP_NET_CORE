@@ -1,9 +1,9 @@
-#  Sports Store Application. Part 1.
+#  Sports Store Application. Spep 1.
 
 ## Implementation details
 
 <details><summary>Creating the Projects</summary>    
-
+    
 - Clone the remote repository from GitLab to your local drive and go to the cloned repository.
 
 ```
@@ -35,18 +35,6 @@ $ dotnet new mvc --name SportsStore
 
 ```
 $ dotnet sln add SportsStore/SportsStore.csproj
-
-```
-- Add and view changes and than commit.
-
-```
-$ git add .
-
-$ git status
-
-git diff --staged
-
-$ git commit -m "Add initial version of SportsStore App."
 
 ```
 - If you are using Visual Studio, click the “Open a project or solution” button on the splash screen or select File > Open > Project/Solution. Select the SportsStore.sln file in the SportsStore folder and click the Open button to open the project.
@@ -82,6 +70,18 @@ $ git commit -m "Add initial version of SportsStore App."
     }
   }
 }
+```
+- Add and view changes and than commit.
+
+```
+$ git add .
+
+$ git status
+
+git diff --staged
+
+$ git commit -m "Add initial version of SportsStore App."
+
 ```
 
 </details>     
