@@ -1,8 +1,9 @@
-#  Sports Store Application. Part 1.
+1. #  Sports Store Application. Part 1.
 
 ## Implementation details
 
 - [Creating the Projects](#creating-the-projects)
+- [Preparing the Application Services and the Request Pipeline](#preparing-the-application-services-and-the-request-pipeline)
 - [Adding Data to the Application](#adding-data-to-the-application)
 - [Displaying a List of Products](#displaying-a-list-of-products)
 - [Adding Pagination](#adding-pagination)
@@ -56,9 +57,45 @@ $ git commit -m "Add initial version of SportsStore App."
 
 ```
 
-- Continue your work in Visual Studio.
+- If you are using Visual Studio, click the “Open a project or solution” button on the splash screen or select File > Open > Project/Solution. Select the SportsStore.sln file in the SportsStore folder and click the Open button to open the project.
+
+- To configure the HTTP port that ASP.NET Core will use to listen for HTTP requests, make the changes shown to the launchSettings.json file in the SportsStore/Properties folder as shown below:
+
+```
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:5000",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "SportsStore": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
+```
+
+### Preparing the Application Services and the Request Pipeline
 
 - To prepare application services and the request pipeline, change the `Startup` class adding the line app.UseStatusCodePages() as shown below: 
+
 
 ```
 namespace SportsStore
