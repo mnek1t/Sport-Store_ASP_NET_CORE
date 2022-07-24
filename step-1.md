@@ -163,7 +163,7 @@ public class Product
 } 
 ```
 
-- Commit changes.
+- - Add and view changes and than commit.
 
 ### Adding Data to the Application
 
@@ -356,7 +356,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     SeedData.EnsurePopulated(app);
 }
 ```
-- Commit changes.
+- - Add and view changes and than commit.
 
 ###  Displaying a List of Products
 
@@ -396,7 +396,7 @@ public class HomeController : Controller
 *Just run the app using F5 button. The port can differ from the one shown above. You might need to set the _SportsStore_ project as the startup in _Visual Studio_ before running this.
 If the database settings were not changed, during the first run a database will be created for C:/Users/"username" folder.
 
-- Commit changes.
+- - Add and view changes and than commit.
 
 ###  Adding Pagination
 
@@ -556,7 +556,7 @@ app.UseEndpoints(endpoints =>
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 ```
-- Commit changes.
+- - Add and view changes and than commit.
 
 ###  Styling the Content
 
@@ -694,7 +694,7 @@ public class PageLinkTagHelper : TagHelper
 ```
 - Run the application. 
 
-- Commit changes.
+- Add and view changes and than commit.
 
 - Push the local branch to the remote branch.
 
