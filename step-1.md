@@ -52,7 +52,7 @@ $ git status
 
 git diff --staged
 
-$ git commit -m "Add initial version of SportsStore."
+$ git commit -m "Add initial version of SportsStore App."
 
 ```
 
@@ -163,12 +163,12 @@ public class Product
 } 
 ```
 
-- - Add and view changes and than commit.
+- Add and view changes and than commit.
 
 ```
 $ dotnet build
 $ git status
-$ git add *.cs
+$ git add *.cs *.cshtml *.csproj
 $ git diff --staged
 $ git commit -m "Add application services."
 ```
@@ -180,10 +180,10 @@ $ git commit -m "Add application services."
 
 ```
 cd SportsStore
-dotnet add package Microsoft.EntityFrameworkCore.Design --version 3.1.1
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 3.1.1
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.7 
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.7
 (Optional) dotnet tool uninstall --global dotnet-ef
-dotnet tool install --global dotnet-ef --version 3.1.1
+dotnet tool install --global dotnet-ef --version 6.0.7
 ```
 
 - To define the connection string, add the configuration setting in the `appsettings.json` file in the `SportsStore` folder:
@@ -364,7 +364,16 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     SeedData.EnsurePopulated(app);
 }
 ```
-- - Add and view changes and than commit.
+
+- Add and view changes and than commit.
+
+```
+$ dotnet build
+$ git status
+$ git add *.cs *.json *.proj
+$ git diff --staged
+$ git commit -m "Add data to application."
+```
 
 ###  Displaying a List of Products
 
