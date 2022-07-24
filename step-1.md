@@ -97,7 +97,6 @@ $ git commit -m "Add initial version of SportsStore App."
 
 - To prepare application services and the request pipeline, change the `Startup` class adding the line app.UseStatusCodePages() as shown below: 
 
-
 ```
 namespace SportsStore
 {
@@ -211,9 +210,9 @@ $ git diff --staged
 $ git commit -m "Add application services."
 ```
 
-</details>  
+</details> 
 
-### Adding Data to the Application
+<details><summary>Adding Data to the Application</summary>   
 
 - Add the Entity Framework Core Packages to the SportsStore Project. 
 - Open _Package Manager Console_ in _Visual Studio_ from _Tools -> Nuget Package Manager -> Package Manager Console_. Run the following commands: 
@@ -414,8 +413,9 @@ $ git add *.cs *.json *.proj
 $ git diff --staged
 $ git commit -m "Add data to application."
 ```
+</details> 
 
-###  Displaying a List of Products
+<details><summary>Displaying a List of Products</summary>   
 
 - Change the `HomeController` class.
 
@@ -455,7 +455,9 @@ If the database settings were not changed, during the first run a database will 
 
 - - Add and view changes and than commit.
 
-###  Adding Pagination
+</details> 
+
+<details><summary>Adding Pagination</summary>  
 
 - To add pagination, change the _Controller_ class
 ```
@@ -613,9 +615,11 @@ app.UseEndpoints(endpoints =>
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 ```
-- - Add and view changes and than commit.
+- Add and view changes and than commit.
 
-###  Styling the Content
+</details> 
+
+<details><summary>Styling the Content</summary>  
 
 - Configure the project to use the `Bootstrap` package to provide the CSS styles. Client-side packages are installed using `LibMan`. To install the `LibMan` Tool Package, use [Microsoft.Web.LibraryManager.Cli](https://www.nuget.org/packages/Microsoft.Web.LibraryManager.Cli/).
 
