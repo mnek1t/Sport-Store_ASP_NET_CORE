@@ -2,13 +2,6 @@
 
 ## Implementation details
 
-- [Creating the Projects](#creating-the-projects)
-- [Preparing the Application Services and the Request Pipeline](#preparing-the-application-services-and-the-request-pipeline)
-- [Adding Data to the Application](#adding-data-to-the-application)
-- [Displaying a List of Products](#displaying-a-list-of-products)
-- [Adding Pagination](#adding-pagination)
-- [Styling the Content](#styling-the-content)
-
 <details><summary>Creating the Projects</summary>    
 
 - Clone the remote repository from GitLab to your local drive and go to the cloned repository.
