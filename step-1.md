@@ -118,12 +118,11 @@ app.Run();
 ``` 
 - To configure the Razor view engine, add the `_ViewImports.cshtml` file in the `SportsStore/Views` folder adding a layout.
 ```
-@using SportsStore
 @using SportsStore.Models
-@using SportsStore.Models.ViewModels
-
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper *, SportsStore
+```
+- Add a Razor View Start file named _ViewStart.cshtml to the SportsStore/Views folder with the content shown below.
+```
 @{
     Layout = "_Layout";
 } 
@@ -136,6 +135,11 @@ public class HomeController: Controller
 }
 ```
 - Add the `Index.cshtml` file to the `SportsStore/Views/Home` folder if it does not exist.
+
+```
+<h4>Welcome to SportsStore</h4>
+
+```
 - Add the `Product` class in the `Product.cs` file to the `SportsStore/Models` folder. Import the required dependencies. 
 ```
 public class Product  
@@ -153,15 +157,16 @@ public class Product
     public string Category { get; set; } 
 } 
 ```
+- Build project and run it.
 
-- Add and view changes and than commit.
+- Than add and view changes and than commit.
 
 ```
 $ dotnet build
 $ git status
 $ git add *.cs *.cshtml *.csproj
 $ git diff --staged
-$ git commit -m "Add application services."
+$ git commit -m "Add initial version of SportsStore App."
 ```
 
 </details> 
