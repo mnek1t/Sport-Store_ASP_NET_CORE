@@ -2,7 +2,11 @@
 
 ## Implementation details
 
-<details><summary>Creating the Projects</summary>    
+<details><summary>
+
+ **Creating the Projects**
+
+</summary>    
     
 - Clone the remote repository from GitLab to your local drive and go to the cloned repository.
 
@@ -86,7 +90,12 @@ $ git commit -m "Add initial version of SportsStore App."
 
 </details>     
 
-<details><summary>Preparing the Application Services and the Request Pipeline</summary>   
+<details>
+<summary>
+
+**Preparing the Application Services and the Request Pipeline**
+
+</summary>   
 
 - To prepare application services and the request pipeline, change the `Startup` class adding the line app.UseStatusCodePages() as shown below: 
 
@@ -205,7 +214,12 @@ $ git commit -m "Add application services."
 
 </details> 
 
-<details><summary>Adding Data to the Application</summary>   
+<details>
+<summary>
+
+**Adding Data to the Application**
+
+</summary>   
 
 - Add the Entity Framework Core Packages to the SportsStore Project. 
 - Open _Package Manager Console_ in _Visual Studio_ from _Tools -> Nuget Package Manager -> Package Manager Console_. Run the following commands: 
@@ -408,7 +422,12 @@ $ git commit -m "Add data to application."
 ```
 </details> 
 
-<details><summary>Displaying a List of Products</summary>   
+<details>
+<summary>
+
+**Displaying a List of Products**
+
+</summary>   
 
 - Change the `HomeController` class.
 
@@ -450,7 +469,12 @@ If the database settings were not changed, during the first run a database will 
 
 </details> 
 
-<details><summary>Adding Pagination</summary>  
+<details>
+<summary>
+
+**Adding Pagination**
+
+</summary>  
 
 - To add pagination, change the _Controller_ class
 ```
@@ -612,7 +636,12 @@ app.UseEndpoints(endpoints =>
 
 </details> 
 
-<details><summary>Styling the Content</summary>  
+<details>
+<summary>
+
+**Styling the Content**
+
+</summary>  
 
 - Configure the project to use the `Bootstrap` package to provide the CSS styles. Client-side packages are installed using `LibMan`. To install the `LibMan` Tool Package, use [Microsoft.Web.LibraryManager.Cli](https://www.nuget.org/packages/Microsoft.Web.LibraryManager.Cli/).
 
