@@ -165,6 +165,14 @@ public class Product
 
 - - Add and view changes and than commit.
 
+```
+$ dotnet build
+$ git status
+$ git add *.cs
+$ git diff --staged
+$ git commit -m "Add application services."
+```
+
 ### Adding Data to the Application
 
 - Add the Entity Framework Core Packages to the SportsStore Project. 
