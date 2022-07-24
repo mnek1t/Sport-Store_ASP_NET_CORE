@@ -459,7 +459,7 @@ public class HomeController : Controller
 $ dotnet build
 $ dotnet run
 $ git status
-$ git add *.cs *.json *.proj
+$ git add *.cs *.cshtml
 $ git diff --staged
 $ git commit -m "Add displaying a list of products."
 ```
@@ -621,6 +621,13 @@ app.MapControllerRoute("pagination",
 app.Run();
 ```
 - Add and view changes and than commit.
+
+```
+$ git status
+$ git add *.cs *.cshtml *.proj
+$ git diff --staged
+$ git commit -m "Add pagination."
+```
 
 </details> 
 
