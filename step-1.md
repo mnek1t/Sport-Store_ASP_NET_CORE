@@ -791,6 +791,23 @@ $ git merge sports-store-application-1 --ff
 
 ```
 $ git push
-
 ```
 - Move on to the `Sports Store Application. Step 2.` of the task (branch `sports-store-application-2`).
+
+</details>
+
+## Additional Materials
+
+- [Minimal APIs overview](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0)
+- [Get started with ASP.NET Core MVC](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-6.0&tabs=visual-studio)
+- [Controllers](https://jakeydocs.readthedocs.io/en/latest/mvc/controllers/index.html)
+- [Views](https://jakeydocs.readthedocs.io/en/latest/mvc/views/index.html)
+- [Models](https://jakeydocs.readthedocs.io/en/latest/mvc/models/index.html)
+- [ASP.NET Core MVC with EF Core - tutorial series](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/?view=aspnetcore-6.0)
+- [Persist and retrieve relational data with Entity Framework Core](https://docs.microsoft.com/en-us/learn/modules/persist-data-ef-core/?view=aspnetcore-6.0)
+- 
+
+
+
+
+
