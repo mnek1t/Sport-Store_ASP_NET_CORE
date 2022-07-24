@@ -41,7 +41,7 @@ $ dotnet new web --no-https --name SportsStore
 $ dotnet sln add SportsStore/SportsStore.csproj
 
 ```
-- If you are using Visual Studio, click the “Open a project or solution” button on the splash screen or select File > Open > Project/Solution. Select the SportsStore.sln file in the SportsStore folder and click the Open button to open the project.
+- If you are using Visual Studio, click the "Open a project or solution" button on the splash screen or select `File` > `Open` > `Project/Solution`. Select the `SportsStore.sln` file in the `SportsStore` folder and click the Open button to open the project.
 
 - To configure the HTTP port that ASP.NET Core will use to listen for HTTP requests, make the changes shown to the launchSettings.json file in the SportsStore/Properties folder as shown below:
 
@@ -75,7 +75,7 @@ $ dotnet sln add SportsStore/SportsStore.csproj
   }
 }
 ```
-- Create folders that will contain the application’s components. Right-click the SportsStore item in the Visual Studio Solution Explorer and select Add > New > Folder to create the set of folders described in this table:
+- Create folders that will contain the application’s components. Right-click the SportsStore item in the Visual Studio Solution Explorer and select `Add` > `New` > Fo``lder to create the set of folders described in this table:
 
 | Folder Name | Description |
 | ------ | ------ |
@@ -167,7 +167,6 @@ $ dotnet run
 - Than add and view changes and than commit.
 
 ```
-$ dotnet build
 $ git status
 $ git add *.cs *.cshtml *.csproj
 $ git diff --staged
