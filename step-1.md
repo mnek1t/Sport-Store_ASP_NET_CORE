@@ -402,7 +402,7 @@ app.Run();
 
 ```
 
-- Build projectThan add and view changes and than commit.
+- Build project, add and view changes and than commit.
 
 ```
 $ dotnet build
@@ -411,21 +411,6 @@ $ git add *.cs *.json *.proj
 $ git diff --staged
 $ git commit -m "Add data to application."
 
-```
-- Build project and run it.
-
-```
-$ dotnet build
-$ dotnet run
-
-```
-- Than add and view changes and than commit.
-
-```
-$ git status
-$ git add *.cs *.cshtml *.csproj
-$ git diff --staged
-$ git commit -m "Add initial version of SportsStore App."
 ```
 
 </details> 
@@ -437,17 +422,16 @@ $ git commit -m "Add initial version of SportsStore App."
 
 </summary>   
 
-- Change the `HomeController` class.
+- Change the `HomeController` class according to following code.
 
 ```
 public class HomeController : Controller 
 { 
-    . . . 
-    private readonly IStoreRepository _repository; 
-    public HomeController(ILogger<HomeController> logger, IStoreRepository repository)
+    private readonly IStoreRepository repository; 
+
+    public HomeController(IStoreRepository repository)
     { 
-    . . .
-        _repository = repository ?? throw new ArgumentNullException(nameof(repository)); 
+        this.repository = repository ?? throw new ArgumentNullException(nameof(repository)); 
     } 
 
     public IActionResult Index() => View(_repository.Products);
@@ -458,8 +442,7 @@ public class HomeController : Controller
 
 ```
 @model IQueryable<Product>
-
-@foreach (var p in Model) 
+@foreach (var p in Model ?? Enumerable.Empty<Product>()) 
 {
     <div>
         <h3>@p.Name</h3>
@@ -470,10 +453,16 @@ public class HomeController : Controller
 ```
 
 - Build the solution. Restart ASP.NET Core and request http://localhost:5000
-*Just run the app using F5 button. The port can differ from the one shown above. You might need to set the _SportsStore_ project as the startup in _Visual Studio_ before running this.
-If the database settings were not changed, during the first run a database will be created for C:/Users/"username" folder.
 
-- - Add and view changes and than commit.
+- Add and view changes and than commit.
+
+```
+$ dotnet build
+$ dotnet run
+$ git status
+$ git add *.cs *.json *.proj
+$ git diff --staged
+$ git commit -m "Add displaying a list of products."
 
 </details> 
 
