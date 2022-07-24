@@ -1,4 +1,4 @@
-1. #  Sports Store Application. Part 1.
+#  Sports Store Application. Part 1.
 
 ## Implementation details
 
@@ -9,7 +9,7 @@
 - [Adding Pagination](#adding-pagination)
 - [Styling the Content](#styling-the-content)
 
-### Creating the Projects
+<details><summary>Creating the Projects</summary>    
 
 - Clone the remote repository from GitLab to your local drive and go to the cloned repository.
 
@@ -56,7 +56,6 @@ git diff --staged
 $ git commit -m "Add initial version of SportsStore App."
 
 ```
-
 - If you are using Visual Studio, click the “Open a project or solution” button on the splash screen or select File > Open > Project/Solution. Select the SportsStore.sln file in the SportsStore folder and click the Open button to open the project.
 
 - To configure the HTTP port that ASP.NET Core will use to listen for HTTP requests, make the changes shown to the launchSettings.json file in the SportsStore/Properties folder as shown below:
@@ -92,7 +91,9 @@ $ git commit -m "Add initial version of SportsStore App."
 }
 ```
 
-### Preparing the Application Services and the Request Pipeline
+</details>     
+
+<details><summary>Preparing the Application Services and the Request Pipeline</summary>   
 
 - To prepare application services and the request pipeline, change the `Startup` class adding the line app.UseStatusCodePages() as shown below: 
 
@@ -209,6 +210,8 @@ $ git add *.cs *.cshtml *.csproj
 $ git diff --staged
 $ git commit -m "Add application services."
 ```
+
+</details>  
 
 ### Adding Data to the Application
 
