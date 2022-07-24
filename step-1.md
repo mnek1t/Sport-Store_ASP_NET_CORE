@@ -159,6 +159,11 @@ public class Product
 ```
 - Build project and run it.
 
+```
+$ dotnet build
+$ dotnet run
+
+```
 - Than add and view changes and than commit.
 
 ```
@@ -179,7 +184,6 @@ $ git commit -m "Add initial version of SportsStore App."
 </summary>   
 
 - Add the Entity Framework Core Packages to the SportsStore Project. 
-- Open _Package Manager Console_ in _Visual Studio_ from _Tools -> Nuget Package Manager -> Package Manager Console_. Run the following commands: 
 
 ```
 $ dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.0
@@ -239,7 +243,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-- Create the `IStoreRepository` interface in the `SportsStore/Models/Repo` folder.
+- Create the `IStoreRepository` interface in the `SportsStore/Models/Repository` folder.
 
 ```
 public interface IStoreRepository 
@@ -248,7 +252,7 @@ public interface IStoreRepository
 }
 ```
 
-- Create the `EFStoreRepository` class in the `SportsStore/Models/Repo` folder
+- Create the `EFStoreRepository` class in the `SportsStore/Models/Repository` folder
 
 ```
 public class EFStoreRepository : IStoreRepository 
