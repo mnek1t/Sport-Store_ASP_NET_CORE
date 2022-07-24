@@ -182,11 +182,12 @@ $ git commit -m "Add initial version of SportsStore App."
 - Open _Package Manager Console_ in _Visual Studio_ from _Tools -> Nuget Package Manager -> Package Manager Console_. Run the following commands: 
 
 ```
-cd SportsStore
-dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.7 
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.7
-(Optional) dotnet tool uninstall --global dotnet-ef
-dotnet tool install --global dotnet-ef --version 6.0.7
+$ dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.0
+$ dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.0
+
+(Optional) 
+$ dotnet tool uninstall --global dotnet-ef
+$ dotnet tool install --global dotnet-ef --version 6.0.7
 ```
 
 - To define the connection string, add the configuration setting in the `appsettings.json` file in the `SportsStore` folder:
@@ -206,7 +207,6 @@ dotnet tool install --global dotnet-ef --version 6.0.7
     }
 }
 ```
-
 - Add the `StoreDbContext` context class in the `StoreDbContext.cs` file to the `SportsStore/Models` folder.
 
 ```
@@ -214,11 +214,11 @@ public class StoreDbContext: DbContext
 {
     public StoreDbContext(DbContextOptions<StoreDbContext> options)
         : base(options) { }
+
     public DbSet<Product> Products { get; set; }
 }
 ```
-
-- To configure Entity Framework Core, add the following code to the `Startup` class: 
+- To configure Entity Framework Core, add the following code to the `Program` file: 
 
 ```
 public Startup(IConfiguration config) 
