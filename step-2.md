@@ -336,7 +336,7 @@ $ dotnet build
 $ git status
 $ git add *.cs *.proj *.cshtml
 $ git diff --staged
-$ git commit -m "Add data to application."
+$ git commit -m "Add navigation controls."
 ```
 
 </details>
@@ -356,14 +356,14 @@ $ git commit -m "Add data to application."
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>SportsStore</title>
-    <link href="/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />    
+    <link href="/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
     <div class="bg-dark text-white p-2">
         <span class="navbar-brand ml-2">SPORTS STORE</span>
     </div>
     <div class="m-1 p-1">
-            @RenderBody()
+        @RenderBody()
     </div>
 </body>
 </html>
@@ -390,7 +390,6 @@ public class CartController : Controller
 
 <h4>This is the Cart Page</h4>
 ```
-
 
 - Restart ASP.NET Core and request http://localhost:5000.
 
@@ -499,7 +498,6 @@ public class CartLine
     public int Quantity { get; set; }
 }
 ```
-
 
 The `Cart` class uses the `CartLine` class to represent a product selected by the customer and the quantity a user wants to buy. The Cart class includes the methods that add an item to the cart, remove a previously added item from the cart, calculate the total cost of the items in the cart, and reset the cart by removing all the items.
 
