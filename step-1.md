@@ -213,7 +213,7 @@ $ dotnet run
 
 ```
 $ git status
-$ git add *.cs *.cshtml *.csproj *.xml
+$ git add .
 $ git diff --staged
 $ git commit -m "Add initial version of SportsStore App."
 ```
