@@ -166,11 +166,16 @@ public class PageLinkTagHelper : TagHelper
 -  Add the `NavigationMenuViewComponent` class to it.
 
 ```
-public class NavigationMenuViewComponent : ViewComponent 
+using Microsoft.AspNetCore.Mvc;
+
+namespace SportsStore.Components
 {
-    public string Invoke() 
+    public class NavigationMenuViewComponent : ViewComponent
     {
-        return "Hello from the Nav View Component";
+        public string Invoke()
+        {
+            return "Hello from the Navigation View Component";
+        }
     }
 }
 ```
@@ -178,36 +183,55 @@ public class NavigationMenuViewComponent : ViewComponent
 - To view the result of the `Invoke` method, open the  `_Layout.cshtml` file and add the tag `<vc:navigation-menu />` as shown below: 
 
 ```
-...
- <div class="row m-1 p-1">
-    <div id="categories" class="col-3">
-        <vc:navigation-menu />
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SportsStore</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="bg-primary text-white p-2">
+        <span class="navbar-brand ml-2">SPORTS STORE</span>
     </div>
-    <div class="col-9">
-        @RenderBody()
+    <div class="row m-1 p-1">
+        <div id="categories" class="col-3">
+            <vc:navigation-menu />
+        </div>
+        <div class="col-9">
+            @RenderBody()
+        </div>
     </div>
-</div>
-...
+</body>
+</html>
 ```
     
 - Restart ASP.NET Core and request http://localhost:5000`.
 
-- Change the `NavigationMenuViewComponent` class, add categories:
+- Change the `NavigationMenuViewComponent` class by addin categories:
 
 ```
-public class NavigationMenuViewComponent : ViewComponent 
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Components
 {
-    private IStoreRepository  repository
-    public NavigationMenuViewComponent(IStoreRepository repo) 
+    public class NavigationMenuViewComponent : ViewComponent
     {
-        repository = repo;
-    
-    public IViewComponentResult Invoke() 
-    {
-        return View(repository.Products
-           .Select(x => x.Category)
-           .Distinct()
-           .OrderBy(x => x));
+        private IStoreRepository repository;
+
+        public NavigationMenuViewComponent(IStoreRepository repository)
+        {
+            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
+        public IViewComponentResult Invoke()
+        {
+            return View(repository.Products
+               .Select(x => x.Category)
+               .Distinct()
+               .OrderBy(x => x));
+        }
     }
 }
 ```
@@ -215,25 +239,28 @@ public class NavigationMenuViewComponent : ViewComponent
 - Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add it to the Razor view named `Default.cshtml`.
 
 ```
-@model IEnumerable<string
-<a class="btn btn-block btn-outline-secondary" 
-    asp-action="Index" 
-    asp-controller="Home" 
-    asp-route-category="">
-    Home
-</a
-@foreach (string category in Model) 
-{
-    <a class="btn btn-block btn-outline-secondary"
+@model IEnumerable<string>
+
+<div class="d-grid gap-2">
+    <a class="btn btn-outline-secondary" asp-action="Index"
+       asp-controller="Home" asp-route-category="">
+        Home
+    </a>
+    @foreach (string category in Model ?? Enumerable.Empty<string>())
+    {
+        <a class="btn btn-outline-secondary"
        asp-action="Index" asp-controller="Home"
        asp-route-category="@category"
        asp-route-productPage="1">
-        @category
-    </a>
-}
+            @category
+        </a>
+    }
+</div>
 ```
 
 - Restart ASP.NET Core and request http://localhost:5000.
+
+![](Images/2.6.png)
 
 - Use the `RouteData` property in the `Invoke` method of `NavigationMenuViewComponent` to access the requested data in order to get the value for the currently selected category. 
 
