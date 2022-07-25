@@ -327,7 +327,17 @@ public ViewResult Index(string? category, int productPage = 1)
 
 - Restart ASP.NET Core and request http://localhost:5000.
 
-- Commit changes.
+![](Images/2.8.png)
+
+- Build project, add and view changes and than commit.
+
+```
+$ dotnet build
+$ git status
+$ git add *.cs *.proj *.cshtml
+$ git diff --staged
+$ git commit -m "Add data to application."
+```
 
 </details>
 
