@@ -93,25 +93,18 @@ SeedData.EnsurePopulated(app);
 ...
 ```
 
-| URL | Leads to | Picture
-| ------ | ------ | ------ |
-| / | Shows the first page of products from all categories | #1 |
-| /Page2 | Shows the specified page (in this case, page 2), showing items from all categories | #2 |
-| /Soccer | Shows the first page of items from a specific category (in this case, the Soccer category) | #3 |
-| /Soccer/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Soccer) | #4 |
-| /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Chess) | #5 |
+| URL | Leads to |
+| ------ | ------ |
+| / | Shows the first page of products from all categories |
+| /Page2 | Shows the specified page (in this case, page 2), showing items from all categories |
+| /Soccer | Shows the first page of items from a specific category (in this case, the Soccer category) |
+| /Soccer/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Soccer) |
+| /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Chess) |
 
 ### #1   
 ![](Images/2.2.png)
 ### #2
 ![](Images/2.3.png)
-### #3
-![](Images/2.4.png)
-### #4  
-![](Images/2.5.png)
-### #5 
-![](Images/2.6.png)
-
     
 - To start generating more complex URLs, it's necessary to receive additional information from the view without having to add extra properties to the tag helper class. Add `Prefixed Values` in the `PageLinkTagHelper` to receive properties with a common prefix all together in a single collection.
 
