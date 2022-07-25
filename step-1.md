@@ -55,17 +55,31 @@ $ dotnet add package StyleCop.Analyzers
   <TargetFramework>net6.0</TargetFramework>
   <Nullable>enable</Nullable>
   <ImplicitUsings>enable</ImplicitUsings>	
-  <CodeAnalysisRuleSet>code-analysis.ruleset</CodeAnalysisRuleSet>
+  <CodeAnalysisRuleSet>..\code-analysis.ruleset</CodeAnalysisRuleSet>
 </PropertyGroup>>
 . . .
 ```
-- Enable the built-in .NET 6 code analyzer settings:
+- Enable the built-in .NET 6 code analyzer settings and add additional settings:
 
 ```
-<EnableNETAnalyzers>true</EnableNETAnalyzers>
-<AnalysisMode>AllEnabledByDefault</AnalysisMode>
-<CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+        <CodeAnalysisRuleSet>..\code-analysis.ruleset</CodeAnalysisRuleSet>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <NoWarn>SA1600,CS1591,SA1200,SA1633,SA1000</NoWarn>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+    </PropertyGroup>>
+
+. . .
+</Project>
 ```
+- Continue your work in Visual Studio or ather IDE.
 
 - If you are using Visual Studio, click the "Open a project or solution" button on the splash screen or select `File` > `Open` > `Project/Solution`. Select the `SportsStore.sln` file in the `SportsStore` folder and click the Open button to open the project.
 
@@ -161,10 +175,7 @@ namespace SportsStore.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
     }
 }
 
@@ -437,6 +448,7 @@ namespace SportsStore.Models
                         Price = 1200,
                     }
                 );
+
                 context.SaveChanges();
             }
         }
@@ -513,6 +525,7 @@ namespace SportsStore.Controllers
 
 ```
 @model IQueryable<Product>
+
 @foreach (var p in Model ?? Enumerable.Empty<Product>()) 
 {
     <div>
@@ -550,7 +563,7 @@ $ git commit -m "Add displaying a list of products."
 - To add pagination, change the `Controller` class by adding following code.
 ```
 ...
-public const int PageSize = 4; 
+private const int PageSize = 4; 
 ...
 public ViewResult Index(int productPage = 1)
     => this.View(this.repository.Products
@@ -668,6 +681,7 @@ namespace SportsStore.Models.ViewModels
 . . .
 using SportsStore.Models.ViewModels;
 . . .
+
 public ViewResult Index(int productPage = 1)
 {
     return View(new ProductsListViewModel
@@ -789,7 +803,6 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 -  Style the content in the `Index.cshtml` file in the `SportsStore/Views/Home` folder.
 
 ```
-@model ProductsListViewModel
 @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
 {
     <div class="card card-outline-primary m-1 p-1">
@@ -797,7 +810,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
             <h4>
                 @p.Name
                 <span class="badge rounded-pill bg-primary text-white"
-                      style="float:right">
+                  style="float:right">
                     <small>@p.Price.ToString("c")</small>
                 </span>
             </h4>
@@ -805,6 +818,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
         <div class="card-text p-1">@p.Description</div>
     </div>
 }
+
 <div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
      page-class="btn" page-class-normal="btn-outline-dark"
      page-class-selected="btn-primary" class="btn-group pull-right m-1">
@@ -818,15 +832,19 @@ public class PageLinkTagHelper : TagHelper
 {
     ...
     public bool PageClassesEnabled { get; set; } = false;
-    public string PageClass { get; set; } = String.Empty;
-    public string PageClassNormal { get; set; } = String.Empty;
-    public string PageClassSelected { get; set; } = String.Empty;
+
+    public string PageClass { get; set; } = string.Empty;
+
+    public string PageClassNormal { get; set; } = string.Empty;
+
+    public string PageClassSelected { get; set; } = string.Empty;
+
     ...
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         ...
-            for (int i = 1; i <= this.PageModel.TotalPages; i++)
+            for (int i = 1; i <= PageModel.TotalPages; i++)
             {
                 . . .
                 if (PageClassesEnabled)
@@ -851,13 +869,14 @@ public class PageLinkTagHelper : TagHelper
 <div class="card card-outline-primary m-1 p-1">
     <div class="bg-faded p-1">
         <h4>
-            @Model.Name
-            <span class="badge badge-pill badge-primary" style="float:right">
+            @Model?.Name
+            <span class="badge rounded-pill bg-primary text-white"
+                  style="float:right">
                 <small>@Model?.Price.ToString("c")</small>
             </span>
         </h4>
     </div>
-    <div class="card-text p-1">@Model.Description</div>
+    <div class="card-text p-1">@Model?.Description</div>
 </div>
 ```
 
@@ -868,7 +887,7 @@ public class PageLinkTagHelper : TagHelper
 
 @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>()) 
 {
-    <partial name="ProductSummary" model="p" />
+    <partial name="_ProductSummary" model="p" />
 }
 
 <div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
@@ -909,7 +928,7 @@ $ git merge sports-store-application-1 --ff
 ```
 $ git push
 ```
-- Move on to the `Sports Store Application. Step 2.` of the task (branch `sports-store-application-2`).
+- Go to the `Sports Store Application. Step 2.` (branch `sports-store-application-2`).
 
 </details>
 
