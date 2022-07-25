@@ -55,16 +55,29 @@ $ dotnet add package StyleCop.Analyzers
   <TargetFramework>net6.0</TargetFramework>
   <Nullable>enable</Nullable>
   <ImplicitUsings>enable</ImplicitUsings>	
-  <CodeAnalysisRuleSet>code-analysis.ruleset</CodeAnalysisRuleSet>
+  <CodeAnalysisRuleSet>..\code-analysis.ruleset</CodeAnalysisRuleSet>
 </PropertyGroup>>
 . . .
 ```
-- Enable the built-in .NET 6 code analyzer settings:
+- Enable the built-in .NET 6 code analyzer settings and add additional settings:
 
 ```
-<EnableNETAnalyzers>true</EnableNETAnalyzers>
-<AnalysisMode>AllEnabledByDefault</AnalysisMode>
-<CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+        <CodeAnalysisRuleSet>..\code-analysis.ruleset</CodeAnalysisRuleSet>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <NoWarn>SA1600,CS1591,SA1200,SA1633,SA1000</NoWarn>
+        <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+    </PropertyGroup>>
+
+. . .
+</Project>
 ```
 
 - If you are using Visual Studio, click the "Open a project or solution" button on the splash screen or select `File` > `Open` > `Project/Solution`. Select the `SportsStore.sln` file in the `SportsStore` folder and click the Open button to open the project.
@@ -818,9 +831,9 @@ public class PageLinkTagHelper : TagHelper
 {
     ...
     public bool PageClassesEnabled { get; set; } = false;
-    public string PageClass { get; set; } = String.Empty;
-    public string PageClassNormal { get; set; } = String.Empty;
-    public string PageClassSelected { get; set; } = String.Empty;
+    public string PageClass { get; set; } = string.Empty;
+    public string PageClassNormal { get; set; } = string.Empty;
+    public string PageClassSelected { get; set; } = string.Empty;
     ...
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
