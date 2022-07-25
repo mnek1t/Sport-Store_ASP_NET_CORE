@@ -394,7 +394,7 @@ namespace SportsStore.Controllers
 <h4>This is the Cart Page</h4>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000.
+- Restart ASP.NET Core and request http://localhost:5000/Cart/Index.
 
     ![](Images/2.9.png)
 
