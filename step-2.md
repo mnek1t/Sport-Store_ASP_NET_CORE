@@ -431,8 +431,6 @@ The extension method generates a URL. The browser will return to this URL after 
             </span>
         </h4>
     </div>
-    <div class="card-text p-1">@Model?.Description</div>
-
     <form id="@Model?.ProductId" asp-page="/Cart" method="post">
         <input type="hidden" asp-for="ProductId" />
         <input type="hidden" name="returnUrl"
