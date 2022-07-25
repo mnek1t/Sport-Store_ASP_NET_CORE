@@ -210,7 +210,7 @@ namespace SportsStore.Components
 
 ![](Images/2.5.png)
 
-- Change the `NavigationMenuViewComponent` class by addin categories:
+- Change the `NavigationMenuViewComponent` class by adding categories:
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -283,17 +283,21 @@ public class NavigationMenuViewComponent : ViewComponent
 - To highlight the selected categories, change the `Default.cshtml` file.
 
 ```
-@foreach (string category in Model) 
-{
-    <a class="btn btn-block
-        @(category == ViewBag.SelectedCategory ? "btn-primary": "btn-outline-secondary")"
-        asp-action="Index" asp-controller="Home"
-        asp-route-category="@category"
-        asp-route-productPage="1">
-        @category
+<div class="d-grid gap-2">
+    <a class="btn btn-outline-secondary" asp-action="Index"
+       asp-controller="Home" asp-route-category="">
+        Home
     </a>
-}
-...
+    @foreach (string category in Model ?? Enumerable.Empty<string>())
+    {
+        <a class="btn @(category == ViewBag.SelectedCategory ? "btn-primary": "btn-outline-secondary")"
+       asp-action="Index" asp-controller="Home"
+       asp-route-category="@category"
+       asp-route-productPage="1">
+            @category
+        </a>
+    }
+</div>
 ```
 - Restart ASP.NET Core and request http://localhost:5000.
 
