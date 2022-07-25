@@ -826,13 +826,16 @@ public class PageLinkTagHelper : TagHelper
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         ...
-            if (PageClassesEnabled)
+            for (int i = 1; i <= this.PageModel.TotalPages; i++)
             {
-                tag.AddCssClass(PageClass);
-                tag.AddCssClass(i == PageModel.CurrentPage
-                    ? PageClassSelected : PageClassNormal);
+                . . .
+                if (PageClassesEnabled)
+                {
+                    tag.AddCssClass(PageClass);
+                    tag.AddCssClass(i == PageModel.CurrentPage
+                        ? PageClassSelected : PageClassNormal);
+                }
             }
-        
         ...
     }
 }
