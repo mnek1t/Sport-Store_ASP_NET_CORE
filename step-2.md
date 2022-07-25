@@ -7,14 +7,14 @@
 
 ###  Adding Navigation Controls
 
-- Go to the cloned repository of the previous step `Part 1`. 
+- Go to the cloned repository of the previous step `Sport Store Application. Part 1`. 
 
 - Switch to the `sports-store-application-2` branch and do a fast-forward merge according to changes from the `main` branch.
 
 ```
 $ git checkout sports-store-application-2
 
-$ git merge main
+$ git merge main -ff
 
 ```
 - Continue your work in Visual Studio.
