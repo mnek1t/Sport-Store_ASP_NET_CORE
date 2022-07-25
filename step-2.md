@@ -647,7 +647,7 @@ namespace SportsStore.Controllers
 ```
 - Restart ASP.NET Core and request http://localhost:5000. As a result, the basic functions of the shopping cart should be in place. First, products are listed along with the button that adds them to the cart. You can see that by restarting ASP.NET Core and requesting http://localhost:5000.  
 
-![](Images/2.01.png)
+![](Images/2.10.png)
 
 Then, when the user clicks the `Add To Cart` button, the selected product is added to their cart:
     
