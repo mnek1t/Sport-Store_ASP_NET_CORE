@@ -539,49 +539,65 @@ namespace SportsStore.Infrastructure
 - Add the `CartViewModel` class (the `SportsStore/Models/ViewModels` folder).
 
 ```
-public class CartViewModel
+namespace SportsStore.Models.ViewModels
 {
-    public Cart Cart { get; set; } = new Cart();
-    
-    public string ReturnUrl { get; set; } = string.Empty;
+    public class CartViewModel
+    {
+        public Cart? Cart { get; set; } = null!;
+
+        public string ReturnUrl { get; set; } = "/";
+    }
 }
+
 ```
 
 - Change the `CartController` class:
 
-        public class CartController : Controller
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Infrastructure;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+using SportsStore.Models.ViewModels;
+
+namespace SportsStore.Controllers
+{
+    public class CartController : Controller
+    {
+        private IStoreRepository repository;
+
+        public CartController(IStoreRepository repository)
         {
-            private IStoreRepository repository;
+            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
 
-            public CartController(IStoreRepository repo)
+        [HttpGet]
+        public IActionResult Index(string returnUrl)
+        {
+            return View(new CartViewModel
             {
-                repository = repo;
-            }
+                ReturnUrl = returnUrl ?? "/",
+                Cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart(),
+            });
+        }
 
-            [HttpGet]
-            public IActionResult Index(string returnUrl)
+        [HttpPost]
+        public IActionResult Index(long productId, string returnUrl)
+        {
+            Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
+            if (product != null)
             {
-                return View(new CartViewModel
-                {
-                    Cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart(),
-                    ReturnUrl = returnUrl ?? "/"
-                });
-            }
-
-            [HttpPost]
-            public IActionResult Index(long productId, string returnUrl)
-            {
-                Product product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
                 var cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart();
                 cart.AddItem(product, 1);
                 HttpContext.Session.SetJson("cart", cart);
-                return View(new CartViewModel
-                {
-                    Cart = cart,
-                    ReturnUrl = returnUrl
-                });
             }
+
+            return RedirectToAction(returnUrl);
         }
+    }
+}
+
+```
 
 - Change the `Index.cshtml` file in the `SportsStore/Views/Cart` folder:
 
@@ -589,6 +605,10 @@ public class CartViewModel
 ...
 
 @model CartViewModel
+
+@{
+    this.Layout = "_CartLayout";
+}
 
 <h2>Your cart</h2>
 <table class="table table-bordered table-striped">
@@ -601,7 +621,8 @@ public class CartViewModel
         </tr>
     </thead>
     <tbody>
-        @foreach (var line in Model.Cart.Lines) {
+        @foreach (var line in Model?.Cart?.Lines ?? Enumerable.Empty<CartLine>())
+        {
             <tr>
                 <td class="text-center">@line.Quantity</td>
                 <td class="text-left">@line.Product.Name</td>
@@ -616,14 +637,13 @@ public class CartViewModel
         <tr>
             <td colspan="3" class="text-right">Total:</td>
             <td class="text-right">
-                @Model.Cart.ComputeTotalValue().ToString("c")
+                @Model?.Cart?.ComputeTotalValue().ToString("c")
             </td>
         </tr>
     </tfoot>
 </table>
-
 <div class="text-center">
-    <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
+    <a class="btn btn-primary" href="@Model?.ReturnUrl">Continue shopping</a>
 </div>
 
 ```
