@@ -101,9 +101,9 @@ SeedData.EnsurePopulated(app);
 | /Soccer/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Soccer) |
 | /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Chess) |
 
-### #1   
+
 ![](Images/2.2.png)
-### #2
+
 ![](Images/2.3.png)
     
 - To start generating more complex URLs, it's necessary to receive additional information from the view without having to add extra properties to the tag helper class. Add `Prefixed Values` in the `PageLinkTagHelper` to receive properties with a common prefix all together in a single collection.
@@ -112,36 +112,40 @@ SeedData.EnsurePopulated(app);
 [HtmlTargetElement("div", Attributes = "page-model")]
 public class PageLinkTagHelper : TagHelper 
 {
-    ...
+    . . . 
     [HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
-    public Dictionary<string, object> PageUrlValues { get; set; } = new Dictionary<string, object>();
-    ...
-    public override void Process(TagHelperContext context, TagHelperOutput output) 
+    public Dictionary<string, object> PageUrlValues { get; set; }  = new Dictionary<string, object>();
+    . . .
+    public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext)  
-        TagBuilder result = new TagBuilder("div");
-        for (int i = 1; i <= PageModel.TotalPages; i++) 
+        if (ViewContext != null && PageModel != null)
         {
-            TagBuilder tag = new TagBuilder("a");
-            PageUrlValues["productPage"] = i;
-            tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
-            if (PageClassesEnabled) 
+            IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+            TagBuilder result = new TagBuilder("div");
+            for (int i = 1; i <= PageModel.TotalPages; i++)
             {
-                tag.AddCssClass(PageClass);
-                tag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
+                TagBuilder tag = new TagBuilder("a");
+                PageUrlValues["productPage"] = i;
+                tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
+                if (PageClassesEnabled)
+                {
+                    tag.AddCssClass(PageClass);
+                    tag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
+                }
+                tag.InnerHtml.Append(i.ToString());
+                result.InnerHtml.AppendHtml(tag);
             }
-            tag.InnerHtml.Append(i.ToString());
-            result.InnerHtml.AppendHtml(tag);
-        
-        output.Content.AppendHtml(result.InnerHtml);
+            output.Content.AppendHtml(result.InnerHtml);
+        }
     }
+   . . . 
 }
-
 ```
 - Add a new attribute in the `Index.cshtml` file in the `SportsStore/Views/Home` folder.
 
 ```
 @model ProductsListViewMode
+
 @foreach (var p in Model.Products) 
 {
     <partial name="ProductSummary" model="p" />
@@ -153,7 +157,9 @@ public class PageLinkTagHelper : TagHelper
 </div>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/Chess.
+- Restart ASP.NET Core and request http://localhost:5000/Soccer/Page1.
+
+![](Images/2.4.png)
 
 -  Сreate a folder called `Components`, which is the conventional home of view components, in the `SportsStore` project.
 
