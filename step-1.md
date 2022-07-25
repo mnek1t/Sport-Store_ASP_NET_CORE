@@ -878,9 +878,9 @@ public class PageLinkTagHelper : TagHelper
 ```
 - Builed project, run the application and request http://localhost:5000.
 
-![](Image/1.7.png)
+![](Images/1.7.png)
 
-![](Image/1.8.png)
+![](Images/1.8.png)
 
 - Add and view changes and than commit.
 
