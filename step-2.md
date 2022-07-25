@@ -2,10 +2,12 @@
 
 ## Implementation details
 
-- [Adding Navigation Controls](#adding-navigation-controls)
-- [Building the Shopping Cart](#building-the-shopping-cart)
+<details>
+<summary>
 
-###  Adding Navigation Controls
+**Adding Navigation Controls**
+
+</summary>
 
 - Go to the cloned repository of the previous step `Sport Store Application. Part 1`. 
 
@@ -286,7 +288,14 @@ public ViewResult Index(string category, int productPage = 1)
 
 - Commit changes.
 
-###  Building the Shopping Cart
+</details>
+
+<details>
+<summary>
+
+**Building the Shopping Cart**
+
+</summary>
 
 - Add a new `_CartLayout.cshtml` file in the `SportsStore/Views/Shared` folder for the`Cart` views.
 
@@ -588,4 +597,6 @@ $ git merge sports-store-application-2
 $ git push
 
 ```
-- Move on to the `Part 3` of the task.
+- Go to to the `Part 3` of the task.
+
+</details>
