@@ -803,8 +803,6 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 -  Style the content in the `Index.cshtml` file in the `SportsStore/Views/Home` folder.
 
 ```
-@model ProductsListViewModel
-
 @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
 {
     <div class="card card-outline-primary m-1 p-1">
@@ -812,7 +810,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
             <h4>
                 @p.Name
                 <span class="badge rounded-pill bg-primary text-white"
-                      style="float:right">
+                  style="float:right">
                     <small>@p.Price.ToString("c")</small>
                 </span>
             </h4>
@@ -820,6 +818,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
         <div class="card-text p-1">@p.Description</div>
     </div>
 }
+
 <div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
      page-class="btn" page-class-normal="btn-outline-dark"
      page-class-selected="btn-primary" class="btn-group pull-right m-1">
@@ -870,8 +869,9 @@ public class PageLinkTagHelper : TagHelper
 <div class="card card-outline-primary m-1 p-1">
     <div class="bg-faded p-1">
         <h4>
-            @Model.Name
-            <span class="badge badge-pill badge-primary" style="float:right">
+            @Model?.Name
+            <span class="badge rounded-pill bg-primary text-white"
+                  style="float:right">
                 <small>@Model?.Price.ToString("c")</small>
             </span>
         </h4>
@@ -887,7 +887,7 @@ public class PageLinkTagHelper : TagHelper
 
 @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>()) 
 {
-    <partial name="ProductSummary" model="p" />
+    <partial name="_ProductSummary" model="p" />
 }
 
 <div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
