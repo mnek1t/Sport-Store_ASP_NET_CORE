@@ -771,7 +771,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
     <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="bg-dark text-white p-2">
+    <div class="bg-primary text-white p-2">
         <span class="navbar-brand ml-2">SPORTS STORE</span>
     </div>
     <div class="row m-1 p-1">
