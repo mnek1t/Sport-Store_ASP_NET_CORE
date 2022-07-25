@@ -876,7 +876,11 @@ public class PageLinkTagHelper : TagHelper
     page-class-selected="btn-primary" class="btn-group pull-right m-1">
 </div>
 ```
-- Builed project, run the application. 
+- Builed project, run the application and request http://localhost:5000.
+
+![](Image/1.7.png)
+
+![](Image/1.8.png)
 
 - Add and view changes and than commit.
 
