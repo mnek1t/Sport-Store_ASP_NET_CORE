@@ -63,25 +63,32 @@ public ViewResult Index(string category, int productPage = 1)
 
 - Restart ASP.NET Core and select a category using the following URL http://localhost:5000/?category=Soccer. Make sure to use an uppercase `S` in `Soccer`.
 
-- To improve the URLs like `/?category = Soccer`, change the routing configuration in the Configure method of the Startup class. Create a more useful set of URLs. It is important to add the new routes in the order they are shown.
+![](Images/2.1.png)
+
+- To improve the URLs like `/?category = Soccer`, change the routing configuration in the `Program` file. Create a more useful set of URLs. It is important to add the new routes in the order they are shown.
 
 ```
 ...
-app.UseRouting();
-app.UseEndpoints(endpoints => 
-{
-    endpoints.MapControllerRoute("catpage",
-        "{category}/Page{productPage:int}",
-        new { Controller = "Home", action = "Index" });
-    endpoints.MapControllerRoute("page", "Page{productPage:int}",
-        new { Controller = "Home", action = "Index", productPage = 1 });
-    endpoints.MapControllerRoute("category", "{category}",
-        new { Controller = "Home", action = "Index", productPage = 1 });
-    endpoints.MapControllerRoute("pagination",
-        "Products/Page{productPage}",
-        new { Controller = "Home", action = "Index", productPage = 1 });
-    endpoints.MapDefaultControllerRoute();
-});
+app.MapControllerRoute(
+    "catpage",
+    "{category}/Page{productPage:int}",
+    new { Controller = "Home", action = "Index" });
+
+app.MapControllerRoute(
+    "page",
+    "Page{productPage:int}",
+    new { Controller = "Home", action = "Index", productPage = 1 });
+
+app.MapControllerRoute(
+    "category",
+    "{category}",
+    new { Controller = "Home", action = "Index", productPage = 1 });
+
+app.MapControllerRoute(
+    "pagination",
+    "Products/Page{productPage}",
+    new { Controller = "Home", action = "Index", productPage = 1 });
+
 SeedData.EnsurePopulated(app);
 ...
 ```
@@ -94,16 +101,16 @@ SeedData.EnsurePopulated(app);
 | /Soccer/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Soccer) | #4 |
 | /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Chess) | #5 |
 
-Image #1   
-![](Images/2.01.png)
-Image #2  
-![](Images/2.02.png)
-Image #3 
-![](Images/2.03.png)
-Image #4  
-![](Images/2.04.png)
-Image #5 
-![](Images/2.05.png)
+### #1   
+![](Images/2.2.png)
+### #2
+![](Images/2.3.png)
+### #3
+![](Images/2.4.png)
+### #4  
+![](Images/2.5.png)
+### #5 
+![](Images/2.6.png)
 
     
 - To start generating more complex URLs, it's necessary to receive additional information from the view without having to add extra properties to the tag helper class. Add `Prefixed Values` in the `PageLinkTagHelper` to receive properties with a common prefix all together in a single collection.
