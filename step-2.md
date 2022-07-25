@@ -431,7 +431,7 @@ The extension method generates a URL. The browser will return to this URL after 
             </span>
         </h4>
     </div>
-    <form id="@Model?.ProductId" asp-page="/Cart" method="post">
+    <form id="@Model?.ProductId" asp-controller="Cart" asp-antiforgery="true">
         <input type="hidden" asp-for="ProductId" />
         <input type="hidden" name="returnUrl"
                value="@ViewContext.HttpContext.Request.PathAndQuery()" />
@@ -454,6 +454,22 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 . . . 
 app.UseSession();
+. . .
+```
+
+- Add new "shoppingCart" route to the routing configuration in the `Program` file.
+
+```
+. . .
+app.MapControllerRoute(
+    "shoppingCart",
+    "Cart",
+    new { Controller = "Cart", action = "Index" });
+
+app.MapControllerRoute(
+    "category",
+    "{category}",
+    new { Controller = "Home", action = "Index", productPage = 1 });
 . . .
 ```
 
@@ -588,9 +604,10 @@ namespace SportsStore.Controllers
                 var cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart();
                 cart.AddItem(product, 1);
                 HttpContext.Session.SetJson("cart", cart);
+                return View(new CartViewModel { Cart = cart, ReturnUrl = returnUrl });
             }
 
-            return RedirectToAction(returnUrl);
+            return RedirectToAction("Index");
         }
     }
 }
