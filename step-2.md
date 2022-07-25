@@ -301,27 +301,27 @@ public class NavigationMenuViewComponent : ViewComponent
 ```
 - Restart ASP.NET Core and request http://localhost:5000.
 
+![](Images/2.7.png)
+
 - Update the `Index` action method in the `Home` controller which will allow you to take into account the categories in the pagination (the functionality that breaks the selection result into pages). 
 
 ```
-public ViewResult Index(string category, int productPage = 1)
-         => View(new ProductsListViewModel 
-            {
-                Products = repository.Products
-                   .Where(p => category == null || p.Category == category)
-                   .OrderBy(p => p.ProductID)
-                   .Skip((productPage - 1) * PageSize)
-                   .Take(PageSize),
-                PagingInfo = new PagingInfo {
-                   CurrentPage = productPage,
-                   ItemsPerPage = PageSize,
-                   TotalItems = category == null ?
-                       repository.Products.Count() :
-                       repository.Products.Where(e =>
-                           e.Category == category).Count()
-               },
-               CurrentCategory = category
-            });
+public ViewResult Index(string? category, int productPage = 1)
+    => View(new ProductsListViewModel
+    {
+        Products = repository.Products
+        .Where(p => category == null || p.Category == category)
+        .OrderBy(p => p.ProductId)
+        .Skip((productPage - 1) * PageSize)
+        .Take(PageSize),
+        PagingInfo = new PagingInfo
+        {
+            CurrentPage = productPage,
+            ItemsPerPage = PageSize,
+            TotalItems = category == null ? repository.Products.Count() : repository.Products.Where(e => e.Category == category).Count(),
+        }
+        CurrentCategory = category,
+    });
         
 ```
 
