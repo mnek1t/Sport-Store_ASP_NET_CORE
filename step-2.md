@@ -17,7 +17,11 @@ $ git checkout sports-store-application-2
 $ git merge main -ff
 
 ```
-- Continue your work in Visual Studio.
+- Continue your work in Visual Studio or ather IDE.
+
+- Builed project, run application and request http://localhost:5000/. Your app should be work.
+
+![](Images/1.7.png)
 
 - Modify the `ProductsListViewModel` class (add the `CurrentCategory` property).
 
