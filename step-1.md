@@ -758,7 +758,7 @@ $ dotnet tool install --global Microsoft.Web.LibraryManager.Cli --version 2.1.11
 - Run the following commands in the `SportsStore` folder:
 ```
 $ libman init -p cdnjs
-$ libman install bootstrap@5.1.3 -d wwwroot/lib/bootstrap
+$ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 ```
 
 - Apply `Bootstrap CSS` to the `_Layout.cshtml` file in the `SportsStore/Views/Shared` folder.
