@@ -174,10 +174,7 @@ namespace SportsStore.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
     }
 }
 
@@ -450,6 +447,7 @@ namespace SportsStore.Models
                         Price = 1200,
                     }
                 );
+
                 context.SaveChanges();
             }
         }
@@ -526,6 +524,7 @@ namespace SportsStore.Controllers
 
 ```
 @model IQueryable<Product>
+
 @foreach (var p in Model ?? Enumerable.Empty<Product>()) 
 {
     <div>
@@ -563,7 +562,7 @@ $ git commit -m "Add displaying a list of products."
 - To add pagination, change the `Controller` class by adding following code.
 ```
 ...
-public const int PageSize = 4; 
+private const int PageSize = 4; 
 ...
 public ViewResult Index(int productPage = 1)
     => this.View(this.repository.Products
@@ -681,6 +680,7 @@ namespace SportsStore.Models.ViewModels
 . . .
 using SportsStore.Models.ViewModels;
 . . .
+
 public ViewResult Index(int productPage = 1)
 {
     return View(new ProductsListViewModel
@@ -803,6 +803,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 
 ```
 @model ProductsListViewModel
+
 @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
 {
     <div class="card card-outline-primary m-1 p-1">
@@ -831,15 +832,19 @@ public class PageLinkTagHelper : TagHelper
 {
     ...
     public bool PageClassesEnabled { get; set; } = false;
+
     public string PageClass { get; set; } = string.Empty;
+
     public string PageClassNormal { get; set; } = string.Empty;
+
     public string PageClassSelected { get; set; } = string.Empty;
+
     ...
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         ...
-            for (int i = 1; i <= this.PageModel.TotalPages; i++)
+            for (int i = 1; i <= PageModel.TotalPages; i++)
             {
                 . . .
                 if (PageClassesEnabled)
@@ -870,7 +875,7 @@ public class PageLinkTagHelper : TagHelper
             </span>
         </h4>
     </div>
-    <div class="card-text p-1">@Model.Description</div>
+    <div class="card-text p-1">@Model?.Description</div>
 </div>
 ```
 
