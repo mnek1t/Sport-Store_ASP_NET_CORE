@@ -356,10 +356,10 @@ $ git commit -m "Add navigation controls."
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>SportsStore</title>
-    <link href="/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="bg-dark text-white p-2">
+    <div class="bg-primary text-white p-2">
         <span class="navbar-brand ml-2">SPORTS STORE</span>
     </div>
     <div class="m-1 p-1">
@@ -393,48 +393,58 @@ public class CartController : Controller
 
 - Restart ASP.NET Core and request http://localhost:5000.
 
-    ![](Images/2.06.png)
+    ![](Images/2.9.png)
 
 - To create the buttons that will add products to the cart, add the `UrlExtensions` class (`Infrastructure` folder) and define the `PathAndQuery` extension method in it.
 
 ```
 public static class UrlExtensions
-{
-    public static string PathAndQuery(this HttpRequest request) 
-        => request.QueryString.HasValue ? $"{request.Path}{request.QueryString}" : request.Path.ToString();
-}
+    {
+        public static string PathAndQuery(this HttpRequest request)
+            => request.QueryString.HasValue  ? $"{request.Path}{request.QueryString}" : request.Path.ToString();
+    }
 ```
 
 The extension method generates a URL. The browser will return to this URL after the cart has been updated. If there are Query Parameters in the URL, they should be considered as well.  
 
-- Add the markup for the buttons into the view `ProductSummary.cshtml` within the `SportsStore/Views/Shared` folder.
+- Add a `SportsStore.Infrastructure` namespace in the` _ViewImports.cshtml` File in the `SportsStore/Views` Folder
+
+```
+@using SportsStore.Models
+@using SportsStore.Models.ViewModels
+@using SportsStore.Infrastructure
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, SportsStore
+```
+- Add the markup for the buttons into the partial view `_ProductSummary.cshtml` within the `SportsStore/Views/Shared` folder.
         
 ```
 @model Product
 
 <div class="card card-outline-primary m-1 p-1">
-
     <div class="bg-faded p-1">
         <h4>
-            @Model.Name
-            <span class="badge badge-pill badge-primary" style="float:right">
-                <small>@Model.Price.ToString("c")</small>
+            @Model?.Name
+            <span class="badge rounded-pill bg-primary text-white"
+                  style="float:right">
+                <small>@Model?.Price.ToString("c")</small>
             </span>
         </h4>
     </div>
-    
-    <form id="@Model.ProductId" method="post" asp-action="Index" asp-controller="Cart"  asp-antiforgery="true">
-        <input type="hidden" asp-for="ProductId"/>
+    <div class="card-text p-1">@Model?.Description</div>
+
+    <form id="@Model?.ProductId" asp-page="/Cart" method="post">
+        <input type="hidden" asp-for="ProductId" />
         <input type="hidden" name="returnUrl"
-               value="@ViewContext.HttpContext.Request.PathAndQuery()"/>
+               value="@ViewContext.HttpContext.Request.PathAndQuery()" />
         <span class="card-text p-1">
-            @Model.Description
-            <button type="submit" class="btn btn-success btn-sm pull-right" style="float:right">
+            @Model?.Description
+            <button type="submit"
+                    class="btn btn-success btn-sm pull-right" style="float:right">
                 Add To Cart
             </button>
         </span>
     </form>
-
 </div>
 ```
 
