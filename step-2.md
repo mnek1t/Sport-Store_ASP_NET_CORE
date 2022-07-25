@@ -1,4 +1,4 @@
-#  Sport Store Application. Part 2
+#  Sports Store Application. Part 2
 
 ## Implementation details
 
@@ -34,7 +34,7 @@ namespace SportsStore.Models.ViewModels
 
         public PagingInfo PagingInfo { get; set; }
 
-        public string CurrentCategory { get; set; }
+        public string? CurrentCategory { get; set; }
     }
 }
 ```
