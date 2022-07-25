@@ -448,64 +448,66 @@ The extension method generates a URL. The browser will return to this URL after 
 </div>
 ```
 
-- Use the session state mechanism to store information about a user’s cart. In order to do this, add services and middleware to the `Startup` class (`AddSession()` and `UseSession()` methods).
+- Use the session state mechanism to store information about a user’s cart. In order to do this, add services and middleware to the `Program` file.
 
 ```
-...
-public void ConfigureServices(IServiceCollection services) 
-{
-    ...
-    services.AddDistributedMemoryCache();
-    services.AddSession();
-}
-...
-public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
-{
-    ...
-    app.UseStaticFiles();
-    app.UseSession();
-    app.UseRouting();
-    ...
-}
-...
+. . . 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+. . . 
+app.UseSession();
+. . .
 ```
 
 - To implement the cart feature, add the `Cart`class and the `CartLine` class (in the `Models` folder) in the `SportsStore` project. 
 
 ```
-public class Cart
+namespace SportsStore.Models
 {
-    public List<CartLine> Lines { get; set; } = new List<CartLine>()
-    public void AddItem(Product product, int quantity)
+    public class Cart
     {
-        CartLine viewModel = Lines.FirstOrDefault(p => p.Product.ProductId == product.ProductId)
-        if (viewModel == null)
+        private List<CartLine> lines { get; set; } = new List<CartLine>();
+
+        public void AddItem(Product product, int quantity)
         {
-            Lines.Add(new CartLine
+            CartLine? line = lines.
+                Where(p => p.Product.ProductId == product.ProductId)
+                .FirstOrDefault();
+
+            if (line is null)
             {
-                Product = product,
-                Quantity = quantity
-            });
+                lines.Add(new CartLine
+                {
+                    Product = product,
+                    Quantity = quantity,
+                });
+            }
+            else
+            {
+                line.Quantity += quantity;
+            }
         }
-        else
-        {
-            viewModel.Quantity += quantity;
-        }
+
+        public void RemoveLine(Product product)
+            => lines.RemoveAll(l => l.Product.ProductId == product.ProductId);
+
+        public decimal ComputeTotalValue()
+            => lines.Sum(e => e.Product.Price * e.Quantity);
+
+        public void Clear() => lines.Clear();
     }
-
-    public void RemoveLine(Product product) =>
-        Lines.RemoveAll(l => l.Product.ProductId == product.ProductId); 
-
-    public decimal ComputeTotalValue() =>
-        Lines.Sum(e => e.Product.Price * e.Quantity);
-
-    public void Clear() => Lines.Clear();
 }
 
-public class CartLine
+namespace SportsStore.Models
 {
-    public Product Product { get; set; }
-    public int Quantity { get; set; }
+    public class CartLine
+    {
+        public int CartLineId { get; set; }
+
+        public Product Product { get; set; } = new();
+
+        public int Quantity { get; set; }
+    }
 }
 ```
 
@@ -514,17 +516,22 @@ The `Cart` class uses the `CartLine` class to represent a product selected by th
 - To store a `Cart` object (the session state feature in ASP.NET Core stores only int, string, and byte[] values) define extension methods to the `ISession` interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the ion interface that provides access to the session state data to serialize Cart objects into JSON and convert them back. Add the `SessionExtensions` class (the `Infrastructure` folder) and defined the extension methods. 
 
 ```
-public static class SessionExtensions
+using System.Text.Json;
+
+namespace SportsStore.Infrastructure
 {
-    public static void SetJson(this ISession session, string key, object value)
+    public static class SessionExtensions
     {
-        session.SetString(key, JsonSerializer.Serialize(value));
-    }
-    
-    public static T GetJson<T>(this ISession session, string key)
-    {
-        var sessionData = session.GetString(key);
-        return sessionData == null ? default : JsonSerializer.Deserialize<T>(sessionData);
+        public static void SetJson(this ISession session, string key, object value)
+        {
+            session.SetString(key, JsonSerializer.Serialize(value));
+        }
+
+        public static T? GetJson<T>(this ISession session, string key)
+        {
+            var sessionData = session.GetString(key);
+            return sessionData == null ? default(T) : JsonSerializer.Deserialize<T>(sessionData);
+        }
     }
 }
 ```
@@ -534,8 +541,9 @@ public static class SessionExtensions
 ```
 public class CartViewModel
 {
-    public Cart Cart { get; set; }
-    public string ReturnUrl { get; set; }
+    public Cart Cart { get; set; } = new Cart();
+    
+    public string ReturnUrl { get; set; } = string.Empty;
 }
 ```
 
