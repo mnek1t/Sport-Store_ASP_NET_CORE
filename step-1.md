@@ -843,7 +843,7 @@ public class PageLinkTagHelper : TagHelper
 
 - Builed project, restart application and request http://localhost:5000.
 
-- To simplify the `Index.cshtml` view, create a partial view. Add a Razor View called `ProductSummary.cshtml` to the `Views/Shared` folder and add the markup.
+- To simplify the `Index.cshtml` view, create a partial view. Add a Razor View called `_ProductSummary.cshtml` to the `Views/Shared` folder and add the markup.
 
 ```
 @model Product
