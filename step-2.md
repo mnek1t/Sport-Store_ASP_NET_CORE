@@ -23,17 +23,17 @@ $ git merge main -ff
 
 - Builed project, run application and request http://localhost:5000/. Your app should be work.
 
-![](Images/1.7.png)
-
 - Modify the `ProductsListViewModel` class (add the `CurrentCategory` property).
 
 ```
-namespace SportsStore.Models.ViewModels 
+namespace SportsStore.Models.ViewModels
 {
-    public class ProductsListViewModel 
+    public class ProductsListViewModel
     {
         public IEnumerable<Product> Products { get; set; }
+
         public PagingInfo PagingInfo { get; set; }
+
         public string CurrentCategory { get; set; }
     }
 }
@@ -43,20 +43,22 @@ namespace SportsStore.Models.ViewModels
 
 ```
 public ViewResult Index(string category, int productPage = 1)
-=> View(new ProductsListViewModel 
-{
-    Products = repository.Products
-        .Where(p => category == null || p.Category == category)
-        .OrderBy(p => p.ProductID)
-        .Skip((productPage - 1) * PageSize)
-        .Take(PageSize),
-    PagingInfo = new PagingInfo {
-       CurrentPage = productPage,
-       ItemsPerPage = PageSize,
-       TotalItems = repository.Products.Count()
-    },
-    CurrentCategory = category
-});
+            => View(new ProductsListViewModel
+            {
+                Products = repository.Products
+                .Where(p => category == null || p.Category == category)
+                .OrderBy(p => p.ProductId)
+                .Skip((productPage - 1) * PageSize)
+                .Take(PageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = productPage,
+                    ItemsPerPage = PageSize,
+                    TotalItems = repository.Products.Count(),
+                },
+
+                CurrentCategory = category,
+            });
 ```
 
 - Restart ASP.NET Core and select a category using the following URL http://localhost:5000/?category=Soccer. Make sure to use an uppercase `S` in `Soccer`.
