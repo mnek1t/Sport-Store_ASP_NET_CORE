@@ -206,7 +206,9 @@ namespace SportsStore.Components
 </html>
 ```
     
-- Restart ASP.NET Core and request http://localhost:5000`.
+- Restart ASP.NET Core and request http://localhost:5000.
+
+![](Images/2.5.png)
 
 - Change the `NavigationMenuViewComponent` class by addin categories:
 
