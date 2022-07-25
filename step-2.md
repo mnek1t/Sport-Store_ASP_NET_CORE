@@ -372,11 +372,14 @@ $ git commit -m "Add navigation controls."
 - Add the `CartController` class in the `SportsStore/Controllers` folder.
 
 ```
-public class CartController : Controller
+namespace SportsStore.Controllers
 {
-    public IActionResult Index()
+    public class CartController : Controller
     {
-        return View();
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }
 ```
@@ -398,13 +401,15 @@ public class CartController : Controller
 - To create the buttons that will add products to the cart, add the `UrlExtensions` class (`Infrastructure` folder) and define the `PathAndQuery` extension method in it.
 
 ```
-public static class UrlExtensions
+namespace SportsStore.Infrastructure
+{
+    public static class UrlExtensions
     {
         public static string PathAndQuery(this HttpRequest request)
-            => request.QueryString.HasValue  ? $"{request.Path}{request.QueryString}" : request.Path.ToString();
+            => request.QueryString.HasValue ? $"{request.Path}{request.QueryString}" : request.Path.ToString();
     }
+}
 ```
-
 The extension method generates a URL. The browser will return to this URL after the cart has been updated. If there are Query Parameters in the URL, they should be considered as well.  
 
 - Add a `SportsStore.Infrastructure` namespace in the` _ViewImports.cshtml` File in the `SportsStore/Views` Folder
@@ -527,10 +532,14 @@ namespace SportsStore.Models
 
 The `Cart` class uses the `CartLine` class to represent a product selected by the customer and the quantity a user wants to buy. The Cart class includes the methods that add an item to the cart, remove a previously added item from the cart, calculate the total cost of the items in the cart, and reset the cart by removing all the items.
 
-- To store a `Cart` object (the session state feature in ASP.NET Core stores only int, string, and byte[] values) define extension methods to the `ISession` interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the ion interface that provides access to the session state data to serialize Cart objects into JSON and convert them back. Add the `SessionExtensions` class (the `Infrastructure` folder) and defined the extension methods. 
+- To store a `Cart` object (the session state feature in ASP.NET Core stores only int, string, and byte[] values) define extension methods to the `ISession` interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the ion interface that provides access to the session state data to serialize Cart objects into JSON and convert them back. Add the `SessionExtensions` class (the `Infrastructure` folder) and defined the extension methods. To serialization use to install the Newtonsoft.json package.
 
 ```
-using System.Text.Json;
+$ dotnet add package Newtonsoft.Json
+```
+
+```
+using Newtonsoft.Json;
 
 namespace SportsStore.Infrastructure
 {
@@ -538,13 +547,13 @@ namespace SportsStore.Infrastructure
     {
         public static void SetJson(this ISession session, string key, object value)
         {
-            session.SetString(key, JsonSerializer.Serialize(value));
+            session.SetString(key, JsonConvert.SerializeObject(value));
         }
 
         public static T? GetJson<T>(this ISession session, string key)
         {
             var sessionData = session.GetString(key);
-            return sessionData == null ? default(T) : JsonSerializer.Deserialize<T>(sessionData);
+            return sessionData == null ? default(T) : JsonConvert.DeserializeObject<T>(sessionData);
         }
     }
 }
@@ -599,6 +608,7 @@ namespace SportsStore.Controllers
         public IActionResult Index(long productId, string returnUrl)
         {
             Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
+
             if (product != null)
             {
                 var cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart();
@@ -607,18 +617,15 @@ namespace SportsStore.Controllers
                 return View(new CartViewModel { Cart = cart, ReturnUrl = returnUrl });
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
     }
 }
 
 ```
-
 - Change the `Index.cshtml` file in the `SportsStore/Views/Cart` folder:
 
 ```
-...
-
 @model CartViewModel
 
 @{
