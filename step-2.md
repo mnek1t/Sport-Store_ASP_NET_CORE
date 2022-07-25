@@ -673,11 +673,9 @@ namespace SportsStore.Controllers
 
 ![](Images/2.10.png)
 
-Then, when the user clicks the `Add To Cart` button, the selected product is added to their cart:
+Then, when the user clicks the `Add To Cart` button, the selected product is added to their cart and the summary of the cart is displayed, as shown below
     
 ![](Images/2.11.png)
-
-and the summary of the cart is displayed, as shown below:
 
 ![](Images/2.12.png)
 
@@ -706,7 +704,7 @@ $ git merge sports-store-application-2
 $ git push
 
 ```
-- Go to to the `Part 3` of the task.
+- Go to the Sports Store Application. Step 3. (branch sports-store-application-3).
 
 </details>
 
