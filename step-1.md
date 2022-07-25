@@ -79,6 +79,7 @@ $ dotnet add package StyleCop.Analyzers
 . . .
 </Project>
 ```
+- Continue your work in Visual Studio or ather IDE.
 
 - If you are using Visual Studio, click the "Open a project or solution" button on the splash screen or select `File` > `Open` > `Project/Solution`. Select the `SportsStore.sln` file in the `SportsStore` folder and click the Open button to open the project.
 
