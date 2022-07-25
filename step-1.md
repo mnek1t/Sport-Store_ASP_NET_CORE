@@ -922,7 +922,7 @@ $ git merge sports-store-application-1 --ff
 ```
 $ git push
 ```
-- Move on to the `Sports Store Application. Step 2.` of the task (branch `sports-store-application-2`).
+- Go to the `Sports Store Application. Step 2.` (branch `sports-store-application-2`).
 
 </details>
 
