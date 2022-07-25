@@ -675,15 +675,15 @@ namespace SportsStore.Controllers
 
 Then, when the user clicks the `Add To Cart` button, the selected product is added to their cart:
     
-![](Images/2.05.png)
+![](Images/2.11.png)
 
 and the summary of the cart is displayed, as shown below:
 
-![](Images/2.07.png)
+![](Images/2.12.png)
 
 Clicking the `Continue Shopping button` returns the user to the product page they came from.
 
-![](Images/2.08.png)
+![](Images/2.13.png)
 
 - Commit changes.
 
