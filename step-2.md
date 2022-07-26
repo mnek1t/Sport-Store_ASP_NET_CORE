@@ -683,26 +683,34 @@ Clicking the `Continue Shopping button` returns the user to the product page the
 
 - Commit changes.
 
+```
+$ dotnet build
+$ git status
+$ git add *.cs *.proj *.cshtml
+$ git diff --staged
+$ git commit -m "Add shopping cart functionality."
+```
+
 - Push the local branch to the remote branch.
 
 ```
 $ git push --set-upstream origin sports-store-application-2
 
 ```
-- Switch to the main branch and do a merge according to changes from the sports-store-application-1 branch.
+- Switch to the `main` branch and do a merge according to changes from the `sports-store-application-2` branch.
 
 ```
 $ git checkout main
 
 $ git merge sports-store-application-2
 ```
-- Push the changes from the local main branch to the remote branch.
+- Push the changes from the local `main` branch to the remote branch.
 
 ```
 $ git push
 
 ```
-- Go to the Sports Store Application. Step 3. (branch sports-store-application-3).
+- Go to the `Sports Store Application. Step 3`. (branch `sports-store-application-3`).
 
 </details>
 
