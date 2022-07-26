@@ -22,7 +22,9 @@ $ git merge main -ff
 - Continue your work in Visual Studio or ather IDE.
 
 - Builed project, run application and request http://localhost:5000/. Your app should be work.
-```
+
+![](Images/1.1.png)
+
 - Add the `Product` class in the `Product.cs` file to the `SportsStore/Models` folder. Import the required dependencies. 
 ```
 using System.ComponentModel.DataAnnotations.Schema;
@@ -74,6 +76,7 @@ $ dotnet tool install --global dotnet-ef --version 6.0.7
     "SportsStoreConnection": "Server=(localdb)\\MSSQLLocalDB;Database=SportsStore;MultipleActiveResultSets=true"
     }
 }
+
 ```
 - Add the `StoreDbContext` context class in the `StoreDbContext.cs` file to the `SportsStore/Models` folder.
 
