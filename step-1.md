@@ -57,7 +57,7 @@ $ dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.0
 
 (Optional) 
 $ dotnet tool uninstall --global dotnet-ef
-$ dotnet tool install --global dotnet-ef --version 6.0.7
+$ dotnet tool install --global dotnet-ef --version 6.0.0
 ```
 
 - To define the connection string, add the configuration setting in the `appsettings.json` file in the `SportsStore` folder:
@@ -717,7 +717,7 @@ public class PageLinkTagHelper : TagHelper
 
 ```
 $ git status
-$ git add *.cs *.cshtml *.proj *.css
+$ git add *.cs *.cshtml *.proj * *.json
 $ git diff --staged
 $ git commit -m "Add styling the content."
 ```
