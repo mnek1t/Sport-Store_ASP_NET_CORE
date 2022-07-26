@@ -1,4 +1,4 @@
-# Sports Store: A Real Application
+# Sports Store Application
 
 ## Description
 
