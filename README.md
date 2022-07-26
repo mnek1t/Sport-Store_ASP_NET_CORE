@@ -27,8 +27,7 @@ The task consists of four steps. The description of the each step of the task ar
 | 1. | Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. Development the HomeController controller that can create paginated product lists.Setting clean and friendly URL schemes. Stylingof the content. |sports-store-application-1 |
 | 2. |Development the navigate by category. Development the basic building blocks in place for adding items to a shopping cart.|sports-store-application-2 |
 | 3. | Complete shopping cart development with a simple checkout process. |sports-store-application-3 |
-| 4. | Implementation of CRUD operations that allow the administrator to create, read, update and delete products from
-repository and mark orders as shipped. |sports-store-application-4 |
+| 4. | Implementation of CRUD operations that allow the administrator to create, read, update and delete products from repository and mark orders as shipped. |sports-store-application-4 |
 
 This task uses the following branching model:
 - The `main` branch always contains workable code that should compile without errors or warnings. All requirements of the current step must be fulfilled.
