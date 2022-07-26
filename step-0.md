@@ -1,4 +1,4 @@
-#  Sports Store Application. Step 1.
+#  Sports Store Application. Step 0.
 
 ## Implementation details
 
