@@ -33,4 +33,4 @@ This task uses the following branching model:
 - The `main` branch always contains workable code that should compile without errors or warnings. All requirements of the current step must be fulfilled.
 - The feature branch is where most of the work for the current step takes place. Changes in a commit may contain warnings, but should not contain errors. Changes that belong to one task or are logically complete are recommended to be uploaded as a separate commit.
 
-_*This task was developed based on an example from the book by [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). If you are having difficulty completing the task, contact the source._
+_*This task was developed based on an example from the book by [Adam Freeman Pro ASP.NET Core 6: Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565). If you are having difficulty completing the task, contact the source._
