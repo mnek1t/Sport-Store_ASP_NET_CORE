@@ -23,7 +23,8 @@ The task consists of four steps. The description of the each step of the task ar
 
 | # | Step Description | Feature Branch Name |
 | ------ | ------ | ------ |
-| Sports Store Application. Step 1. | Building the basic infrastructure for the SportsStore application. Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. Development the HomeController controller that can create paginated product lists.Setting clean and friendly URL schemes. Stylingof the content. |sports-store-application-1 |
+| Sports Store Application. Step 0. | Building the basic infrastructure for the SportsStore application. | sports-store-application-0 |
+| Sports Store Application. Step 1. | Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. Development the HomeController controller that can create paginated product lists.Setting clean and friendly URL schemes. Stylingof the content. |sports-store-application-1 |
 | Sports Store Application. Step 2. |Development the navigate by category. Development the basic building blocks in place for adding items to a shopping cart.|sports-store-application-2 |
 | Sports Store Application. Step 3. | Complete shopping cart development with a simple checkout process. |sports-store-application-3 |
 | Sports Store Application. Step 4. |  |sports-store-application-4 |
