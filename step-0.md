@@ -29,7 +29,7 @@ $ git checkout sports-store-application-0
 $ dotnet new sln --name SportsStore
 
 ```
-- Create `SportsStore` ASP.NET Core Empty Application in the directory of the cloned repository.
+- Create `SportsStore` `ASP.NET Core Empty Application` in the directory of the cloned repository.
 
 ```
 $ dotnet new web --no-https --name SportsStore
@@ -41,13 +41,13 @@ $ dotnet new web --no-https --name SportsStore
 $ dotnet sln add SportsStore/SportsStore.csproj
 
 ```
-- Add StyleCop.Analyzers package to the SportsStore/SportsStore.csproj.
+- Add `StyleCop.Analyzers` package to the `SportsStore/SportsStore.csproj`.
 
 ```
-$ dotnet add package StyleCop.Analyzers
+$ dotnet add package `StyleCop.Analyzers`
 
 ```
-- Change the project file SportsStore/SportsStore.csproj by adding settings `code-analysis.ruleset` for StyleCop to it.
+- Change the project file `SportsStore/SportsStore.csproj` by adding settings `code-analysis.ruleset` for StyleCop to it.
 
 ```
 . . .
