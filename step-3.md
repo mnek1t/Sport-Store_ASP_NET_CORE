@@ -108,9 +108,56 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 - Simplify the `CartController` class where `Cart` objects are used
 
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Infrastructure;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+using SportsStore.Models.ViewModels;
 
+namespace SportsStore.Controllers
+{
+    public class CartController : Controller
+    {
+        private IStoreRepository repository;
+
+        public CartController(IStoreRepository repository, Cart cart)
+        {
+            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.Cart = cart ?? throw new ArgumentNullException(nameof(cart));
+        }
+
+        public Cart Cart { get; set; }
+
+        [HttpGet]
+        public IActionResult Index(string returnUrl)
+        {
+            return View(new CartViewModel
+            {
+                ReturnUrl = returnUrl ?? "/",
+            });
+        }
+
+        [HttpPost]
+        public IActionResult Index(long productId, string returnUrl)
+        {
+            Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
+
+            if (product != null)
+            {
+                this.Cart.AddItem(product, 1);
+                return View(new CartViewModel { Cart = this.Cart, ReturnUrl = returnUrl });
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+    }
+}
+```
 
 - Restart ASP.NET Core and request http://localhost:5000/
+
+![]()
 
 </details>
 
