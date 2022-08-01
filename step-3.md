@@ -1,14 +1,12 @@
-#  Creating "Sports Store" Application. Part 3
+#  Sports Store Application. Part 2
 
-## Description
+## Implementation details
 
-- [Refining the Cart Model with a Service](#refining-the-cart-model-with-a-service)
-- [Completing the Cart Functionality](#completing-the-cart-functionality)
-- [Submitting Orders](#submitting-orders)
+<details>
+<summary>
 
-## TODO
-
-###  Refining the Cart Model with a Service
+**Refining the Cart Model with a Service**
+</summary>
 
 - Use SportsStore` ASP.NET Core MVC Application. Part 2
 
@@ -102,7 +100,13 @@
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
-### Completing the Cart Functionality
+</details>
+
+<details>
+<summary>
+
+**Completing the Cart Functionality**
+</summary>
 
 - To remove items from the cart add to the `Index.cshtml` file a `Remove` button  that will submit an HTTP POST request (see `SportsStore/Views/Cart` folder)
 
@@ -216,7 +220,14 @@
 
     ![](Images/3.2.png)
 
-###  Submitting Orders
+<details>
+
+<details>
+<summary>
+
+**  Submitting Orders**
+
+</summary>
 
 - To represent the shipping details for a customer add a `Order` class (the `Models` folder)
 
@@ -317,8 +328,14 @@
 
     ![](Images/3.4.png)
 
+</details>
+
+<details>
+<summary>
+
 #### Implementing Order Processing
 
+</summary>
 - Add a new property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
 
         public class StoreDbContext : DbContext
@@ -432,3 +449,4 @@
 - Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
 
      ![](Images/3.3.png)
+</details>
