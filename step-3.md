@@ -220,12 +220,12 @@
 
     ![](Images/3.2.png)
 
-<details>
+</details>
 
 <details>
 <summary>
 
-**  Submitting Orders**
+**Submitting Orders**
 
 </summary>
 
