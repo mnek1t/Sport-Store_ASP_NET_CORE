@@ -333,7 +333,7 @@
 <details>
 <summary>
 
-#### Implementing Order Processing
+**Implementing Order Processing**
 
 </summary>
 - Add a new property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
