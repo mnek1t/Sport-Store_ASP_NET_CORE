@@ -8,7 +8,19 @@
 **Refining the Cart Model with a Service**
 </summary>
 
-- Use SportsStore` ASP.NET Core MVC Application. Part 2
+- Go to the cloned repository of the previous step `Sport Store Application. Part 3`. 
+
+- Switch to the `sports-store-application-3` branch and do a fast-forward merge according to changes from the `main` branch.
+
+```
+$ git checkout sports-store-application-3
+
+$ git merge main -ff
+
+```
+- Continue your work in Visual Studio or ather IDE.
+
+- Builed project, run application and request http://localhost:5000/. Your app should be work.
 
 - To can override the members of the `Cart` class apply the `virtual` keyword to the `AddItem`, `RemoveLine`, `Clear` methods of the `Cart` class
 
@@ -449,4 +461,33 @@
 - Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
 
      ![](Images/3.3.png)
+</details>
+
+## Additional Materials
+
+<details><summary>References
+</summary> 
+
+1. [Minimal APIs overview](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0)
+1. [Get started with ASP.NET Core MVC](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-6.0&tabs=visual-studio)
+1. [Controllers](https://jakeydocs.readthedocs.io/en/latest/mvc/controllers/index.html)
+1. [Views](https://jakeydocs.readthedocs.io/en/latest/mvc/views/index.html)
+1. [Models](https://jakeydocs.readthedocs.io/en/latest/mvc/models/index.html)
+1. [ASP.NET Core MVC with EF Core - tutorial series](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/?view=aspnetcore-6.0)
+1. [Persist and retrieve relational data with Entity Framework Core](https://docs.microsoft.com/en-us/learn/modules/persist-data-ef-core/?view=aspnetcore-6.0)
+
+</details>
+
+<details><summary>Books
+</summary> 
+
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 1. Chapeter 7. SportsStore: A Real Application.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 2. Chapeter 13. Using URL Routing.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 2. Chapeter 16. Using the Platform Features, Part 2.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 18. Creating the Example Project.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 21. Using Controllers with Views. Part I.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 22. Using Controllers with Views. Part II.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 23. Using Razor Pages.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 25. Using Tag Helpers.
+
 </details>
