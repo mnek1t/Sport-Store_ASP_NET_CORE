@@ -1,4 +1,4 @@
-#  Sports Store Application. Part 2
+#  Sports Store Application. Part 3
 
 ## Implementation details
 
@@ -23,6 +23,28 @@ $ git merge main -ff
 - Builed project, run application and request http://localhost:5000/. Your app should be work.
 
 - To can override the members of the `Cart` class apply the `virtual` keyword to the `AddItem`, `RemoveLine`, `Clear` methods of the `Cart` class
+
+```
+namespace SportsStore.Models
+{
+    public class Cart
+    {
+        . . .
+
+        public virtual void AddItem(Product product, int quantity)
+        {
+            . . .
+        }
+
+        public virtual void RemoveLine(Product product)
+        {
+            . . .
+        }
+
+        public void Clear() => lines.Clear();
+    }
+}
+```
 
 - Add a `SessionCart` class  (int the `Models` folder)
 
