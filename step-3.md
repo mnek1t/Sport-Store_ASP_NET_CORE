@@ -41,96 +41,74 @@ namespace SportsStore.Models
             . . .
         }
 
-        public void Clear() => lines.Clear();
+        public virtual void Clear()
+        {
+            . . .
+        }
     }
 }
 ```
 
 - Add a `SessionCart` class  (int the `Models` folder)
 
-        using System;
-        using System.Text.Json.Serialization;
-        using Microsoft.AspNetCore.Http;
-        using Microsoft.Extensions.DependencyInjection;
-        using SportsStore.Infrastructure;
+```
+using Newtonsoft.Json;
+using SportsStore.Infrastructure;
 
-        namespace SportsStore.Models
+namespace SportsStore.Models
+{
+    public class SessionCart : Cart
+    {
+        public static Cart GetCart(IServiceProvider services)
         {
-            public class SessionCart : Cart
-            {
-                public static Cart GetCart(IServiceProvider services)
-                {
-                    ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
-                    SessionCart cart = session?.GetJson<SessionCart>("Cart") ?? new SessionCart();
-                    cart.Session = session;
-                    return cart;
-                }
-
-                [JsonIgnore] public ISession Session { get; set; }
-
-                public override void AddItem(Product product, int quantity)
-                {
-                    base.AddItem(product, quantity);
-                    Session.SetJson("Cart", this);
-                }
-
-                public override void RemoveLine(Product product)
-                {
-                    base.RemoveLine(product);
-                    Session.SetJson("Cart", this);
-                }
-
-                public override void Clear()
-                {
-                    base.Clear();
-                    Session.Remove("Cart");
-                }
-            }
+            ISession? session = services.GetRequiredService<IHttpContextAccessor>().HttpContext?.Session;
+            SessionCart cart = session?.GetJson<SessionCart>("Cart") ?? new SessionCart();
+            cart.Session = session;
+            return cart;
         }
 
--  Create a service for the `Cart` class
+        [JsonIgnore]
+        public ISession? Session { get; set; }
 
-        public void ConfigureServices(IServiceCollection services) 
+        public override void AddItem(Product product, int quantity)
         {
-            ...
-            services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            base.AddItem(product, quantity);
+            Session?.SetJson("Cart", this);
         }
+
+        public override void RemoveLine(Product product)
+        {
+            base.RemoveLine(product);
+            Session?.SetJson("Cart", this);
+        }
+
+        public override void Clear()
+        {
+            base.Clear();
+            Session?.Remove("Cart");
+        }
+    }
+}        
+```
+-  Register a service for the `Cart` class in `the Progrem.cs` file
+
+```
+using Microsoft.EntityFrameworkCore;
+using SportsStore.Models;
+
+var builder = WebApplication.CreateBuilder(args);    
+. . .
+
+builder.Services.AddSession();
+builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+. . .
+        
+```
 
 - Simplify the `CartController` class where `Cart` objects are used
 
-        public class CartController : Controller
-        {
-            private readonly IStoreRepository repository;
-            private readonly Cart cart;
 
-            public CartController(IStoreRepository repo, Cart cartService)
-            {
-                repository = repo;
-                cart = cartService;
-            }
-
-            [HttpGet]
-            public IActionResult Index(string returnUrl)
-            {
-                return View(new CartViewModel
-                {
-                    ReturnUrl = returnUrl ?? "/"
-                });
-            }
-
-            [HttpPost]
-            public IActionResult Index(long productId, string returnUrl)
-            {
-                Product product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
-                cart.AddItem(product, 1);
-                return View(new CartViewModel
-                {
-                    Cart = cart,
-                    ReturnUrl = returnUrl
-                });
-            }
-        }
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
