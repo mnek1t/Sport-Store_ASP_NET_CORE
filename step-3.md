@@ -135,6 +135,7 @@ namespace SportsStore.Controllers
             return View(new CartViewModel
             {
                 ReturnUrl = returnUrl ?? "/",
+                Cart = this.Cart
             });
         }
 
@@ -318,7 +319,11 @@ namespace SportsStore.Components
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
-    ![](Images/3.3.png)
+![](Images/3.3.png)
+
+![](Images/3.4.png)
+
+![](Images/3.5.png)
 
 </details>
 
