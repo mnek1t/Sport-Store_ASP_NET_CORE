@@ -169,46 +169,47 @@ namespace SportsStore.Controllers
 
 - To remove items from the cart add to the `Index.cshtml` file a `Remove` button  that will submit an HTTP POST request (see `SportsStore/Views/Cart` folder)
 
-        ...
-        @foreach (var line in Model.Cart.Lines)
-        {
-            <tr>
-                <td class="text-center">@line.Quantity</td>
-                <td class="text-left">@line.Product.Name</td>
-                <td class="text-right">@line.Product.Price.ToString("c")</td>
-                <td class="text-right">
-                    @((line.Quantity * line.Product.Price).ToString("c"))
-                </td>
-                <td class="text-center">
-                    <form method="post" asp-action="Remove" asp-controller="Cart">
-                        <input type="hidden" name="ProductID" value="@line.Product.ProductId"/>
-                        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl"/>
-                        <button type="submit" class="btn btn-sm btn-danger">
-                            Remove
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
-        ...
+```
+. . .
+@foreach (var line in Model.Cart.Lines)
+{
+    <tr>
+        . . .
+        <td class="text-right">
+            @((line.Quantity * line.Product.Price).ToString("c"))
+        </td>
+        <td class="text-center">
+            <form method="post" asp-action="Remove" asp-controller="Cart">
+                <input type="hidden" name="ProductID" value="@line.Product.ProductId"/>
+                <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/>
+                <button type="submit" class="btn btn-sm btn-danger">
+                    Remove
+                </button>
+            </form>
+        </td>
+    </tr>
+}
+. . .
+```
 
 - Add a `Remove` method to the `CartController` class
 
-        [HttpPost]
-        public IActionResult Remove(long productId, string returnUrl) 
-        {
-            cart.RemoveLine(cart.Lines.First(cl => cl.Product.ProductId == productId).Product);
-            
-            return View("Index", new CartViewModel
-            {
-                Cart = cart,
-                ReturnUrl = returnUrl ?? "/"
-            });
-        }
+```
+[HttpPost]
+public IActionResult Remove(long productId, string returnUrl)
+{
+    Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
+    return View("Index", new CartViewModel
+    {
+        Cart = Cart,
+        ReturnUrl = returnUrl ?? "/"
+    });
+}
+```
 
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
-    ![](Images/3.1.png)
+    ![](Images/3.2.png)
 
 - Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see ) http://fortawesome.github.io/Font-Awesome). To install the client-side package, use a PowerShell command prompt to run the command
 
