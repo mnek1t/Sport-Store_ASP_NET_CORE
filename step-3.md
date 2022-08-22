@@ -157,7 +157,7 @@ namespace SportsStore.Controllers
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
-![]()
+![](Images/3.1.png)
 
 </details>
 
@@ -209,76 +209,116 @@ public IActionResult Remove(long productId, string returnUrl)
 
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
-    ![](Images/3.2.png)
+![](Images/3.2.png)
 
 - Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see ) http://fortawesome.github.io/Font-Awesome). To install the client-side package, use a PowerShell command prompt to run the command
 
-        libman install font-awesome@5.12.0 -d wwwroot/lib/font-awesome
+```
+libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
+
+```
+
+The libman.json file looks like this 
+
+```
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.2.0",
+      "destination": "wwwroot/lib/bootstrap"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@6.1.2",
+      "destination": "wwwroot/lib/font-awesome/"
+    }
+  ]
+}
+```
 
 - Add a `CartSummaryViewComponent` class (the `Components` folder)
 
-        public class CartSummaryViewComponent : ViewComponent
-        {
-            private Cart cart;
-            
-            public CartSummaryViewComponent(Cart cartService) 
-            {
-                cart = cartService;
-            }
+```
+namespace SportsStore.Components
+{
+    public class CartSummaryViewComponent : ViewComponent
+    {
+        private Cart cart;
 
-            public IViewComponentResult Invoke() 
-            {
-                return View(cart);
-            }
+        public CartSummaryViewComponent(Cart cart)
+        {
+            this.cart = cart;
         }
+
+        public IViewComponentResult Invoke()
+        {
+            return View(cart);
+        }
+    }
+}
+```
 
 - Created the `Views/Shared/Components/CartSummary` folder and add to it a View Component named `Default.cshtml` with the content
 
-        @model Cart
-        
-        <div class="">
-            @if (Model.Lines.Any())
-            {
-                <small class="navbar-text">
-                    <b>Your cart:</b>
-                    @Model.Lines.Sum(x => x.Quantity) item(s)
-                    @Model.ComputeTotalValue().ToString("c")
-                </small>
-            }
-            
-            <a class="btn btn-sm btn-secondary navbar-btn" 
-               asp-page="/Cart" 
-               asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
-                <i class="fa fa-shopping-cart"></i>
-            </a>
-        </div>
+```
+@model Cart
+
+<div class="">
+    @if (Model.Lines.Any()) 
+    {
+        <small class="navbar-text">
+            <b>Your cart:</b>
+            @Model?.Lines.Sum(x => x.Quantity) item(s)
+            @Model?.ComputeTotalValue().ToString("c")
+        </small>
+    }
+    <a class="btn btn-sm btn-secondary navbar-btn" asp-controller="Cart" 
+       asp-action="Index"
+       asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
+        <i class="fa fa-shopping-cart"></i>
+    </a>
+</div>
+```
 
 - To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, adding the `Cart Summary` in the `_Layout.cshtml` file (the Views/Shared folder)
 
-        <!DOCTYPE html>
-        <html>
-        <head>
-            ...
-            <link href="/lib/font-awesome/css/all.min.css" rel="stylesheet"/>
-        </head>
-        <body>
-        <div class="bg-dark text-white p-2">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col navbar-brand">SPORTS STORE</div>
-                    <div class="col-6 text-right">
-                        <vc:cart-summary/>
-                    </div>
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SportsStore</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="bg-primary text-white p-2">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col navbar-brand">SPORTS STORE</div>
+                <div class="col-6 navbar-text text-end">
+                    <vc:cart-summary />
                 </div>
             </div>
         </div>
-        ...
-        </body>
-        </html>
+    </div>
+    <div class="row m-1 p-1">
+        <div id="categories" class="col-3">
+            <vc:navigation-menu />
+        </div>
+        <div class="col-9">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>
+```
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
-    ![](Images/3.2.png)
+    ![](Images/3.3.png)
 
 </details>
 
