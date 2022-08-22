@@ -326,6 +326,7 @@ Than click `Continue shopping button`.
 ![](Images/3.4.png)
 
 The widget that summarizes the contents of the cart looks like this
+
 ![](Images/3.5.png)
 
 If you press the cart icon, you will see summarizes the contents of the cart in details
