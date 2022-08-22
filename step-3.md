@@ -218,6 +218,26 @@ libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
 
 ```
 
+- See libman.json file
+
+```
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap@5.2.0",
+      "destination": "wwwroot/lib/bootstrap"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "font-awesome@6.1.2",
+      "destination": "wwwroot/lib/font-awesome/"
+    }
+  ]
+}
+```
+
 - Add a `CartSummaryViewComponent` class (the `Components` folder)
 
 ```
@@ -246,7 +266,7 @@ namespace SportsStore.Components
 @model Cart
 
 <div class="">
-    @if ((Model.Lines).Any()) 
+    @if (Model.Lines.Any()) 
     {
         <small class="navbar-text">
             <b>Your cart:</b>
@@ -263,30 +283,42 @@ namespace SportsStore.Components
 
 - To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, adding the `Cart Summary` in the `_Layout.cshtml` file (the Views/Shared folder)
 
-        <!DOCTYPE html>
-        <html>
-        <head>
-            ...
-            <link href="/lib/font-awesome/css/all.min.css" rel="stylesheet"/>
-        </head>
-        <body>
-        <div class="bg-dark text-white p-2">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col navbar-brand">SPORTS STORE</div>
-                    <div class="col-6 text-right">
-                        <vc:cart-summary/>
-                    </div>
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SportsStore</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="bg-dark text-white p-2">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col navbar-brand">SPORTS STORE</div>
+                <div class="col-6 navbar-text text-end">
+                    <vc:cart-summary />
                 </div>
             </div>
         </div>
-        ...
-        </body>
-        </html>
+    </div>
+    <div class="row m-1 p-1">
+        <div id="categories" class="col-3">
+            <vc:navigation-menu />
+        </div>
+        <div class="col-9">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>
+```
+
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
-    ![](Images/3.2.png)
+    ![](Images/3.3.png)
 
 </details>
 
