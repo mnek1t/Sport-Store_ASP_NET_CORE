@@ -218,7 +218,7 @@ libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
 
 ```
 
-- See libman.json file
+The libman.json file looks like this 
 
 ```
 {
@@ -274,7 +274,8 @@ namespace SportsStore.Components
             @Model?.ComputeTotalValue().ToString("c")
         </small>
     }
-    <a class="btn btn-sm btn-secondary navbar-btn" asp-page="/Cart"
+    <a class="btn btn-sm btn-secondary navbar-btn" asp-controller="Cart" 
+       asp-action="Index"
        asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
         <i class="fa fa-shopping-cart"></i>
     </a>
@@ -293,7 +294,7 @@ namespace SportsStore.Components
     <link href="/lib/font-awesome/css/all.min.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="bg-dark text-white p-2">
+    <div class="bg-primary text-white p-2">
         <div class="container-fluid">
             <div class="row">
                 <div class="col navbar-brand">SPORTS STORE</div>
@@ -314,7 +315,6 @@ namespace SportsStore.Components
 </body>
 </html>
 ```
-
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
