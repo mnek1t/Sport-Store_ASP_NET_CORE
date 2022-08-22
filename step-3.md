@@ -157,7 +157,7 @@ namespace SportsStore.Controllers
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
-![]()
+![](Images/3.1.png)
 
 </details>
 
@@ -209,7 +209,7 @@ public IActionResult Remove(long productId, string returnUrl)
 
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
-    ![](Images/3.2.png)
+![](Images/3.2.png)
 
 - Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see ) http://fortawesome.github.io/Font-Awesome). To install the client-side package, use a PowerShell command prompt to run the command
 
