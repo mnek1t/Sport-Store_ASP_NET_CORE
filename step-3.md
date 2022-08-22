@@ -471,17 +471,29 @@ public class OrderController : Controller
 **Implementing Order Processing**
 
 </summary>
-- Add a new property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
+- Add a new `Orders` property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
 
-        public class StoreDbContext : DbContext
-        {
-            ...
-            public DbSet<Order> Orders { get; set; }
-        }
+```
+namespace SportsStore.Models
+{
+    public class StoreDbContext : DbContext
+    {
+        public StoreDbContext(DbContextOptions<StoreDbContext> options)
+            : base(options) { }
+
+        public DbSet<Product> Products => this.Set<Product>();
+
+        public DbSet<Order> Orders => Set<Order>();
+    }
+}
+```
 
 -  To create the migration, use a PowerShell command prompt to run the command
 
-        dotnet ef migrations add Orders
+```
+dotnet ef migrations add Orders
+
+```
 
 - Follow the same pattern that was used for the `Product` Repository for providing access to `Order` objects. Add the `IOrderRepository` interface (the `Models` folder)
 
