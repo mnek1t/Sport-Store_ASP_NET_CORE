@@ -213,45 +213,53 @@ public IActionResult Remove(long productId, string returnUrl)
 
 - Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see ) http://fortawesome.github.io/Font-Awesome). To install the client-side package, use a PowerShell command prompt to run the command
 
-        libman install font-awesome@5.12.0 -d wwwroot/lib/font-awesome
+```
+libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
+
+```
 
 - Add a `CartSummaryViewComponent` class (the `Components` folder)
 
-        public class CartSummaryViewComponent : ViewComponent
-        {
-            private Cart cart;
-            
-            public CartSummaryViewComponent(Cart cartService) 
-            {
-                cart = cartService;
-            }
+```
+namespace SportsStore.Components
+{
+    public class CartSummaryViewComponent : ViewComponent
+    {
+        private Cart cart;
 
-            public IViewComponentResult Invoke() 
-            {
-                return View(cart);
-            }
+        public CartSummaryViewComponent(Cart cart)
+        {
+            this.cart = cart;
         }
+
+        public IViewComponentResult Invoke()
+        {
+            return View(cart);
+        }
+    }
+}
+```
 
 - Created the `Views/Shared/Components/CartSummary` folder and add to it a View Component named `Default.cshtml` with the content
 
-        @model Cart
-        
-        <div class="">
-            @if (Model.Lines.Any())
-            {
-                <small class="navbar-text">
-                    <b>Your cart:</b>
-                    @Model.Lines.Sum(x => x.Quantity) item(s)
-                    @Model.ComputeTotalValue().ToString("c")
-                </small>
-            }
-            
-            <a class="btn btn-sm btn-secondary navbar-btn" 
-               asp-page="/Cart" 
-               asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
-                <i class="fa fa-shopping-cart"></i>
-            </a>
-        </div>
+```
+@model Cart
+
+<div class="">
+    @if ((Model.Lines).Any()) 
+    {
+        <small class="navbar-text">
+            <b>Your cart:</b>
+            @Model?.Lines.Sum(x => x.Quantity) item(s)
+            @Model?.ComputeTotalValue().ToString("c")
+        </small>
+    }
+    <a class="btn btn-sm btn-secondary navbar-btn" asp-page="/Cart"
+       asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
+        <i class="fa fa-shopping-cart"></i>
+    </a>
+</div>
+```
 
 - To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, adding the `Cart Summary` in the `_Layout.cshtml` file (the Views/Shared folder)
 
