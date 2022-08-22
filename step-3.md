@@ -1,151 +1,215 @@
-#  Creating "Sports Store" Application. Part 3
+#  Sports Store Application. Part 3
 
-## Description
+## Implementation details
 
-- [Refining the Cart Model with a Service](#refining-the-cart-model-with-a-service)
-- [Completing the Cart Functionality](#completing-the-cart-functionality)
-- [Submitting Orders](#submitting-orders)
+<details>
+<summary>
 
-## TODO
+**Refining the Cart Model with a Service**
+</summary>
 
-###  Refining the Cart Model with a Service
+- Go to the cloned repository of the previous step `Sport Store Application. Part 3`. 
 
-- Use SportsStore` ASP.NET Core MVC Application. Part 2
+- Switch to the `sports-store-application-3` branch and do a fast-forward merge according to changes from the `main` branch.
+
+```
+$ git checkout sports-store-application-3
+
+$ git merge main -ff
+
+```
+- Continue your work in Visual Studio or ather IDE.
+
+- Builed project, run application and request http://localhost:5000/. Your app should be work.
 
 - To can override the members of the `Cart` class apply the `virtual` keyword to the `AddItem`, `RemoveLine`, `Clear` methods of the `Cart` class
 
+```
+namespace SportsStore.Models
+{
+    public class Cart
+    {
+        . . .
+
+        public virtual void AddItem(Product product, int quantity)
+        {
+            . . .
+        }
+
+        public virtual void RemoveLine(Product product)
+        {
+            . . .
+        }
+
+        public virtual void Clear()
+        {
+            . . .
+        }
+    }
+}
+```
+
 - Add a `SessionCart` class  (int the `Models` folder)
 
-        using System;
-        using System.Text.Json.Serialization;
-        using Microsoft.AspNetCore.Http;
-        using Microsoft.Extensions.DependencyInjection;
-        using SportsStore.Infrastructure;
+```
+using Newtonsoft.Json;
+using SportsStore.Infrastructure;
 
-        namespace SportsStore.Models
+namespace SportsStore.Models
+{
+    public class SessionCart : Cart
+    {
+        public static Cart GetCart(IServiceProvider services)
         {
-            public class SessionCart : Cart
-            {
-                public static Cart GetCart(IServiceProvider services)
-                {
-                    ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
-                    SessionCart cart = session?.GetJson<SessionCart>("Cart") ?? new SessionCart();
-                    cart.Session = session;
-                    return cart;
-                }
-
-                [JsonIgnore] public ISession Session { get; set; }
-
-                public override void AddItem(Product product, int quantity)
-                {
-                    base.AddItem(product, quantity);
-                    Session.SetJson("Cart", this);
-                }
-
-                public override void RemoveLine(Product product)
-                {
-                    base.RemoveLine(product);
-                    Session.SetJson("Cart", this);
-                }
-
-                public override void Clear()
-                {
-                    base.Clear();
-                    Session.Remove("Cart");
-                }
-            }
+            ISession? session = services.GetRequiredService<IHttpContextAccessor>().HttpContext?.Session;
+            SessionCart cart = session?.GetJson<SessionCart>("Cart") ?? new SessionCart();
+            cart.Session = session;
+            return cart;
         }
 
--  Create a service for the `Cart` class
+        [JsonIgnore]
+        public ISession? Session { get; set; }
 
-        public void ConfigureServices(IServiceCollection services) 
+        public override void AddItem(Product product, int quantity)
         {
-            ...
-            services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            base.AddItem(product, quantity);
+            Session?.SetJson("Cart", this);
         }
+
+        public override void RemoveLine(Product product)
+        {
+            base.RemoveLine(product);
+            Session?.SetJson("Cart", this);
+        }
+
+        public override void Clear()
+        {
+            base.Clear();
+            Session?.Remove("Cart");
+        }
+    }
+}        
+```
+-  Register a service for the `Cart` class in `the Progrem.cs` file
+
+```
+using Microsoft.EntityFrameworkCore;
+using SportsStore.Models;
+
+var builder = WebApplication.CreateBuilder(args);    
+. . .
+
+builder.Services.AddSession();
+builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+. . .
+        
+```
 
 - Simplify the `CartController` class where `Cart` objects are used
 
-        public class CartController : Controller
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Infrastructure;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+using SportsStore.Models.ViewModels;
+
+namespace SportsStore.Controllers
+{
+    public class CartController : Controller
+    {
+        private IStoreRepository repository;
+
+        public CartController(IStoreRepository repository, Cart cart)
         {
-            private readonly IStoreRepository repository;
-            private readonly Cart cart;
-
-            public CartController(IStoreRepository repo, Cart cartService)
-            {
-                repository = repo;
-                cart = cartService;
-            }
-
-            [HttpGet]
-            public IActionResult Index(string returnUrl)
-            {
-                return View(new CartViewModel
-                {
-                    ReturnUrl = returnUrl ?? "/"
-                });
-            }
-
-            [HttpPost]
-            public IActionResult Index(long productId, string returnUrl)
-            {
-                Product product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
-                cart.AddItem(product, 1);
-                return View(new CartViewModel
-                {
-                    Cart = cart,
-                    ReturnUrl = returnUrl
-                });
-            }
+            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.Cart = cart ?? throw new ArgumentNullException(nameof(cart));
         }
 
-- Restart ASP.NET Core and request http://localhost:5000/
+        public Cart Cart { get; set; }
 
-### Completing the Cart Functionality
-
-- To remove items from the cart add to the `Index.cshtml` file a `Remove` button  that will submit an HTTP POST request (see `SportsStore/Views/Cart` folder)
-
-        ...
-        @foreach (var line in Model.Cart.Lines)
+        [HttpGet]
+        public IActionResult Index(string returnUrl)
         {
-            <tr>
-                <td class="text-center">@line.Quantity</td>
-                <td class="text-left">@line.Product.Name</td>
-                <td class="text-right">@line.Product.Price.ToString("c")</td>
-                <td class="text-right">
-                    @((line.Quantity * line.Product.Price).ToString("c"))
-                </td>
-                <td class="text-center">
-                    <form method="post" asp-action="Remove" asp-controller="Cart">
-                        <input type="hidden" name="ProductID" value="@line.Product.ProductId"/>
-                        <input type="hidden" name="returnUrl" value="@Model.ReturnUrl"/>
-                        <button type="submit" class="btn btn-sm btn-danger">
-                            Remove
-                        </button>
-                    </form>
-                </td>
-            </tr>
-        }
-        ...
-
-- Add a `Remove` method to the `CartController` class
-
-        [HttpPost]
-        public IActionResult Remove(long productId, string returnUrl) 
-        {
-            cart.RemoveLine(cart.Lines.First(cl => cl.Product.ProductId == productId).Product);
-            
-            return View("Index", new CartViewModel
+            return View(new CartViewModel
             {
-                Cart = cart,
-                ReturnUrl = returnUrl ?? "/"
+                ReturnUrl = returnUrl ?? "/",
             });
         }
 
+        [HttpPost]
+        public IActionResult Index(long productId, string returnUrl)
+        {
+            Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
+
+            if (product != null)
+            {
+                this.Cart.AddItem(product, 1);
+                return View(new CartViewModel { Cart = this.Cart, ReturnUrl = returnUrl });
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+    }
+}
+```
+
+- Restart ASP.NET Core and request http://localhost:5000/
+
+![]()
+
+</details>
+
+<details>
+<summary>
+
+**Completing the Cart Functionality**
+</summary>
+
+- To remove items from the cart add to the `Index.cshtml` file a `Remove` button  that will submit an HTTP POST request (see `SportsStore/Views/Cart` folder)
+
+```
+. . .
+@foreach (var line in Model.Cart.Lines)
+{
+    <tr>
+        . . .
+        <td class="text-right">
+            @((line.Quantity * line.Product.Price).ToString("c"))
+        </td>
+        <td class="text-center">
+            <form method="post" asp-action="Remove" asp-controller="Cart">
+                <input type="hidden" name="ProductID" value="@line.Product.ProductId"/>
+                <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/>
+                <button type="submit" class="btn btn-sm btn-danger">
+                    Remove
+                </button>
+            </form>
+        </td>
+    </tr>
+}
+. . .
+```
+
+- Add a `Remove` method to the `CartController` class
+
+```
+[HttpPost]
+public IActionResult Remove(long productId, string returnUrl)
+{
+    Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
+    return View("Index", new CartViewModel
+    {
+        Cart = Cart,
+        ReturnUrl = returnUrl ?? "/"
+    });
+}
+```
+
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
-    ![](Images/3.1.png)
+    ![](Images/3.2.png)
 
 - Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see ) http://fortawesome.github.io/Font-Awesome). To install the client-side package, use a PowerShell command prompt to run the command
 
@@ -216,7 +280,14 @@
 
     ![](Images/3.2.png)
 
-###  Submitting Orders
+</details>
+
+<details>
+<summary>
+
+**Submitting Orders**
+
+</summary>
 
 - To represent the shipping details for a customer add a `Order` class (the `Models` folder)
 
@@ -317,8 +388,14 @@
 
     ![](Images/3.4.png)
 
-#### Implementing Order Processing
+</details>
 
+<details>
+<summary>
+
+**Implementing Order Processing**
+
+</summary>
 - Add a new property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
 
         public class StoreDbContext : DbContext
@@ -432,3 +509,33 @@
 - Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
 
      ![](Images/3.3.png)
+</details>
+
+## Additional Materials
+
+<details><summary>References
+</summary> 
+
+1. [Minimal APIs overview](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0)
+1. [Get started with ASP.NET Core MVC](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-6.0&tabs=visual-studio)
+1. [Controllers](https://jakeydocs.readthedocs.io/en/latest/mvc/controllers/index.html)
+1. [Views](https://jakeydocs.readthedocs.io/en/latest/mvc/views/index.html)
+1. [Models](https://jakeydocs.readthedocs.io/en/latest/mvc/models/index.html)
+1. [ASP.NET Core MVC with EF Core - tutorial series](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/?view=aspnetcore-6.0)
+1. [Persist and retrieve relational data with Entity Framework Core](https://docs.microsoft.com/en-us/learn/modules/persist-data-ef-core/?view=aspnetcore-6.0)
+
+</details>
+
+<details><summary>Books
+</summary> 
+
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 1. Chapeter 7. SportsStore: A Real Application.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 2. Chapeter 13. Using URL Routing.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 2. Chapeter 16. Using the Platform Features, Part 2.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 18. Creating the Example Project.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 21. Using Controllers with Views. Part I.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 22. Using Controllers with Views. Part II.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 23. Using Razor Pages.
+1. [Adam Freeman Pro ASP.NET Core 3 (Develop Cloud-Ready Web Applications Using MVC 3, Blazor, and Razor Pages)](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484254392). Part 3. Chapeter 25. Using Tag Helpers.
+
+</details>
