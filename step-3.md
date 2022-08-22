@@ -100,7 +100,7 @@ var builder = WebApplication.CreateBuilder(args);
 . . .
 
 builder.Services.AddSession();
-builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+builder.Services.AddScoped<Cart>(SessionCart.GetCart);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 . . .
         
@@ -147,7 +147,11 @@ namespace SportsStore.Controllers
             if (product != null)
             {
                 this.Cart.AddItem(product, 1);
-                return View(new CartViewModel { Cart = this.Cart, ReturnUrl = returnUrl });
+                return View(new CartViewModel 
+                {
+                    Cart = this.Cart, 
+                    ReturnUrl = returnUrl 
+                });
             }
 
             return RedirectToAction("Index", "Home");
@@ -317,7 +321,9 @@ namespace SportsStore.Components
 </html>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/. Add `Human Chess Board`.
+- Restart ASP.NET Core and request http://localhost:5000/Page2. 
+
+Add `Human Chess Board`.
 
 ![](Images/3.3.png)
 
@@ -326,11 +332,12 @@ Than click `Continue shopping button`.
 ![](Images/3.4.png)
 
 The widget that summarizes the contents of the cart looks like this
+
 ![](Images/3.5.png)
 
 If you press the cart icon, you will see summarizes the contents of the cart in details
 
-![](Images/3.4.png)
+![](Images/3.6.png)
 
 </details>
 
@@ -343,102 +350,118 @@ If you press the cart icon, you will see summarizes the contents of the cart in 
 
 - To represent the shipping details for a customer add a `Order` class (the `Models` folder)
 
-        public class Order
-        {
-            [BindNever] public int OrderID { get; set; }
+```
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-            [BindNever] public ICollection<CartLine> Lines { get; set; }
-    
-            [Required(ErrorMessage = "Please enter a name")]
-            public string Name { get; set; }
-    
-            [Required(ErrorMessage = "Please enter the first address line")]
-            public string Line1 { get; set; }
-    
-            public string Line2 { get; set; }
-            public string Line3 { get; set; }
-    
-            [Required(ErrorMessage = "Please enter a city name")]
-            public string City { get; set; }
-    
-            [Required(ErrorMessage = "Please enter a state name")]
-            public string State { get; set; }
-    
-            public string Zip { get; set; }
-    
-            [Required(ErrorMessage = "Please enter a country name")]
-            public string Country { get; set; }
-    
-            public bool GiftWrap { get; set; }
-        }
+namespace SportsStore.Models
+{
+    public class Order
+    {
+        [BindNever]
+        public int OrderId { get; set; }
+
+        [BindNever]
+        public ICollection<CartLine> Lines { get; set; } = new List<CartLine>();
+
+        [Required(ErrorMessage = "Please enter a name")]
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter the first address line")]
+        public string? Line1 { get; set; }
+
+        public string? Line2 { get; set; }
+
+        public string? Line3 { get; set; }
+
+        [Required(ErrorMessage = "Please enter a city name")]
+        public string? City { get; set; }
+
+        [Required(ErrorMessage = "Please enter a state name")]
+        public string? State { get; set; }
+
+        public string? Zip { get; set; }
+
+        [Required(ErrorMessage = "Please enter a country name")]
+        public string? Country { get; set; }
+
+        public bool GiftWrap { get; set; }
+    }
+}
+```
 
 -  Add a `Checkout` button to the cart view (in the `Index.cshtml` file in the `SportsStore/Views/Cart` folder)
 
-        ...
-        <div class="text-center">
-            <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
-            <a class="btn btn-primary" asp-action="Checkout" asp-controller="Order">
-                Checkout
-            </a>
-        </div>
+```
+. . .
+<div class="text-center">
+    <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
+    <a class="btn btn-primary" asp-action="Checkout" asp-controller="Order">
+        Checkout
+    </a>
+</div>
+. . .
+
+```
 
 - Add a class `OrderController` (the `Controllers` folder) with a `Checkout` action method
 
-        public class OrderController : Controller 
-        {
-            public ViewResult Checkout() => View(new Order());
-        }
+```
+public class OrderController : Controller 
+{
+    public ViewResult Checkout() => View(new Order());
+}
+```
 
 - Create the `Views/Order` folder and added to it a Razor View called `Checkout.cshtml`
-        
-        @model Order
-        
-        <h2>Check out now</h2>
-        <p>Please enter your details, and we'll ship your goods right away!</p>
-        
-        <div asp-validation-summary="All" class="text-danger"></div>
-        
-        <form asp-action="Checkout" method="post">
-            <h3>Ship to</h3>
-            <div class="form-group">
-                <label>Name:</label><input asp-for="Name" class="form-control" />
-            </div>
-            <h3>Address</h3>
-            <div class="form-group">
-                <label>Line 1:</label><input asp-for="Line1" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Line 2:</label><input asp-for="Line2" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Line 3:</label><input asp-for="Line3" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>City:</label><input asp-for="City" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>State:</label><input asp-for="State" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Zip:</label><input asp-for="Zip" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label>Country:</label><input asp-for="Country" class="form-control" />
-            </div>
-            <h3>Options</h3>
-            <div class="checkbox">
-                <label>
-                    <input asp-for="GiftWrap" /> Gift wrap these items
-                </label>
-            </div>
-            <div class="text-center">
-                <input class="btn btn-primary" type="submit" value="Complete Order" />
-            </div>
-        </form>
+
+```   
+@model Order
+
+<h2>Check out now</h2>
+<p>Please enter your details, and we'll ship your goods right away!</p>
+<form asp-action="Checkout" method="post">
+    <h3>Ship to</h3>
+    <div class="form-group">
+        <label>Name:</label><input asp-for="Name" class="form-control" />
+    </div>
+    <h3>Address</h3>
+    <div class="form-group">
+        <label>Line 1:</label><input asp-for="Line1" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Line 2:</label><input asp-for="Line2" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Line 3:</label><input asp-for="Line3" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>City:</label><input asp-for="City" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>State:</label><input asp-for="State" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Zip:</label><input asp-for="Zip" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Country:</label><input asp-for="Country" class="form-control" />
+    </div>
+    <h3>Options</h3>
+    <div class="checkbox">
+        <label>
+            <input asp-for="GiftWrap" /> Gift wrap these items
+        </label>
+    </div>
+    <div class="text-center">
+        <input class="btn btn-primary" type="submit" value="Complete Order" />
+    </div>
+</form>
+```
         
 - Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
 
-    ![](Images/3.4.png)
+![](Images/3.7.png)
 
 </details>
 
