@@ -1,6 +1,6 @@
-# Sports Store Application. Part 3. Part 4
+# Sports Store Application. Part 4
 
-**[Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) for creation administration features will be used**
+*_[Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) for creation administration features will be used_
 
 ## Implementation details
 
@@ -10,42 +10,41 @@
 **Preparing Blazor Server**
 </summary>
 
-- Use SportsStore ASP.NET Core MVC Application. Part 3.
+- Go to the cloned repository of the previous step `Sport Store Application. Part 3`. 
 
-- To create the services that Blazor uses add a `AddServerSideBlazor` method to the `ConfigureServices` method
+- Switch to the `sports-store-application-4` branch and do a fast-forward merge according to changes from the `main` branch.
 
-        public void ConfigureServices(IServiceCollection services) 
-        {
-            ...
-            services.AddServerSideBlazor();
-        }
+```
+$ git checkout sports-store-application-4
+
+$ git merge main --ff
+
+```
+- Continue your work in Visual Studio or ather IDE.
+
+- Builed project, run application and request http://localhost:5000/. Your app should be work.
+
+- To create the services that Blazor uses add a `AddServerSideBlazor` method in the `Program.cs` file
+
+```
+. . .
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddServerSideBlazor();
+
+var app = builder.Build();
+. . .
+```
 
 - To register the Blazor middleware components add a `MapBlazorHub` method. The final addition is to finesse the routing system to ensure that Blazor works seamlessly with the rest of the application
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
-        {
-            ...
-            app.UseEndpoints(endpoints => 
-            {
-                endpoints.MapControllerRoute("catpage",
-                    "{category}/Page{productPage:int}",
-                    new { Controller = "Home", action = "Index" });
-                endpoints.MapControllerRoute("page", "Page{productPage:int}",
-                    new { Controller = "Home", action = "Index", productPage = 1 });
-                endpoints.MapControllerRoute("category", "{category}",
-                    new { Controller = "Home", action = "Index", productPage = 1 });
-                endpoints.MapControllerRoute("pagination",
-                    "Products/Page{productPage}",
-                    new { Controller = "Home", action = "Index", productPage = 1 });
-                endpoints.MapDefaultControllerRoute();
-                endpoints.MapRazorPages();
-                endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
-            });
-
-            SeedData.EnsurePopulated(app);
-        }
-
+```
+. . .
+app.MapDefaultControllerRoute();
+app.MapBlazorHub();
+app.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
+SeedData.EnsurePopulated(app);
+. . .
+```
 - Create the `Pages` folder and add to it a file named `_ViewImports.cshtml` 
 
         @namespace SportsStore.Pages
@@ -151,7 +150,8 @@
         public class Order
         {
             ...
-            [BindNever] public bool Shipped { get; set; }
+            [BindNever] 
+            public bool Shipped { get; set; }
         }
 
 - To update the database to reflect the addition of the `Shipped` property to the `Order` class, open a new PowerShell window and run the command
