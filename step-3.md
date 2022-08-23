@@ -635,6 +635,38 @@ namespace SportsStore.Controllers
 
 ![](Images/3.9.png)
 
+- Commit changes.
+
+```
+$ dotnet build
+$ git status
+$ git add *.cs *.proj *.cshtml *.json
+$ git diff --staged
+$ git commit -m "Completing cart functionality."
+```
+
+- Push the local branch to the remote branch.
+
+```
+$ git push --set-upstream origin sports-store-application-3
+
+```
+- Switch to the `main` branch and do a merge according to changes from the `sports-store-application-3` branch.
+
+```
+$ git checkout main
+
+$ git merge sports-store-application-3
+```
+- Push the changes from the local `main` branch to the remote branch.
+
+```
+$ git push
+
+```
+- Go to the `Sports Store Application. Step 4`. (branch `sports-store-application-4`).
+
+
 </details>
 
 ## Additional Materials
