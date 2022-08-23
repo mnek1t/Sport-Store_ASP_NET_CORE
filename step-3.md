@@ -493,44 +493,59 @@ namespace SportsStore.Models
 ```
 dotnet ef migrations add Orders
 
+dotnet ef database update
+
 ```
 
-- Follow the same pattern that was used for the `Product` Repository for providing access to `Order` objects. Add the `IOrderRepository` interface (the `Models` folder)
+- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository` interface (the `Models` folder)
 
-        public interface IOrderRepository
-        {
-            IQueryable<Order> Orders { get; }
-            void SaveOrder(Order order);
-        }
+```
+namespace SportsStore.Models.Repository
+{
+    public interface IOrderRepository
+    {
+        IQueryable<Order> Orders { get; }
+
+        void SaveOrder(Order order);
+    }
+}
+```
 
 - To implement the order repository interface,  add a `EFOrderRepository` class (the `Models` folder)
 
-        public class EFOrderRepository : IOrderRepository
+```
+using Microsoft.EntityFrameworkCore;
+
+namespace SportsStore.Models.Repository
+{
+    public class EFOrderRepository : IOrderRepository
+    {
+        private StoreDbContext context;
+
+        public EFOrderRepository(StoreDbContext context)
         {
-            private StoreDbContext context;
-
-            public EFOrderRepository(StoreDbContext ctx)
-            {
-                context = ctx;
-            }
-
-            public IQueryable<Order> Orders => context.Orders
-                .Include(o => o.Lines)
-                .ThenInclude(l => l.Product);
-
-            public void SaveOrder(Order order)
-            {
-                context.AttachRange(order.Lines.Select(l => l.Product));
-                if (order.OrderID == 0)
-                {
-                    context.Orders.Add(order);
-                }
-
-                context.SaveChanges();
-            }
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-    This class implements the IOrderRepository interface using Entity Framework Core, allowing the set of Order objects that have been stored to be retrieved and allowing for orders to be created or changed.
+        public IQueryable<Order> Orders => context.Orders
+            .Include(o => o.Lines)
+            .ThenInclude(l => l.Product);
+
+        public void SaveOrder(Order order)
+        {
+            context.AttachRange(order.Lines.Select(l => l.Product));
+
+            if (order.OrderId == 0)
+            {
+                context.Orders.Add(order);
+            }
+
+            context.SaveChanges();
+        }
+    }
+}
+```
+This class implements the IOrderRepository interface using Entity Framework Core, allowing the set of Order objects that have been stored to be retrieved and allowing for orders to be created or changed.
 
 - Register the `Order Repository Service` in the `Startup` class
 
