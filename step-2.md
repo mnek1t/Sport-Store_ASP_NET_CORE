@@ -224,7 +224,7 @@ namespace SportsStore.Components
 
         public NavigationMenuViewComponent(IStoreRepository repository)
         {
-            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.repository = repository;
         }
 
         public IViewComponentResult Invoke()
@@ -589,7 +589,7 @@ namespace SportsStore.Controllers
 
         public CartController(IStoreRepository repository)
         {
-            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.repository = repository;
         }
 
         [HttpGet]
