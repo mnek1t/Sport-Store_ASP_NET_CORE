@@ -471,6 +471,7 @@ public class OrderController : Controller
 **Implementing Order Processing**
 
 </summary>
+
 - Add a new `Orders` property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
 
 ```
@@ -547,15 +548,16 @@ namespace SportsStore.Models.Repository
 ```
 This class implements the IOrderRepository interface using Entity Framework Core, allowing the set of Order objects that have been stored to be retrieved and allowing for orders to be created or changed.
 
-- Register the `Order Repository Service` in the `Startup` class
+- Register the `Order Repository Service` in the `Program.cs` file 
 
-        public void ConfigureServices(IServiceCollection services) 
-        {
-            ...
-            services.AddScoped<IOrderRepository, EFOrderRepository>();
-            ...
-        }
-    
+```
+. . .
+builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+. . .
+```   
 - To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete Order button 
 
         public class OrderController : Controller
