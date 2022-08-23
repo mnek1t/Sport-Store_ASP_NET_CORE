@@ -16,7 +16,7 @@
 ```
 $ git checkout sports-store-application-1
 
-$ git merge main -ff
+$ git merge main --ff
 
 ```
 - Continue your work in Visual Studio or ather IDE.
