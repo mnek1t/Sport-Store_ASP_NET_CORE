@@ -104,8 +104,7 @@ builder.Services.AddScoped<Cart>(SessionCart.GetCart);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 . . .
         
-```
-
+```     
 - Simplify the `CartController` class where `Cart` objects are used
 
 ```
