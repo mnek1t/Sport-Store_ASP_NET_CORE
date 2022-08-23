@@ -8,7 +8,7 @@
 **Refining the Cart Model with a Service**
 </summary>
 
-- Go to the cloned repository of the previous step `Sport Store Application. Part 3`. 
+- Go to the cloned repository of the previous step `Sport Store Application. Part 2`. 
 
 - Switch to the `sports-store-application-3` branch and do a fast-forward merge according to changes from the `main` branch.
 
