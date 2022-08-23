@@ -1,13 +1,11 @@
-# Sports Store Application. Part 4
-
-*_[Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) for creation administration features will be used_
+# Sports Store Application. Part 4 (in progress)
 
 ## Implementation details
 
 <details>
 <summary>
 
-**Preparing Blazor Server**
+**Managing Orders**
 </summary>
 
 - Go to the cloned repository of the previous step `Sport Store Application. Part 3`. 
@@ -24,32 +22,165 @@ $ git merge main --ff
 
 - Builed project, run application and request http://localhost:5000/. Your app should be work.
 
-- To create the services that Blazor uses add a `AddServerSideBlazor` method in the `Program.cs` file
+- Adding a `Shipped` property in the Order.cs file (the `Models` Folder)
 
 ```
-. . .
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddServerSideBlazor();
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-var app = builder.Build();
-. . .
+namespace SportsStore.Models
+{
+    public class Order
+    {
+        [BindNever]
+        public int OrderId { get; set; }
+
+        [BindNever]
+        public ICollection<CartLine> Lines { get; set; } = new List<CartLine>();
+
+        [BindNever]
+        public bool Shipped { get; set; }
+
+        [Required(ErrorMessage = "Please enter a name")]
+        public string? Name { get; set; }
+
+        [Required(ErrorMessage = "Please enter the first address line")]
+        public string? Line1 { get; set; }
+
+        public string? Line2 { get; set; }
+
+        public string? Line3 { get; set; }
+
+        [Required(ErrorMessage = "Please enter a city name")]
+        public string? City { get; set; }
+
+        [Required(ErrorMessage = "Please enter a state name")]
+        public string? State { get; set; }
+
+        public string? Zip { get; set; }
+
+        [Required(ErrorMessage = "Please enter a country name")]
+        public string? Country { get; set; }
+
+        public bool GiftWrap { get; set; }
+    }
+}
+
 ```
 
-- To register the Blazor middleware components add a `MapBlazorHub` method. The final addition is to finesse the routing system to ensure that Blazor works seamlessly with the rest of the application
+- To update the database to reflect the addition of the `Shipped` property to the `Order` class, open a new command prompt or PowerShell window, navigate to the SportsStore project folder and run the following command: 
 
 ```
-. . .
-app.MapDefaultControllerRoute();
-app.MapBlazorHub();
-app.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
-SeedData.EnsurePopulated(app);
-. . .
-```
-- Create the `Pages` folder and add to it a file named `_ViewImports.cshtml` 
+dotnet ef migrations add ShippedOrders
 
-        @namespace SportsStore.Pages
-        @using Microsoft.AspNetCore.Mvc.RazorPages
-        @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+dotnet ef database update
+```
+- Add action methods in the `OrderController.cs` file in the `SportsStore/Controllers` folder - the `List` method will be use to display a list of the unshipped orders to the administrator and the `MarkShipped` method will  be receive a POST request that specifies the ID of an order, which is used to locate the corresponding Order object from the repository so that the Shipped property can be set to true and saved.
+ 
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class OrderController : Controller
+    {
+        . . .
+
+        public ViewResult List() => View(orderRepository.Orders.Where(o => !o.Shipped));
+        
+        [HttpPost]
+        public IActionResult MarkShipped(int orderId)
+        {
+            Order order = orderRepository
+                .Orders
+                .FirstOrDefault(o => o.OrderId == orderId);
+
+            if (order != null)
+            {
+                order.Shipped = true;
+                orderRepository.SaveOrder(order);
+            }
+
+            return RedirectToAction(nameof(List));
+        }
+
+        . . .
+    }
+}
+
+```
+- To display the list of unshipped orders add a `List.cshtml` view file to the Views/Order folder and add the markup shown below
+
+```
+@model IQueryable<Order>
+
+@{
+    ViewBag.Title = "Orders";
+    Layout = "_Layout";
+}
+
+@if (Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Zip</th>
+            <th colspan="2">Details</th>
+            <th></th>
+        </tr>
+        @foreach (Order o in Model)
+        {
+            <tr>
+                <td>@o.Name</td>
+                <td>@o.Zip</td>
+                <th>Product</th>
+                <th>Quantity</th>
+                <td>
+                    <form asp-action="MarkShipped" method="post">
+                        <input type="hidden" name="orderId" value="@o.OrderId" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Ship
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            @foreach (CartLine line in o.Lines)
+            {
+                <tr>
+                    <td colspan="2"></td>
+                    <td>@line.Product.Name</td>
+                    <td>@line.Quantity</td>
+                    <td></td>
+                </tr>
+            }
+        }
+    </table>
+}
+else
+{
+    <div class="text-center">No Unshipped Orders</div>
+}
+```
+- To add the layout use the MVC View Layout Page item template to create a file called _AdminLayout.cshtml in the Views/Shared folder, and add the markup shown below.
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.min.css" />
+    <title>@ViewBag.Title</title>
+</head>
+<body class="m-1 p-1">
+    <div class="bg-info p-2"><h4>@ViewBag.Title</h4></div>
+    @RenderBody()
+</body>
+</html>
+```
+
+.........................
 
 - Create the `Pages/Admin` folder and add to it a file named `_Imports.razor`, because Blazor requires its own imports file to specify the namespaces that it uses. 
 
