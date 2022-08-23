@@ -123,8 +123,8 @@ namespace SportsStore.Controllers
 
         public CartController(IStoreRepository repository, Cart cart)
         {
-            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
-            this.Cart = cart ?? throw new ArgumentNullException(nameof(cart));
+            this.repository = repository;
+            this.Cart = cart;
         }
 
         public Cart Cart { get; set; }
@@ -525,7 +525,7 @@ namespace SportsStore.Models.Repository
 
         public EFOrderRepository(StoreDbContext context)
         {
-            this.context = context ?? throw new ArgumentNullException(nameof(context));
+            this.context = context;
         }
 
         public IQueryable<Order> Orders => context.Orders
@@ -560,59 +560,82 @@ builder.Services.AddSession();
 ```   
 - To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete Order button 
 
-        public class OrderController : Controller
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class OrderController : Controller
+    {
+        private IOrderRepository orderRepository;
+
+        private Cart cart;
+
+        public OrderController(IOrderRepository orderRepository, Cart cart)
         {
-            private IOrderRepository repository;
-
-            private Cart cart;
-
-            public OrderController(IOrderRepository repoService, Cart cartService)
-            {
-                repository = repoService;
-                cart = cartService;
-            }
-
-            [HttpGet]
-            public ViewResult Checkout() => View(new Order());
-
-            [HttpPost]
-            public IActionResult Checkout(Order order)
-            {
-                if (!cart.Lines.Any())
-                {
-                    ModelState.AddModelError("", "Sorry, your cart is empty!");
-                }
-
-                if (ModelState.IsValid)
-                {
-                    order.Lines = cart.Lines.ToArray();
-                    repository.SaveOrder(order);
-                    cart.Clear();
-                    return View("Completed", order.OrderID);
-                }
-
-                return View();
-            }
+            this.orderRepository = orderRepository;
+            this.cart = cart;
         }
 
-- To complete the checkout process, create a `Completed.cshtml` Razor Page that displays a thank-you message with a summary of the orders
+        public ViewResult Checkout() => View(new Order());
 
-        @model int
+        [HttpPost]
+        public IActionResult Checkout(Order order)
+        {
+            if (!cart.Lines.Any())
+            {
+                ModelState.AddModelError("", "Sorry, your cart is empty!");
+            }
 
-        @{
-            this.Layout = "_CartLayout";
+            if (ModelState.IsValid)
+            {
+                order.Lines = cart.Lines.ToArray();
+                orderRepository.SaveOrder(order);
+                cart.Clear();
+                return View("Completed", order.OrderId);
+            }
+            
+            return View();
         }
+    }
+}
 
-        <div class="text-center">
-            <h2>Thanks!</h2>
-            <p>Thanks for placing order #@Model.</p>
-            <p>We'll ship your goods as soon as possible.</p>
-            <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
-        </div>
+```
+- Add a Validation Summary to the Checkout.cshtml File in the SportsStore/Views/Order Folder
 
+```
+<h2>Check out now</h2>
+<p>Please enter your details, and we'll ship your goods right away!</p>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form asp-action="Checkout" method="post">
+. . .
+```
 - Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
 
-     ![](Images/3.3.png)
+![](Images/3.8.png)
+
+- To complete the checkout process, create a `Completed.cshtml` View that displays a thank-you message with a summary of the orders
+
+```
+@model int
+
+@{
+    this.Layout = "_CartLayout";
+}
+
+<div class="text-center">
+    <h2>Thanks!</h2>
+    <p>Thanks for placing order #@Model.</p>
+    <p>We'll ship your goods as soon as possible.</p>
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
+</div>
+```
+- Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
+
+![](Images/3.9.png)
+
 </details>
 
 ## Additional Materials
