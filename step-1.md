@@ -326,7 +326,7 @@ namespace SportsStore.Controllers
 
         public HomeController(IStoreRepository repository)
         {
-            this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            this.repository = repository;
         }
 
         public IActionResult Index() => View(repository.Products);
@@ -459,7 +459,6 @@ namespace SportsStore.Infrastructure
         }
     }
 }
-
 
 ```
 
