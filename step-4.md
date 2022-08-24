@@ -177,7 +177,7 @@ else
 </html>
 ```
 
-- Build project, run application and request http://localhost:5000/Orders/List.
+- To see the new features, restart ASP.NET Core, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/order/list, and you will see a summary of the order you created displayed in the Unshipped Orders table. Click the Ship button, and the order will be updated and removed from the Shipped Orders table, as shown below
 
 ![](Images/4.1.png)
 
