@@ -177,7 +177,13 @@ else
 </html>
 ```
 
-- Builed project, run application and request http://localhost:5000/Orders/List.
+- Build project, run application and request http://localhost:5000/Orders/List.
+
+![](Images/4.1.png)
+
+![](Images/4.2.png)
+
+![](Images/4.3.png)
 
 </details>
 
