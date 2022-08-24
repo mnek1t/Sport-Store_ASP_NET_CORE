@@ -19,7 +19,7 @@ $ git checkout sports-store-application-2
 $ git merge main --ff
 
 ```
-- Continue your work in Visual Studio or ather IDE.
+- Continue your work in Visual Studio or other IDE.
 
 - Builed project, run application and request http://localhost:5000/. Your app should be work.
 
