@@ -18,11 +18,11 @@ $ git checkout sports-store-application-4
 $ git merge main --ff
 
 ```
-- Continue your work in Visual Studio or ather IDE.
+- Continue your work in Visual Studio or other IDE.
 
 - Builed project, run application and request http://localhost:5000/. Your app should be work.
 
-- Adding a `Shipped` property in the Order.cs file (the `Models` Folder)
+- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the Order.cs file (the `Models` Folder)
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -32,37 +32,12 @@ namespace SportsStore.Models
 {
     public class Order
     {
-        [BindNever]
-        public int OrderId { get; set; }
-
-        [BindNever]
-        public ICollection<CartLine> Lines { get; set; } = new List<CartLine>();
+        . . .
 
         [BindNever]
         public bool Shipped { get; set; }
 
-        [Required(ErrorMessage = "Please enter a name")]
-        public string? Name { get; set; }
-
-        [Required(ErrorMessage = "Please enter the first address line")]
-        public string? Line1 { get; set; }
-
-        public string? Line2 { get; set; }
-
-        public string? Line3 { get; set; }
-
-        [Required(ErrorMessage = "Please enter a city name")]
-        public string? City { get; set; }
-
-        [Required(ErrorMessage = "Please enter a state name")]
-        public string? State { get; set; }
-
-        public string? Zip { get; set; }
-
-        [Required(ErrorMessage = "Please enter a country name")]
-        public string? Country { get; set; }
-
-        public bool GiftWrap { get; set; }
+        . . .
     }
 }
 
@@ -117,8 +92,7 @@ namespace SportsStore.Controllers
 @model IQueryable<Order>
 
 @{
-    ViewBag.Title = "Orders";
-    Layout = "_Layout";
+    Layout = "_AdminLayout";
 }
 
 @if (Model.Any())
@@ -162,118 +136,56 @@ else
 {
     <div class="text-center">No Unshipped Orders</div>
 }
+
 ```
-- To add the layout use the MVC View Layout Page item template to create a file called _AdminLayout.cshtml in the Views/Shared folder, and add the markup shown below.
+- Add a `_AdminLayout.cshtml` layout view in the Views/Shared folder with the following markup
 
 ```
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <link rel="stylesheet" asp-href-include="lib/bootstrap/dist/css/*.min.css" />
-    <title>@ViewBag.Title</title>
+    <title>SportsStore</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body class="m-1 p-1">
-    <div class="bg-info p-2"><h4>@ViewBag.Title</h4></div>
-    @RenderBody()
+<body>
+    <div class="bg-info text-white p-2">
+        <div class="container-fluid">
+            <span class="navbar-brand">SPORTS STORE Administration</span>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row p-2">
+            <div class="col-3">
+                <div class="d-grid gap-1">
+                    <a class="btn btn-outline-primary"
+                       asp-action="List" asp-controller="Order">
+                       Orders
+                    </a>
+                    <a class="btn btn-outline-primary"
+                       asp-action="Products" asp-controller="Admin">
+                        Products
+                    </a>
+                </div>
+            </div>
+            <div class="col-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 ```
 
-.........................
-
-- Create the `Pages/Admin` folder and add to it a file named `_Imports.razor`, because Blazor requires its own imports file to specify the namespaces that it uses. 
-
-        @using Microsoft.AspNetCore.Components
-        @using Microsoft.AspNetCore.Components.Forms
-        @using Microsoft.AspNetCore.Components.Routing
-        @using Microsoft.AspNetCore.Components.Web
-        @using Microsoft.EntityFrameworkCore
-        @using SportsStore.Models
-
-- Add a Razor Page named `Index.cshtml` to the `Pages/Admin` folder
-
-        @page "/admin"
-
-        @{
-            Layout = null;
-        }
-
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>SportsStore Admin</title>
-            <link href="/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-            <base href="/"/>
-        </head>
-        <body>
-        <component type="typeof(Routed)" render-mode="Server"/>
-        <script src="/_framework/blazor.server.js"></script>
-        </body>
-        </html>
-
-- Add a Razor Component named `Routed.razor` to the `Pages/Admin` folder and add the content
-
-        <Router AppAssembly="typeof(Startup).Assembly">
-            <Found>
-                <RouteView RouteData="@context" DefaultLayout="typeof(AdminLayout)"/>
-            </Found>
-            <NotFound>
-                <h4 class="bg-danger text-white text-center p-2">
-                    No Matching Route Found
-                </h4>
-            </NotFound>
-        </Router>
-
-- To create the layout for the administration tools, add a Razor Component named `AdminLayout.razor` to the `Pages/Admin` folder. Blazor has its own system of layouts
-
-        @inherits LayoutComponentBase
-
-        <div class="bg-info text-white p-2">
-            <span class="navbar-brand ml-2">SPORTS STORE Administration</span>
-        </div>
-        <div class="container-fluid">
-            <div class="row p-2">
-                <div class="col-3">
-                    <NavLink class="btn btn-outline-primary btn-block"
-                             href="/admin/products"
-                             ActiveClass="btn-primary text-white"
-                             Match="NavLinkMatch.Prefix">
-                        Products
-                    </NavLink>
-                    <NavLink class="btn btn-outline-primary btn-block"
-                             href="/admin/orders"
-                             ActiveClass="btn-primary text-white"
-                             Match="NavLinkMatch.Prefix">
-                        Orders
-                    </NavLink
-                </div>
-                <div class="col">
-                    @Body
-                </div>
-            </div>
-        </div>
-
-- To complete the initial setup add the components that will provide the administration tools, although they will contain placeholder messages at first. Add a Razor Component named `Products.razor` to the `Pages/Admin` folder
-
-        @page "/admin/products"
-        @page "/admin"
-
-        <h4>This is the products component</h4>
-
-- Add a Razor Component named `Orders.razor` to the `Pages/Admin` folder
-
-        @page "/admin/orders"
-        <h4>This is the orders component</h4>
-
-- To make sure that Blazor is working correctly, start ASP.NET Core and request http://localhost:5000/admin
+- Builed project, run application and request http://localhost:5000/Orders/List.
 
 </details>
 
 <details>
 <summary>
 
-**Managing Orders**
+**Adding Catalog Management**
+
 </summary>
 
 - To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a property in the `Order` class (the `SportsStore/Models` folder)
