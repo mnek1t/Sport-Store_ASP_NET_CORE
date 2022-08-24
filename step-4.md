@@ -1,330 +1,280 @@
-#  Creating "Sports Store" Application. Part 4
+# Sports Store Application. Part 4 (in progress)
 
-**[Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) for creation administration features will be used**
+## Implementation details
 
-## Description
+<details>
+<summary>
 
-- [Preparing Blazor Server](#preparing-blazor-server) 
-- [Managing Orders](#managing-orders)
-- [Managing Products](#managing-products)
+**Managing Orders**
+</summary>
 
-## TODO
+- Go to the cloned repository of the previous step `Sport Store Application. Part 3`. 
 
-### Preparing Blazor Server
+- Switch to the `sports-store-application-4` branch and do a fast-forward merge according to changes from the `main` branch.
 
-- Use SportsStore ASP.NET Core MVC Application. Part 3.
+```
+$ git checkout sports-store-application-4
 
-- To create the services that Blazor uses add a `AddServerSideBlazor` method to the `ConfigureServices` method
+$ git merge main --ff
 
-        public void ConfigureServices(IServiceCollection services) 
+```
+- Continue your work in Visual Studio or other IDE.
+
+- Builed project, run application and request http://localhost:5000/. Your app should be work.
+
+- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the Order.cs file (the `Models` Folder)
+
+```
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace SportsStore.Models
+{
+    public class Order
+    {
+        . . .
+
+        [BindNever]
+        public bool Shipped { get; set; }
+
+        . . .
+    }
+}
+
+```
+
+- To update the database to reflect the addition of the `Shipped` property to the `Order` class, open a new command prompt or PowerShell window, navigate to the SportsStore project folder and run the following command: 
+
+```
+dotnet ef migrations add ShippedOrders
+
+dotnet ef database update
+```
+- Add action methods in the `OrderController.cs` file in the `SportsStore/Controllers` folder - the `List` method will be use to display a list of the unshipped orders to the administrator and the `MarkShipped` method will  be receive a POST request that specifies the ID of an order, which is used to locate the corresponding Order object from the repository so that the Shipped property can be set to true and saved.
+ 
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class OrderController : Controller
+    {
+        . . .
+
+        public ViewResult List() => View(orderRepository.Orders.Where(o => !o.Shipped));
+        
+        [HttpPost]
+        public IActionResult MarkShipped(int orderId)
         {
-            ...
-            services.AddServerSideBlazor();
-        }
+            Order order = orderRepository
+                .Orders
+                .FirstOrDefault(o => o.OrderId == orderId);
 
-- To register the Blazor middleware components add a `MapBlazorHub` method. The final addition is to finesse the routing system to ensure that Blazor works seamlessly with the rest of the application
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) 
-        {
-            ...
-            app.UseEndpoints(endpoints => 
+            if (order != null)
             {
-                endpoints.MapControllerRoute("catpage",
-                    "{category}/Page{productPage:int}",
-                    new { Controller = "Home", action = "Index" });
-                endpoints.MapControllerRoute("page", "Page{productPage:int}",
-                    new { Controller = "Home", action = "Index", productPage = 1 });
-                endpoints.MapControllerRoute("category", "{category}",
-                    new { Controller = "Home", action = "Index", productPage = 1 });
-                endpoints.MapControllerRoute("pagination",
-                    "Products/Page{productPage}",
-                    new { Controller = "Home", action = "Index", productPage = 1 });
-                endpoints.MapDefaultControllerRoute();
-                endpoints.MapRazorPages();
-                endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
-            });
-
-            SeedData.EnsurePopulated(app);
-        }
-
-- Create the `Pages` folder and add to it a file named `_ViewImports.cshtml` 
-
-        @namespace SportsStore.Pages
-        @using Microsoft.AspNetCore.Mvc.RazorPages
-        @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-
-- Create the `Pages/Admin` folder and add to it a file named `_Imports.razor`, because Blazor requires its own imports file to specify the namespaces that it uses. 
-
-        @using Microsoft.AspNetCore.Components
-        @using Microsoft.AspNetCore.Components.Forms
-        @using Microsoft.AspNetCore.Components.Routing
-        @using Microsoft.AspNetCore.Components.Web
-        @using Microsoft.EntityFrameworkCore
-        @using SportsStore.Models
-
-- Add a Razor Page named `Index.cshtml` to the `Pages/Admin` folder
-
-        @page "/admin"
-
-        @{
-            Layout = null;
-        }
-
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>SportsStore Admin</title>
-            <link href="/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-            <base href="/"/>
-        </head>
-        <body>
-        <component type="typeof(Routed)" render-mode="Server"/>
-        <script src="/_framework/blazor.server.js"></script>
-        </body>
-        </html>
-
-- Add a Razor Component named `Routed.razor` to the `Pages/Admin` folder and add the content
-
-        <Router AppAssembly="typeof(Startup).Assembly">
-            <Found>
-                <RouteView RouteData="@context" DefaultLayout="typeof(AdminLayout)"/>
-            </Found>
-            <NotFound>
-                <h4 class="bg-danger text-white text-center p-2">
-                    No Matching Route Found
-                </h4>
-            </NotFound>
-        </Router>
-
-- To create the layout for the administration tools, add a Razor Component named `AdminLayout.razor` to the `Pages/Admin` folder. Blazor has its own system of layouts
-
-        @inherits LayoutComponentBase
-
-        <div class="bg-info text-white p-2">
-            <span class="navbar-brand ml-2">SPORTS STORE Administration</span>
-        </div>
-        <div class="container-fluid">
-            <div class="row p-2">
-                <div class="col-3">
-                    <NavLink class="btn btn-outline-primary btn-block"
-                             href="/admin/products"
-                             ActiveClass="btn-primary text-white"
-                             Match="NavLinkMatch.Prefix">
-                        Products
-                    </NavLink>
-                    <NavLink class="btn btn-outline-primary btn-block"
-                             href="/admin/orders"
-                             ActiveClass="btn-primary text-white"
-                             Match="NavLinkMatch.Prefix">
-                        Orders
-                    </NavLink
-                </div>
-                <div class="col">
-                    @Body
-                </div>
-            </div>
-        </div>
-
-- To complete the initial setup add the components that will provide the administration tools, although they will contain placeholder messages at first. Add a Razor Component named `Products.razor` to the `Pages/Admin` folder
-
-        @page "/admin/products"
-        @page "/admin"
-
-        <h4>This is the products component</h4>
-
-- Add a Razor Component named `Orders.razor` to the `Pages/Admin` folder
-
-        @page "/admin/orders"
-        <h4>This is the orders component</h4>
-
-- To make sure that Blazor is working correctly, start ASP.NET Core and request http://localhost:5000/admin
-
-### Managing Orders
-
-- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a property in the `Order` class (the `SportsStore/Models` folder)
-
-        public class Order
-        {
-            ...
-            [BindNever] public bool Shipped { get; set; }
-        }
-
-- To update the database to reflect the addition of the `Shipped` property to the `Order` class, open a new PowerShell window and run the command
-
-        dotnet ef migrations add ShippedOrders
-
-- To display two tables, one of which shows the orders waiting to be shipped and the other the shipped orders. Each order will be presented with a button that changes the shipping state. To avoid duplicating code and content, create a Razor Component that displays a table without knowing which 
-category of order it is dealing with. Add a Razor Component named `OrderTable.razor` to the `Pages/Admin` folder
-
-        <table class="table table-sm table-striped table-bordered">
-            <thead>
-            <tr>
-                <th colspan="5" class="text-center">@TableTitle</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if (Orders?.Count() > 0)
-            {
-                @foreach (Order o in Orders)
-                {
-                    <tr>
-                        <td>@o.Name</td><td>@o.Zip</td><th>Product</th><th>Quantity</th>
-                        <td>
-                            <button class="btn btn-sm btn-danger"
-                                    @onclick="@(e => OrderSelected.InvokeAsync(o.OrderId))">
-                                @ButtonLabel
-                            </button>
-                        </td>
-                    </tr>
-                    @foreach (CartLine line in o.Lines)
-                    {
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>@line.Product.Name</td><td>@line.Quantity</td>
-                            <td></td>
-                        </tr>
-                    }
-                }
+                order.Shipped = true;
+                orderRepository.SaveOrder(order);
             }
-            else
+
+            return RedirectToAction(nameof(List));
+        }
+
+        . . .
+    }
+}
+
+```
+- To display the list of unshipped orders add a `List.cshtml` view file to the Views/Order folder and add the markup shown below
+
+```
+@model IQueryable<Order>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+@if (Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Zip</th>
+            <th colspan="2">Details</th>
+            <th></th>
+        </tr>
+        @foreach (Order o in Model)
+        {
+            <tr>
+                <td>@o.Name</td>
+                <td>@o.Zip</td>
+                <th>Product</th>
+                <th>Quantity</th>
+                <td>
+                    <form asp-action="MarkShipped" method="post">
+                        <input type="hidden" name="orderId" value="@o.OrderId" />
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Ship
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            @foreach (CartLine line in o.Lines)
             {
                 <tr>
-                    <td colspan="5" class="text-center">No Orders</td>
+                    <td colspan="2"></td>
+                    <td>@line.Product.Name</td>
+                    <td>@line.Quantity</td>
+                    <td></td>
                 </tr>
             }
-            </tbody>
-        </table>
-        
-        @code 
-        {
-        
-            [Parameter]
-            public string TableTitle { get; set; } = "Orders";
-        
-            [Parameter]
-            public IEnumerable<Order> Orders { get; set; }
-        
-            [Parameter]
-            public string ButtonLabel { get; set; } = "Ship";
-        
-            [Parameter]
-            public EventCallback<int> OrderSelected { get; set; }
-        
         }
+    </table>
+}
+else
+{
+    <div class="text-center">No Unshipped Orders</div>
+}
 
-- Remove the placeholder content in the Orders component and replace it with the code and content
+```
+- Add a `_AdminLayout.cshtml` layout view in the Views/Shared folder with the following markup
 
-        @page "/admin/orders"
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SportsStore</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="bg-info text-white p-2">
+        <div class="container-fluid">
+            <span class="navbar-brand">SPORTS STORE Administration</span>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row p-2">
+            <div class="col-3">
+                <div class="d-grid gap-1">
+                    <a class="btn btn-outline-primary"
+                       asp-action="List" asp-controller="Order">
+                       Orders
+                    </a>
+                    <a class="btn btn-outline-primary"
+                       asp-action="Products" asp-controller="Admin">
+                        Products
+                    </a>
+                </div>
+            </div>
+            <div class="col-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+```
 
-        @inherits OwningComponentBase<IOrderRepository>
+- Builed project, run application and request http://localhost:5000/Orders/List.
 
-        <OrderTable TableTitle="Unshipped Orders" Orders="UnshippedOrders" ButtonLabel="Ship" OrderSelected="ShipOrder"/>
-        <OrderTable TableTitle="Shipped Orders" Orders="ShippedOrders" ButtonLabel="Reset" OrderSelected="ResetOrder"/>
-        <button class="btn btn-info" @onclick="@(e => UpdateData())">Refresh Data</button>
+</details>
 
-        @code 
-        {
-            public IOrderRepository Repository => Service;
+<details>
+<summary>
 
-            public IEnumerable<Order> AllOrders { get; set; }
+**Adding Catalog Management**
 
-            public IEnumerable<Order> UnshippedOrders { get; set; }
+</summary>
 
-            public IEnumerable<Order> ShippedOrders { get; set; }
 
-            protected async override Task OnInitializedAsync()
-            {
-                await UpdateData();
-            }
+- To add the features that allow a administrator to create, read, update, and delete products add new methods to the `IStoreRepository` interface
 
-            public async Task UpdateData()
-            {
-                AllOrders = await Repository.Orders.ToListAsync();
-                UnshippedOrders = AllOrders.Where(o => !o.Shipped);
-                ShippedOrders = AllOrders.Where(o => o.Shipped);
-            }
+```
+namespace SportsStore.Models.Repository
+{
+    public interface IStoreRepository
+    {
+        IQueryable<Product> Products { get; }
 
-            public void ShipOrder(int id) => UpdateOrder(id, true);
+        void SaveProduct(Product p);
 
-            public void ResetOrder(int id) => UpdateOrder(id, false);
+        void CreateProduct(Product p);
 
-            private void UpdateOrder(int id, bool shipValue)
-            {
-                Order o = Repository.Orders.FirstOrDefault(o => o.OrderId == id);
-                o.Shipped = shipValue;
-                Repository.SaveOrder(o);
-            }
-        }
+        void DeleteProduct(Product p);
+    }
+}
 
-- To see the new features, restart ASP.NET Core, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/admin/orders, and you will see a summary of the order you created displayed in the Unshipped Orders table. Click the Ship button, and the order will be updated and moved to the Shipped Orders table 
-  
-    ![](Images/4.5.png)
-
-### Managing Products
-
-- To add the features that allow a administrator to create, read, update, and delete products add new methods to the IStoreRepository interface
-
-        public interface IStoreRepository
-        {
-            IQueryable<Product> Products { get; }
-            void SaveProduct(Product p);
-            void CreateProduct(Product p);
-            void DeleteProduct(Product p);
-        }
+```
 
 - Add implemention of this methods in the `EFStoreRepository` calss (the SportsStore/Models folder)
 
-        public class EFStoreRepository : IStoreRepository
+```
+namespace SportsStore.Models.Repository
+{
+    public class EFStoreRepository : IStoreRepository
+    {
+        private StoreDbContext context;
+
+        public EFStoreRepository(StoreDbContext ctx)
         {
-            private StoreDbContext context;
-    
-            public EFStoreRepository(StoreDbContext ctx)
-            {
-                context = ctx;
-            }
-    
-            public IQueryable<Product> Products => context.Products;
-    
-            public void CreateProduct(Product p)
-            {
-                context.Add(p);
-                context.SaveChanges();
-            }
-    
-            public void DeleteProduct(Product p)
-            {
-                context.Remove(p);
-                context.SaveChanges();
-            }
-    
-            public void SaveProduct(Product p)
-            {
-                context.SaveChanges();
-            }
+            this.context = ctx;
         }
 
-- To validate the values the user provides when editing or creating Product objects,  add validation attributes to the Product data model class
-    
-        public class Product
+        public IQueryable<Product> Products => this.context.Products;
+
+        public void CreateProduct(Product p)
         {
-            public long ProductId { get; set; }
-
-            [Required(ErrorMessage = "Please enter a product name")]
-            public string Name { get; set; }
-
-            [Required(ErrorMessage = "Please enter a description")]
-            public string Description { get; set; }
-
-            [Required]
-            [Range(0.01, double.MaxValue,
-                ErrorMessage = "Please enter a positive price")]
-            [Column(TypeName = "decimal(8, 2)")]
-            public decimal Price { get; set; }
-
-            [Required(ErrorMessage = "Please specify a category")]
-            public string Category { get; set; }
+            context.Add(p);
+            context.SaveChanges();
         }
+
+        public void DeleteProduct(Product p)
+        {
+            context.Remove(p);
+            context.SaveChanges();
+        }
+
+        public void SaveProduct(Product p)
+        {
+            context.SaveChanges();
+        }
+    }
+}
+
+```
+
+- To validate the values the user provides when editing or creating Product objects, add validation attributes to the `Product` data model class
+
+```
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SportsStore.Models
+{
+    public class Product
+    {
+        public long ProductId { get; set; }
+
+        [Required(ErrorMessage = "Please enter a product name")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please enter a description")]
+        public string Description { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price")]
+        [Column(TypeName = "decimal(8, 2)")]
+        public decimal Price { get; set; }
+
+        [Required(ErrorMessage = "Please specify a category")]
+        public string Category { get; set; } = string.Empty;
+    }
+}
+
+```
+
 
 - To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.razor` file
 
@@ -590,3 +540,37 @@ or request http://localhost:5000/admin, and click the `Create` button
         }
 
 -  Restart ASP.NET Core, request http://localhost:5000/admin/products, and click a `Delete` button to remove an object from the database
+
+</details>
+
+## Additional Materials
+
+<details><summary>References
+</summary> 
+
+1. [Minimal APIs overview](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0)
+1. [Get started with ASP.NET Core MVC](https://docs.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/start-mvc?view=aspnetcore-6.0&tabs=visual-studio)
+1. [Controllers](https://jakeydocs.readthedocs.io/en/latest/mvc/controllers/index.html)
+1. [Views](https://jakeydocs.readthedocs.io/en/latest/mvc/views/index.html)
+1. [Models](https://jakeydocs.readthedocs.io/en/latest/mvc/models/index.html)
+1. [ASP.NET Core MVC with EF Core - tutorial series](https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/?view=aspnetcore-6.0)
+1. [Persist and retrieve relational data with Entity Framework Core](https://docs.microsoft.com/en-us/learn/modules/persist-data-ef-core/?view=aspnetcore-6.0)
+
+</details>
+
+<details><summary>Books
+</summary> 
+
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 1. Chapeter 9. SportsStore: Completing the Cart.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 13. Using URL Routing.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 14. Using Dependency Injection.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 15. Using the Platform Features. Part 1.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 16. Using the Platform Features. Part 2.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 17. Working with Data.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 21. Using Controllers with Views. Part 1.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 22. Using Controllers with Views. Part 2.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 24. Using View Components.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 28. Using Model Binding.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 29. Using Model Validation.
+
+</details>
