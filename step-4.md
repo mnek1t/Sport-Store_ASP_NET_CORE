@@ -188,197 +188,93 @@ else
 
 </summary>
 
-- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a property in the `Order` class (the `SportsStore/Models` folder)
 
-        public class Order
-        {
-            ...
-            [BindNever] 
-            public bool Shipped { get; set; }
-        }
+- To add the features that allow a administrator to create, read, update, and delete products add new methods to the `IStoreRepository` interface
 
-- To update the database to reflect the addition of the `Shipped` property to the `Order` class, open a new PowerShell window and run the command
+```
+namespace SportsStore.Models.Repository
+{
+    public interface IStoreRepository
+    {
+        IQueryable<Product> Products { get; }
 
-        dotnet ef migrations add ShippedOrders
+        void SaveProduct(Product p);
 
-- To display two tables, one of which shows the orders waiting to be shipped and the other the shipped orders. Each order will be presented with a button that changes the shipping state. To avoid duplicating code and content, create a Razor Component that displays a table without knowing which 
-category of order it is dealing with. Add a Razor Component named `OrderTable.razor` to the `Pages/Admin` folder
+        void CreateProduct(Product p);
 
-        <table class="table table-sm table-striped table-bordered">
-            <thead>
-            <tr>
-                <th colspan="5" class="text-center">@TableTitle</th>
-            </tr>
-            </thead>
-            <tbody>
-            @if (Orders?.Count() > 0)
-            {
-                @foreach (Order o in Orders)
-                {
-                    <tr>
-                        <td>@o.Name</td><td>@o.Zip</td><th>Product</th><th>Quantity</th>
-                        <td>
-                            <button class="btn btn-sm btn-danger"
-                                    @onclick="@(e => OrderSelected.InvokeAsync(o.OrderId))">
-                                @ButtonLabel
-                            </button>
-                        </td>
-                    </tr>
-                    @foreach (CartLine line in o.Lines)
-                    {
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>@line.Product.Name</td><td>@line.Quantity</td>
-                            <td></td>
-                        </tr>
-                    }
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="5" class="text-center">No Orders</td>
-                </tr>
-            }
-            </tbody>
-        </table>
-        
-        @code 
-        {
-        
-            [Parameter]
-            public string TableTitle { get; set; } = "Orders";
-        
-            [Parameter]
-            public IEnumerable<Order> Orders { get; set; }
-        
-            [Parameter]
-            public string ButtonLabel { get; set; } = "Ship";
-        
-            [Parameter]
-            public EventCallback<int> OrderSelected { get; set; }
-        
-        }
+        void DeleteProduct(Product p);
+    }
+}
 
-- Remove the placeholder content in the Orders component and replace it with the code and content
-
-        @page "/admin/orders"
-
-        @inherits OwningComponentBase<IOrderRepository>
-
-        <OrderTable TableTitle="Unshipped Orders" Orders="UnshippedOrders" ButtonLabel="Ship" OrderSelected="ShipOrder"/>
-        <OrderTable TableTitle="Shipped Orders" Orders="ShippedOrders" ButtonLabel="Reset" OrderSelected="ResetOrder"/>
-        <button class="btn btn-info" @onclick="@(e => UpdateData())">Refresh Data</button>
-
-        @code 
-        {
-            public IOrderRepository Repository => Service;
-
-            public IEnumerable<Order> AllOrders { get; set; }
-
-            public IEnumerable<Order> UnshippedOrders { get; set; }
-
-            public IEnumerable<Order> ShippedOrders { get; set; }
-
-            protected async override Task OnInitializedAsync()
-            {
-                await UpdateData();
-            }
-
-            public async Task UpdateData()
-            {
-                AllOrders = await Repository.Orders.ToListAsync();
-                UnshippedOrders = AllOrders.Where(o => !o.Shipped);
-                ShippedOrders = AllOrders.Where(o => o.Shipped);
-            }
-
-            public void ShipOrder(int id) => UpdateOrder(id, true);
-
-            public void ResetOrder(int id) => UpdateOrder(id, false);
-
-            private void UpdateOrder(int id, bool shipValue)
-            {
-                Order o = Repository.Orders.FirstOrDefault(o => o.OrderId == id);
-                o.Shipped = shipValue;
-                Repository.SaveOrder(o);
-            }
-        }
-
-- To see the new features, restart ASP.NET Core, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/admin/orders, and you will see a summary of the order you created displayed in the Unshipped Orders table. Click the Ship button, and the order will be updated and moved to the Shipped Orders table 
-  
-    ![](Images/4.5.png)
-
-</details>
-
-<details>
-<summary>
-
-**Managing Products**
-</summary>
-
-
-- To add the features that allow a administrator to create, read, update, and delete products add new methods to the IStoreRepository interface
-
-        public interface IStoreRepository
-        {
-            IQueryable<Product> Products { get; }
-            void SaveProduct(Product p);
-            void CreateProduct(Product p);
-            void DeleteProduct(Product p);
-        }
+```
 
 - Add implemention of this methods in the `EFStoreRepository` calss (the SportsStore/Models folder)
 
-        public class EFStoreRepository : IStoreRepository
+```
+namespace SportsStore.Models.Repository
+{
+    public class EFStoreRepository : IStoreRepository
+    {
+        private StoreDbContext context;
+
+        public EFStoreRepository(StoreDbContext ctx)
         {
-            private StoreDbContext context;
-    
-            public EFStoreRepository(StoreDbContext ctx)
-            {
-                context = ctx;
-            }
-    
-            public IQueryable<Product> Products => context.Products;
-    
-            public void CreateProduct(Product p)
-            {
-                context.Add(p);
-                context.SaveChanges();
-            }
-    
-            public void DeleteProduct(Product p)
-            {
-                context.Remove(p);
-                context.SaveChanges();
-            }
-    
-            public void SaveProduct(Product p)
-            {
-                context.SaveChanges();
-            }
+            this.context = ctx;
         }
 
-- To validate the values the user provides when editing or creating Product objects,  add validation attributes to the Product data model class
-    
-        public class Product
+        public IQueryable<Product> Products => this.context.Products;
+
+        public void CreateProduct(Product p)
         {
-            public long ProductId { get; set; }
-
-            [Required(ErrorMessage = "Please enter a product name")]
-            public string Name { get; set; }
-
-            [Required(ErrorMessage = "Please enter a description")]
-            public string Description { get; set; }
-
-            [Required]
-            [Range(0.01, double.MaxValue,
-                ErrorMessage = "Please enter a positive price")]
-            [Column(TypeName = "decimal(8, 2)")]
-            public decimal Price { get; set; }
-
-            [Required(ErrorMessage = "Please specify a category")]
-            public string Category { get; set; }
+            context.Add(p);
+            context.SaveChanges();
         }
+
+        public void DeleteProduct(Product p)
+        {
+            context.Remove(p);
+            context.SaveChanges();
+        }
+
+        public void SaveProduct(Product p)
+        {
+            context.SaveChanges();
+        }
+    }
+}
+
+```
+
+- To validate the values the user provides when editing or creating Product objects, add validation attributes to the `Product` data model class
+
+```
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SportsStore.Models
+{
+    public class Product
+    {
+        public long ProductId { get; set; }
+
+        [Required(ErrorMessage = "Please enter a product name")]
+        public string Name { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Please enter a description")]
+        public string Description { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price")]
+        [Column(TypeName = "decimal(8, 2)")]
+        public decimal Price { get; set; }
+
+        [Required(ErrorMessage = "Please specify a category")]
+        public string Category { get; set; } = string.Empty;
+    }
+}
+
+```
+
 
 - To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.razor` file
 
