@@ -258,6 +258,10 @@ namespace SportsStore.Controllers
 
 ![](Images/4.5.png)
 
+Click the `Reset` button, and the order will be updated and moved to the `Unshipped Orders table`, as shown below
+
+![](Images/4.6.png)
+
 </details>
 
 <details>
