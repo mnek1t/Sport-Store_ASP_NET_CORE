@@ -272,7 +272,7 @@ Click the `Reset` button, and the order will be updated and moved to the `Unship
 </summary>
 
 
-- To add the features that allow a administrator to create, read, update, and delete products add new methods to the `IStoreRepository` interface
+- To add the features that allow a administrator to create, modify, and delete products add new methods to the `IStoreRepository` interface
 
 ```
 namespace SportsStore.Models.Repository
@@ -291,7 +291,7 @@ namespace SportsStore.Models.Repository
 
 ```
 
-- Add implemention of this methods in the `EFStoreRepository` calss (the SportsStore/Models folder)
+- Add implemention of this methods in the `EFStoreRepository` class (the `SportsStore/Models` folder)
 
 ```
 namespace SportsStore.Models.Repository
@@ -328,7 +328,7 @@ namespace SportsStore.Models.Repository
 
 ```
 
-- To validate the values the user provides when editing or creating Product objects, add validation attributes to the `Product` data model class
+- To validate the values the user provides when editing or creating `Product` objects, add validation attributes to the `Product` data model class
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -357,80 +357,63 @@ namespace SportsStore.Models
 }
 
 ```
+- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.html` file
 
+```
+@model IQueryable<Product>
 
-- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.razor` file
+@{
+    Layout = "_AdminLayout";
+}
 
-        @page "/admin/products"
-        @page "/admin"
-
-        @inherits OwningComponentBase<IStoreRepository>
-
-        <table class="table table-sm table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>ID</th><th>Name</th>
-                <th>Category</th><th>Price</th><td/>
-            </tr>
-            </thead>
-            <tbody>
-            @if (ProductData?.Count() > 0)
-            {
-                @foreach (Product p in ProductData)
-                {
-                    <tr>
-                        <td>@p.ProductId</td>
-                        <td>@p.Name</td>
-                        <td>@p.Category</td>
-                        <td>@p.Price.ToString("c")</td>
-                        <td>
-                            <NavLink class="btn btn-info btn-sm"
-                                     href="@GetDetailsUrl(p.ProductId)">
-                                Details
-                            </NavLink>
-                            <NavLink class="btn btn-warning btn-sm"
-                                     href="@GetEditUrl(p.ProductId)">
-                                Edit
-                            </NavLink>
-                        </td>
-                    </tr>
-                }
-            }
-            else
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <td />
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model?.Count() > 0)
+        {
+            @foreach (Product p in Model)
             {
                 <tr>
-                    <td colspan="5" class="text-center">No Products</td>
+                    <td>@p.ProductId</td>
+                    <td>@p.Name</td>
+                    <td>@p.Category</td>
+                    <td>@p.Price.ToString("c")</td>
+                    <td>
+                        <a class="btn btn-info btn-sm" asp-controller="Admin" asp-action="Details">
+                            Details
+                        </a>
+                        <a class="btn btn-warning btn-sm" asp-controller="Admin" asp-action="Edit">
+                            Edit
+                        </a>
+                    </td>
                 </tr>
             }
-            </tbody>
-        </table>
-        <NavLink class="btn btn-primary" href="/admin/products/create">Create</NavLink>
-
-        @code {
-            public IStoreRepository Repository => Service;
-
-            public IEnumerable<Product> ProductData { get; set; }
-
-            protected async override Task OnInitializedAsync()
-            {
-                await UpdateData();
-            }
-
-            public async Task UpdateData()
-            {
-                ProductData = await Repository.Products.ToListAsync();
-            }
-
-            public string GetDetailsUrl(long id) => $"/admin/products/details/{id}";
-
-            public string GetEditUrl(long id) => $"/admin/products/edit/{id}";
         }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No Products</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-- Restart ASP.NET Core and request http://localhost:5000/admin/products
+<a class="btn btn-primary" asp-controller="Admin" asp-action="Create">Create</a>    
+```
 
-    ![](Images/4.3.png)
+- Restart ASP.NET Core and request http://localhost:5000/Admin/Products
 
-- To reate the Detail Component the job of that is to display all the fields for a single `Product` object, add a Razor Component named `Details.razor` to the `Pages/Admin` folder
+    ![](Images/4.7.png)
+
+- To create the Detail Component the job of that is to display all the fields for a single `Product` object, add a Razor Component named `Details.razor` to the `Pages/Admin` folder
 
         @page "/admin/products/details/{id:long}"
         
