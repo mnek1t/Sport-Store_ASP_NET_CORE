@@ -247,11 +247,12 @@ namespace SportsStore.Controllers
     <button class="btn btn-info">Refresh Data</button>
 </form>
 ```
+
+- Build project, run application and request http://localhost:5000/Admin/Orders.
+
+![](Images/4.3.png)
+
 - To see the new features, restart ASP.NET Core, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/order/list, and you will see a summary of the order you created displayed in the Unshipped Orders table. Click the Ship button, and the order will be updated and removed from the Shipped Orders table, as shown below
-
-![](Images/4.1.png)
-
-![](Images/4.2.png)
 
 ![](Images/4.3.png)
 
