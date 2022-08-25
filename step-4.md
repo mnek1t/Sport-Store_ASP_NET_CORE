@@ -45,7 +45,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- To create the layout for the administration tools, add a `_AdminLayout.html` Layout View with the content shown below to the `Views/Admin` folder 
+- To create the layout for the administration tools, add a `_AdminLayout.cshtml` Layout View with the content shown below to the `Views/Admin` folder 
 ```
 <!DOCTYPE html>
 <html>
@@ -82,7 +82,7 @@ namespace SportsStore.Controllers
 </body>
 </html>
 ```
-- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.html` View to the `Views/Admin` folder with the content shown below
+- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.cshtml` View to the `Views/Admin` folder with the content shown below
 
 ```
 @model IQueryable<Order>
@@ -93,7 +93,7 @@ namespace SportsStore.Controllers
 
 <h4>This is the orders information.</h4>
 ```
-and add a `Products.html` View to the `Views/Admin` folder with the content shown below
+and add a `Products.cshtml` View to the `Views/Admin` folder with the content shown below
 
 ```
 @model IQueryable<Product>
@@ -184,7 +184,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.html` Partial View that displays a table without knowing which category of order it is dealing with the content shown below
+- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.cshtml` Partial View that displays a table without knowing which category of order it is dealing with the content shown below
 
 ```
 @model (IQueryable<Order> Orders, string TableTitle, string ButtonLabel, string CallbackMethodName)
@@ -230,7 +230,7 @@ namespace SportsStore.Controllers
     </tbody>
 </table>
 ```
-- Change a `Orders.html` View that gets the `Order` data from the database and uses the `_OrderTable.html` Partial View to display it to the user
+- Change a `Orders.cshtml` View that gets the `Order` data from the database and uses the `_OrderTable.cshtml` Partial View to display it to the user
 
 ```
 @model IQueryable<Order>
@@ -356,7 +356,7 @@ namespace SportsStore.Models
 }
 
 ```
-- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.html` file with those shown below
+- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.cshtml` file with those shown below
 
 ```
 @model IQueryable<Product>
@@ -430,7 +430,7 @@ namespace SportsStore.Controllers
         . . .
 }
 ```
-and a `Details.html` view to the `Views/Admin` folder
+and a `Details.cshtml` view to the `Views/Admin` folder
 
 ```
 @model SportsStore.Models.Product?
@@ -473,60 +473,11 @@ and a `Details.html` view to the `Views/Admin` folder
 
 ![](Images/4.8.png)
 
-- To implement eding possibility add an `Edit` action method in the `AdminController` class
-
+- To implement the abilities to edit and to create of a single `Product` object, add the `Edit` and `Create` action methods accordingly in the `AdminController` class.
 ```
 public ViewResult Edit(int productId)
     => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
 ```
-- Create the Detail Component the job of that is to display all the fields for a single `Product` object, add a Razor Component named `Details.razor` to the `Pages/Admin` folder
-
-        @page "/admin/products/details/{id:long}"
-        
-        <h3 class="bg-info text-white text-center p-1">Details</h3>
-        <table class="table table-sm table-bordered table-striped">
-            <tbody>
-            <tr>
-                <th>ID</th><td>@Product.ProductId</td>
-            </tr>
-            <tr>
-                <th>Name</th><td>@Product.Name</td>
-            </tr>
-            <tr>
-                <th>Description</th><td>@Product.Description</td>
-            </tr>
-            <tr>
-                <th>Category</th><td>@Product.Category</td>
-            </tr>
-            <tr>
-                <th>Price</th><td>@Product.Price.ToString("C")</td>
-            </tr>
-            </tbody>
-        </table>
-        <NavLink class="btn btn-warning" href="@EditUrl">Edit</NavLink>
-        <NavLink class="btn btn-secondary" href="/admin/products">Back</NavLink>
-        
-        @code {
-        
-            [Inject]
-            public IStoreRepository Repository { get; set; }
-        
-            [Parameter]
-            public long Id { get; set; }
-        
-            public Product Product { get; set; }
-        
-            protected override void OnParametersSet()
-            {
-                Product = Repository.Products.FirstOrDefault(p => p.ProductId == Id);
-            }
-        
-            public string EditUrl => $"/admin/products/edit/{Product.ProductId}";
-        }
-
--  Restart ASP.NET Core, request http://localhost:5000/admin/products, and click one of the `Details` buttons
-  
-    ![](Images/4.6.png)
 
 - To support the operations to create and edit data, add a Razor Component named `Editor.razor` to the `Pages/Admin` folder
 
