@@ -256,6 +256,8 @@ namespace SportsStore.Controllers
 
 ![](Images/4.4.png)
 
+![](Images/4.5.png)
+
 </details>
 
 <details>
