@@ -106,9 +106,11 @@ and add a `Products.html` View to the `Views/Admin` folder with the content show
 <h4>This is the products information.</h4>
 
 ```
-- Build project, run application and request http://localhost:5000/Admin/Orders and http://localhost:5000/Admin/Products
+- Build project, run application and request http://localhost:5000/Admin/Orders 
 
 ![](Images/4.1.png)
+
+and http://localhost:5000/Admin/Products
 
 ![](Images/4.2.png)
 
