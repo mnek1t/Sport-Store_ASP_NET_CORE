@@ -45,7 +45,6 @@ namespace SportsStore.Controllers
     }
 }
 ```
-
 - To create the layout for the administration tools, add a `_AdminLayout.html` Layout View with the content shown below to the `Views/Admin` folder 
 ```
 <!DOCTYPE html>
@@ -114,7 +113,7 @@ and http://localhost:5000/Admin/Products
 
 ![](Images/4.2.png)
 
-- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the Order.cs file (the `Models` Folder)
+- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the `Order.cs` file (the `Models` Folder)
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -134,7 +133,6 @@ namespace SportsStore.Models
 }
 
 ```
-
 - To update the database to reflect the addition of the `Shipped` property to the `Order` class, open a new command prompt or PowerShell window, navigate to the SportsStore project folder and run the following command: 
 
 ```
@@ -143,6 +141,49 @@ dotnet ef migrations add ShippedOrders
 ```
 The migration will be applied automatically when the application is started and the `SeedData` class calls the `Migrate` method provided by Entity Framework Core.
 
+- Add to `AdminController` class `MarkShipped` method that will be receive a POST request that specifies the ID of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `true` and saved and  `Reset` method  that will be receive a POST request that specifies the ID of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `false` and saved
+
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class AdminController : Controller
+    {
+        . . .
+
+        [HttpPost]
+        public IActionResult MarkShipped(int orderId)
+        {
+            Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
+
+            if (order != null)
+            {
+                order.Shipped = true;
+                orderRepository.SaveOrder(order);
+            }
+
+            return RedirectToAction("Orders");
+        }
+
+        [HttpPost]
+        public IActionResult Reset(int orderId)
+        {
+            Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
+
+            if (order != null)
+            {
+                order.Shipped = false;
+                orderRepository.SaveOrder(order);
+            }
+
+            return RedirectToAction("Orders");
+        }
+    }
+}
+```
 - To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.html` Partial View that displays a table without knowing which category of order it is dealing with the content shown below
 
 ```
@@ -189,135 +230,23 @@ The migration will be applied automatically when the application is started and 
     </tbody>
 </table>
 ```
-- The next step is to create a View that will get the Order data from the database and use the `OrderTable` Partal View to display it to the user.
-
-- Add action methods in the `OrderController.cs` file in the `SportsStore/Controllers` folder - the `List` method will be use to display a list of the unshipped orders to the administrator and the `MarkShipped` method will  be receive a POST request that specifies the ID of an order, which is used to locate the corresponding Order object from the repository so that the Shipped property can be set to true and saved.
- 
-```
-using Microsoft.AspNetCore.Mvc;
-using SportsStore.Models;
-using SportsStore.Models.Repository;
-
-namespace SportsStore.Controllers
-{
-    public class OrderController : Controller
-    {
-        . . .
-
-        public ViewResult List() => View(orderRepository.Orders.Where(o => !o.Shipped));
-        
-        [HttpPost]
-        public IActionResult MarkShipped(int orderId)
-        {
-            Order order = orderRepository
-                .Orders
-                .FirstOrDefault(o => o.OrderId == orderId);
-
-            if (order != null)
-            {
-                order.Shipped = true;
-                orderRepository.SaveOrder(order);
-            }
-
-            return RedirectToAction(nameof(List));
-        }
-
-        . . .
-    }
-}
-
-```
-- To display the list of unshipped orders add a `List.cshtml` view file to the Views/Order folder and add the markup shown below
+- Change a `Orders.html` View that gets the `Order` data from the database and uses the `_OrderTable.html` Partial View to display it to the user
 
 ```
 @model IQueryable<Order>
 
 @{
     Layout = "_AdminLayout";
+    var unshippedOrders = Model.Where(o => !o.Shipped);
+    var shippedOrders = Model.Where(o => o.Shipped);
 }
 
-@if (Model.Any())
-{
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Name</th>
-            <th>Zip</th>
-            <th colspan="2">Details</th>
-            <th></th>
-        </tr>
-        @foreach (Order o in Model)
-        {
-            <tr>
-                <td>@o.Name</td>
-                <td>@o.Zip</td>
-                <th>Product</th>
-                <th>Quantity</th>
-                <td>
-                    <form asp-action="MarkShipped" method="post">
-                        <input type="hidden" name="orderId" value="@o.OrderId" />
-                        <button type="submit" class="btn btn-sm btn-danger">
-                            Ship
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @foreach (CartLine line in o.Lines)
-            {
-                <tr>
-                    <td colspan="2"></td>
-                    <td>@line.Product.Name</td>
-                    <td>@line.Quantity</td>
-                    <td></td>
-                </tr>
-            }
-        }
-    </table>
-}
-else
-{
-    <div class="text-center">No Unshipped Orders</div>
-}
-
+<partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
+<partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
+<form asp-action="List" method="post">
+    <button class="btn btn-info">Refresh Data</button>
+</form>
 ```
-- Add a `_AdminLayout.cshtml` layout view in the Views/Shared folder with the following markup
-
-```
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>SportsStore</title>
-    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body>
-    <div class="bg-info text-white p-2">
-        <div class="container-fluid">
-            <span class="navbar-brand">SPORTS STORE Administration</span>
-        </div>
-    </div>
-    <div class="container-fluid">
-        <div class="row p-2">
-            <div class="col-3">
-                <div class="d-grid gap-1">
-                    <a class="btn btn-outline-primary"
-                       asp-action="List" asp-controller="Order">
-                       Orders
-                    </a>
-                    <a class="btn btn-outline-primary"
-                       asp-action="Products" asp-controller="Admin">
-                        Products
-                    </a>
-                </div>
-            </div>
-            <div class="col-9">
-                @RenderBody()
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-```
-
 - To see the new features, restart ASP.NET Core, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/order/list, and you will see a summary of the order you created displayed in the Unshipped Orders table. Click the Ship button, and the order will be updated and removed from the Shipped Orders table, as shown below
 
 ![](Images/4.1.png)
