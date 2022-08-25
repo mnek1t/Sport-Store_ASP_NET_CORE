@@ -20,7 +20,99 @@ $ git merge main --ff
 ```
 - Continue your work in Visual Studio or other IDE.
 
-- Builed project, run application and request http://localhost:5000/. Your app should be work.
+- Build project, run application and request http://localhost:5000/. Your application should be work.
+
+- Create and add to `Controllers` folder a separate `AdminController.cs` controller for managing orders shipping and the product catalog
+
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class AdminController : Controller
+    {
+        private IStoreRepository storeRepository;
+        private IOrderRepository orderRepository;
+
+        public AdminController(IStoreRepository storeRepository, IOrderRepository orderRepository) 
+            => (this.storeRepository, this.orderRepository) = (storeRepository, orderRepository);
+
+        public ViewResult Orders() => View(orderRepository.Orders);
+
+        public ViewResult Products() => View(storeRepository.Products);
+    }
+}
+```
+
+- To create the layout for the administration tools, add a `_AdminLayout.html` Layout View with the content shown below to the `Views/Admin` folder 
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SportsStore</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="bg-info text-white p-2">
+        <div class="container-fluid">
+            <span class="navbar-brand">SPORTS STORE Administration</span>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row p-2">
+            <div class="col-3">
+                <div class="d-grid gap-1">
+                    <a class="btn btn-outline-primary"
+                       asp-action="Orders" asp-controller="Admin">
+                       Orders
+                    </a>
+                    <a class="btn btn-outline-primary"
+                       asp-action="Products" asp-controller="Admin">
+                        Products
+                    </a>
+                </div>
+            </div>
+            <div class="col-9">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+```
+- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.html` View to the `Views/Admin` folder with the content shown below
+
+```
+@model IQueryable<Order>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h4>This is the orders information.</h4>
+```
+and add a `Products.html` View to the `Views/Admin` folder with the content shown below
+
+```
+@model IQueryable<Product>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h4>This is the products information.</h4>
+
+```
+- Build project, run application and request http://localhost:5000/Admin/Orders 
+
+![](Images/4.1.png)
+
+and http://localhost:5000/Admin/Products
+
+![](Images/4.2.png)
 
 - To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the Order.cs file (the `Models` Folder)
 
@@ -48,8 +140,57 @@ namespace SportsStore.Models
 ```
 dotnet ef migrations add ShippedOrders
 
-dotnet ef database update
 ```
+The migration will be applied automatically when the application is started and the `SeedData` class calls the `Migrate` method provided by Entity Framework Core.
+
+- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.html` Partial View that displays a table without knowing which category of order it is dealing with the content shown below
+
+```
+@model (IQueryable<Order> Orders, string TableTitle, string ButtonLabel, string CallbackMethodName)
+
+<table class="table table-sm table-striped table-bordered">
+    <thead>
+        <tr><th colspan="5" class="text-center">@Model.TableTitle</th></tr>
+    </thead>
+    <tbody>
+        @if (Model.Orders.Any())
+        {
+            @foreach (Order o in Model.Orders)
+            {
+                <tr>
+                    <td>@o.Name</td>
+                    <td>@o.Zip</td>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <td>
+                        <form asp-action=@Model.CallbackMethodName method="post">
+                            <input type="hidden" name="orderId" value="@o.OrderId" />
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                @Model.ButtonLabel
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @foreach (CartLine line in o.Lines)
+                {
+                    <tr>
+                        <td colspan="2"></td>
+                        <td>@line.Product.Name</td>
+                        <td>@line.Quantity</td>
+                        <td></td>
+                    </tr>
+                }
+            }
+        }
+        else
+        {
+            <tr><td colspan="5" class="text-center">No Orders</td></tr>
+        }
+    </tbody>
+</table>
+```
+- The next step is to create a View that will get the Order data from the database and use the `OrderTable` Partal View to display it to the user.
+
 - Add action methods in the `OrderController.cs` file in the `SportsStore/Controllers` folder - the `List` method will be use to display a list of the unshipped orders to the administrator and the `MarkShipped` method will  be receive a POST request that specifies the ID of an order, which is used to locate the corresponding Order object from the repository so that the Shipped property can be set to true and saved.
  
 ```
@@ -177,7 +318,13 @@ else
 </html>
 ```
 
-- Builed project, run application and request http://localhost:5000/Orders/List.
+- To see the new features, restart ASP.NET Core, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/order/list, and you will see a summary of the order you created displayed in the Unshipped Orders table. Click the Ship button, and the order will be updated and removed from the Shipped Orders table, as shown below
+
+![](Images/4.1.png)
+
+![](Images/4.2.png)
+
+![](Images/4.3.png)
 
 </details>
 
