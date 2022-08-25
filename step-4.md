@@ -20,10 +20,33 @@ $ git merge main --ff
 ```
 - Continue your work in Visual Studio or other IDE.
 
-- Builed project, run application and request http://localhost:5000/. Your application should be work.
+- Build project, run application and request http://localhost:5000/. Your application should be work.
 
-- To create the layout for the administration tools, add a `_AdminLayout.html` Layout View to the `Views/Admin` folder with the content shown below
+- Create and add to `Controllers` folder a separate `AdminController.cs` controller for managing orders shipping and the product catalog
 
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class AdminController : Controller
+    {
+        private IStoreRepository storeRepository;
+        private IOrderRepository orderRepository;
+
+        public AdminController(IStoreRepository storeRepository, IOrderRepository orderRepository) 
+            => (this.storeRepository, this.orderRepository) = (storeRepository, orderRepository);
+
+        public ViewResult Orders() => View(orderRepository.Orders);
+
+        public ViewResult Products() => View(storeRepository.Products);
+    }
+}
+```
+
+- To create the layout for the administration tools, add a `_AdminLayout.html` Layout View with the content shown below to the `Views/Admin` folder 
 ```
 <!DOCTYPE html>
 <html>
@@ -81,7 +104,14 @@ and add a `Products.html` View to the `Views/Admin` folder with the content show
 }
 
 <h4>This is the products information.</h4>
+
 ```
+- Build project, run application and request http://localhost:5000/Admin/Orders and http://localhost:5000/Admin/Products
+
+![](Images/4.1.png)
+
+![](Images/4.2.png)
+
 - To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the Order.cs file (the `Models` Folder)
 
 ```
