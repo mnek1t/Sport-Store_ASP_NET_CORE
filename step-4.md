@@ -469,7 +469,7 @@ and a `Details.html` view to the `Views/Admin` folder
 <a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
 <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Admin/Products and click `Details` link for some product
+- Restart ASP.NET Core, request http://localhost:5000/Admin/Products and click `Details` link for some product
 
 ![](Images/4.8.png)
 
