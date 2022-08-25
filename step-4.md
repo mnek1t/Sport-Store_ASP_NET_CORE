@@ -252,7 +252,7 @@ namespace SportsStore.Controllers
 
 ![](Images/4.3.png)
 
-- To see the new features, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/Admin/Orders, and you will see a summary of the order you created displayed in the `Unshipped Orders table`. Click the `Ship` button, and the order will be updated and moved to the `Shipped Orders table`, as shown below.
+- To see the new features, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/Admin/Orders, and you will see a summary of the order you created displayed in the `Unshipped Orders table`. Click the `Ship` button, and the order will be updated and moved to the `Shipped Orders table`, as shown below
 
 ![](Images/4.4.png)
 
