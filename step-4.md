@@ -475,97 +475,36 @@ and a `Details.cshtml` view to the `Views/Admin` folder
 
 - To implement the abilities to edit and to create of a single `Product` object, add the `Edit` and `Create` action methods accordingly in the `AdminController` class.
 ```
-public ViewResult Edit(int productId)
-    => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
-```
+public class AdminController : Controller
+{
+    . . .
 
-- To support the operations to create and edit data, add a Razor Component named `Editor.razor` to the `Pages/Admin` folder
-
-        @page "/admin/products/edit/{id:long}"
-        @page "/admin/products/create"
-
-        @inherits OwningComponentBase<IStoreRepository>
-
-        <style>
-            div.validation-message { color: rgb(220, 53, 69); font-weight: 500 }
-        </style>
-
-        <h3 class="bg-@ThemeColor text-white text-center p-1">@TitleText a Product</h3>
-        <EditForm Model="Product" OnValidSubmit="SaveProduct">
-            <DataAnnotationsValidator/>
-            @if (Product.ProductId != 0)
-            {
-                <div class="form-group">
-                    <label>ID</label>
-                    <input class="form-control" disabled value="@Product.ProductId"/>
-                </div>
-            }
-            <div class="form-group">
-                <label>Name</label>
-                <ValidationMessage For="@(() => Product.Name)"/>
-                <InputText class="form-control" @bind-Value="Product.Name"/>
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <ValidationMessage For="@(() => Product.Description)"/>
-                <InputText class="form-control" @bind-Value="Product.Description"/>
-            </div>
-            <div class="form-group">
-                <label>Category</label>
-                <ValidationMessage For="@(() => Product.Category)"/>
-                <InputText class="form-control" @bind-Value="Product.Category"/>
-            </div>
-            <div class="form-group">
-                <label>Price</label>
-                <ValidationMessage For="@(() => Product.Price)"/>
-                <InputNumber class="form-control" @bind-Value="Product.Price"/>
-            </div>
-            <button type="submit" class="btn btn-@ThemeColor">Save</button>
-            <NavLink class="btn btn-secondary" href="/admin/products">Cancel</NavLink>
-        </EditForm>
-
-        @code {
-            public IStoreRepository Repository => Service;
-
-            [Inject]
-            public NavigationManager NavManager { get; set; }
-
-            [Parameter]
-            public long Id { get; set; } = 0;
-
-            public Product Product { get; set; } = new Product();
-
-            protected override void OnParametersSet()
-            {
-                if (Id != 0)
-                {
-                    Product = Repository.Products.FirstOrDefault(p => p.ProductId == Id);
-                }
-            }
-
-            public void SaveProduct()
-            {
-                if (Id == 0)
-                {
-                    Repository.CreateProduct(Product);
-                }
-                else
-                {
-                    Repository.SaveProduct(Product);
-                }
-                NavManager.NavigateTo("/admin/products");
-            }
-
-            public string ThemeColor => Id == 0 ? "primary" : "warning";
-
-            public string TitleText => Id == 0 ? "Create" : "Edit";
+    [Route("Admin/Edit/{productId:int}")]
+    public ViewResult Edit(int productId)
+        => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
+    
+    [HttpPost]
+    public IActionResult Edit(Product product)
+    {
+        if (ModelState.IsValid)
+        {
+            storeRepository.SaveProduct(product);
+            return RedirectToAction("Products");
         }
 
-- To see the editor, restart ASP.NET Core, request http://localhost:5000/admin, and click the `Edit` button
-  
-    ![](Images/4.3.png)  
+        return View(product);
+    }
 
-    ![](Images/4.7.png)   
+    . . .
+}
+```
+//?????????????
+- To support the operations to create and edit data, add a `Editor.cshtml` artial View to the `Pages/Admin` folder
+
+
+- To see the editor work, restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click the `Edit` button
+  
+![](Images/4.9.png)  
 
 or request http://localhost:5000/admin, and click the `Create` button
   
