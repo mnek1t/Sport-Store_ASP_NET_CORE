@@ -243,11 +243,10 @@ namespace SportsStore.Controllers
 
 <partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
 <partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
-<form asp-action="List" method="post">
+<form asp-action="Orders" method="post">
     <button class="btn btn-info">Refresh Data</button>
 </form>
 ```
-
 - To see your changes, build project, run application and request http://localhost:5000/Admin/Orders.
 
 ![](Images/4.3.png)
@@ -357,7 +356,7 @@ namespace SportsStore.Models
 }
 
 ```
-- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.html` file
+- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.html` file with those shown below
 
 ```
 @model IQueryable<Product>
@@ -411,9 +410,76 @@ namespace SportsStore.Models
 
 - Restart ASP.NET Core and request http://localhost:5000/Admin/Products
 
-    ![](Images/4.7.png)
+![](Images/4.7.png)
 
-- To create the Detail Component the job of that is to display all the fields for a single `Product` object, add a Razor Component named `Details.razor` to the `Pages/Admin` folder
+- To display all the fields for a single `Product` object add an `Details` action method in the `AdminController` class
+
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class AdminController : Controller
+    {
+        . . .
+        [Route("Admin/Details/{productId:int}")]
+        public ViewResult Details(int productId)
+            => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
+        . . .
+}
+```
+and a `Details.html` view to the `Views/Admin` folder
+
+```
+@model SportsStore.Models.Product?
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h3 class="bg-info text-white text-center p-1">Details</h3>
+
+<table class="table table-sm table-bordered table-striped">
+    <tbody>
+        <tr>
+            <th>Id</th>
+            <td>@Model?.ProductId</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>@Model?.Name</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>@Model?.Description</td>
+        </tr>
+        <tr>
+            <th>Category</th>
+            <td>@Model?.Category</td>
+        </tr>
+        <tr>
+            <th>Price</th>
+            <td>@Model?.Price.ToString("C")</td>
+        </tr>
+    </tbody>
+</table>
+
+<a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
+<a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
+```
+- Restart ASP.NET Core and request http://localhost:5000/Admin/Products and click `Details` link for some product
+
+![](Images/4.8.png)
+
+- To implement eding possibility add an `Edit` action method in the `AdminController` class
+
+```
+public ViewResult Edit(int productId)
+    => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
+```
+- Create the Detail Component the job of that is to display all the fields for a single `Product` object, add a Razor Component named `Details.razor` to the `Pages/Admin` folder
 
         @page "/admin/products/details/{id:long}"
         
