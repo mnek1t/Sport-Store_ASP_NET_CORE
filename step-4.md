@@ -45,6 +45,37 @@ namespace SportsStore.Controllers
     }
 }
 ```
+- Add the `AdminNavigationMenuViewComponent` class to `Components` folder
+
+```
+using Microsoft.AspNetCore.Mvc;
+
+namespace SportsStore.Components
+{
+    public class AdminNavigationMenuViewComponent : ViewComponent
+    {
+        public IViewComponentResult Invoke()
+        {
+            ViewBag.SelectedAction = RouteData?.Values["action"];
+
+            return View(new string[] { "Orders", "Products" });
+        }
+    }
+}
+```
+- Add the `Default.cshtml` Razor view named  to `Views/Shared/Components/AdminNavigationMenu` folder 
+
+```
+<div class="d-grid gap-2">
+    @foreach (string category in Model)
+    {
+        <a class="btn @(category == ViewBag.SelectedAction ? "btn-primary" : "btn-outline-secondary")"
+        asp-action="@category" asp-controller="Admin">
+            @category
+        </a>
+    }
+</div>
+```
 - To create the layout for the administration tools, add a `_AdminLayout.cshtml` Layout View with the content shown below to the `Views/Admin` folder 
 ```
 <!DOCTYPE html>
@@ -63,16 +94,7 @@ namespace SportsStore.Controllers
     <div class="container-fluid">
         <div class="row p-2">
             <div class="col-3">
-                <div class="d-grid gap-1">
-                    <a class="btn btn-outline-primary"
-                       asp-action="Orders" asp-controller="Admin">
-                       Orders
-                    </a>
-                    <a class="btn btn-outline-primary"
-                       asp-action="Products" asp-controller="Admin">
-                        Products
-                    </a>
-                </div>
+                <vc:admin-navigation-menu />
             </div>
             <div class="col-9">
                 @RenderBody()
