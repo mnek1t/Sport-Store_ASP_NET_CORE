@@ -238,7 +238,7 @@ namespace SportsStore.Components
 }
 ```
 
-- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add it to the Razor view named `Default.cshtml`.
+- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add to it the Razor view named `Default.cshtml`.
 
 ```
 @model IEnumerable<string>
