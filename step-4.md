@@ -31,6 +31,7 @@ using SportsStore.Models.Repository;
 
 namespace SportsStore.Controllers
 {
+    [Route("Admin")]
     public class AdminController : Controller
     {
         private IStoreRepository storeRepository;
@@ -39,13 +40,46 @@ namespace SportsStore.Controllers
         public AdminController(IStoreRepository storeRepository, IOrderRepository orderRepository) 
             => (this.storeRepository, this.orderRepository) = (storeRepository, orderRepository);
 
+        [Route("Orders")]
         public ViewResult Orders() => View(orderRepository.Orders);
 
+        [Route("Products")]
         public ViewResult Products() => View(storeRepository.Products);
     }
 }
 ```
-- To create the layout for the administration tools, add a `_AdminLayout.html` Layout View with the content shown below to the `Views/Admin` folder 
+- Add the `AdminNavigationMenuViewComponent` class to `Components` folder
+
+```
+using Microsoft.AspNetCore.Mvc;
+
+namespace SportsStore.Components
+{
+    public class AdminNavigationMenuViewComponent : ViewComponent
+    {
+        public IViewComponentResult Invoke()
+        {
+            ViewBag.Selection = Request.Path.Value ?? "Products";
+
+            return View(new string[] { "Orders", "Products" });
+        }
+    }
+}
+```
+- Add the `Default.cshtml` Razor view named  to `Views/Shared/Components/AdminNavigationMenu` folder 
+
+```
+<div class="d-grid gap-2">
+    @foreach (string category in Model)
+    {
+        <a class="btn @(((string)ViewBag.Selection).Contains(category) ? "btn-primary" : "btn-outline-secondary")"
+           asp-action="@category" asp-controller="Admin">
+            @category
+        </a>
+    }
+</div>
+```
+- To create the layout for the administration tools, add a `_AdminLayout.cshtml` Layout View with the content shown below to the `Views/Admin` folder 
 ```
 <!DOCTYPE html>
 <html>
@@ -63,16 +97,7 @@ namespace SportsStore.Controllers
     <div class="container-fluid">
         <div class="row p-2">
             <div class="col-3">
-                <div class="d-grid gap-1">
-                    <a class="btn btn-outline-primary"
-                       asp-action="Orders" asp-controller="Admin">
-                       Orders
-                    </a>
-                    <a class="btn btn-outline-primary"
-                       asp-action="Products" asp-controller="Admin">
-                        Products
-                    </a>
-                </div>
+                <vc:admin-navigation-menu />
             </div>
             <div class="col-9">
                 @RenderBody()
@@ -82,7 +107,7 @@ namespace SportsStore.Controllers
 </body>
 </html>
 ```
-- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.html` View to the `Views/Admin` folder with the content shown below
+- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.cshtml` View to the `Views/Admin` folder with the content shown below
 
 ```
 @model IQueryable<Order>
@@ -93,7 +118,7 @@ namespace SportsStore.Controllers
 
 <h4>This is the orders information.</h4>
 ```
-and add a `Products.html` View to the `Views/Admin` folder with the content shown below
+and add a `Products.cshtml` View to the `Views/Admin` folder with the content shown below
 
 ```
 @model IQueryable<Product>
@@ -155,6 +180,8 @@ namespace SportsStore.Controllers
         . . .
 
         [HttpPost]
+        [Route("MarkShipped")]
+
         public IActionResult MarkShipped(int orderId)
         {
             Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
@@ -169,6 +196,7 @@ namespace SportsStore.Controllers
         }
 
         [HttpPost]
+        [Route("Reset")]
         public IActionResult Reset(int orderId)
         {
             Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
@@ -184,7 +212,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.html` Partial View that displays a table without knowing which category of order it is dealing with the content shown below
+- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.cshtml` Partial View that displays a table without knowing which category of order it is dealing with the content shown below
 
 ```
 @model (IQueryable<Order> Orders, string TableTitle, string ButtonLabel, string CallbackMethodName)
@@ -205,7 +233,7 @@ namespace SportsStore.Controllers
                     <th>Quantity</th>
                     <td>
                         <form asp-action=@Model.CallbackMethodName method="post">
-                            <input type="hidden" name="orderId" value="@o.OrderId" />
+                            <input type="hidden" name="OrderId" value="@o.OrderId" />
                             <button type="submit" class="btn btn-sm btn-danger">
                                 @Model.ButtonLabel
                             </button>
@@ -230,7 +258,7 @@ namespace SportsStore.Controllers
     </tbody>
 </table>
 ```
-- Change a `Orders.html` View that gets the `Order` data from the database and uses the `_OrderTable.html` Partial View to display it to the user
+- Change a `Orders.cshtml` View that gets the `Order` data from the database and uses the `_OrderTable.cshtml` Partial View to display it to the user
 
 ```
 @model IQueryable<Order>
@@ -243,6 +271,7 @@ namespace SportsStore.Controllers
 
 <partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
 <partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
+
 <form asp-action="Orders" method="post">
     <button class="btn btn-info">Refresh Data</button>
 </form>
@@ -318,8 +347,25 @@ namespace SportsStore.Models.Repository
             context.SaveChanges();
         }
 
-        public void SaveProduct(Product p)
+        public void SaveProduct(Product product)
         {
+            if (product.ProductId == 0)
+            {
+                context.Products.Add(product);
+            }
+            else
+            {
+                Product? dbEntry = context.Products?.FirstOrDefault(p => p.ProductId == product.ProductId);
+
+                if (dbEntry != null)
+                {
+                    dbEntry.Name = product.Name;
+                    dbEntry.Description = product.Description;
+                    dbEntry.Price = product.Price;
+                    dbEntry.Category = product.Category;
+                }
+            }
+
             context.SaveChanges();
         }
     }
@@ -356,7 +402,7 @@ namespace SportsStore.Models
 }
 
 ```
-- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.html` file with those shown below
+- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.cshtml` file with those shown below
 
 ```
 @model IQueryable<Product>
@@ -386,11 +432,14 @@ namespace SportsStore.Models
                     <td>@p.Category</td>
                     <td>@p.Price.ToString("c")</td>
                     <td>
-                        <a class="btn btn-info btn-sm" asp-controller="Admin" asp-action="Details">
+                        <a class="btn btn-info btn-sm" asp-controller="Admin" asp-action="Details" asp-route-productId="@p.ProductId">
                             Details
                         </a>
-                        <a class="btn btn-warning btn-sm" asp-controller="Admin" asp-action="Edit">
+                        <a class="btn btn-warning btn-sm" asp-controller="Admin" asp-action="Edit" asp-route-productId="@p.ProductId">
                             Edit
+                        </a>
+                        <a class="btn btn-danger btn-sm" asp-controller="Admin" asp-action="Delete" asp-route-productId="@p.ProductId">
+                            Delete
                         </a>
                     </td>
                 </tr>
@@ -430,7 +479,7 @@ namespace SportsStore.Controllers
         . . .
 }
 ```
-and a `Details.html` view to the `Views/Admin` folder
+and a `Details.cshtml` view to the `Views/Admin` folder
 
 ```
 @model SportsStore.Models.Product?
@@ -469,152 +518,97 @@ and a `Details.html` view to the `Views/Admin` folder
 <a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
 <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Admin/Products and click `Details` link for some product
+- Restart ASP.NET Core, request http://localhost:5000/Admin/Products and click `Details` link for some product
 
 ![](Images/4.8.png)
 
-- To implement eding possibility add an `Edit` action method in the `AdminController` class
-
+- To implement the abilities to edit and to create of a single `Product` object, add the `Edit` and `Create` action methods accordingly in the `AdminController` class.
 ```
-public ViewResult Edit(int productId)
-    => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
-```
-- Create the Detail Component the job of that is to display all the fields for a single `Product` object, add a Razor Component named `Details.razor` to the `Pages/Admin` folder
+public class AdminController : Controller
+{
+    . . .
 
-        @page "/admin/products/details/{id:long}"
-        
-        <h3 class="bg-info text-white text-center p-1">Details</h3>
-        <table class="table table-sm table-bordered table-striped">
-            <tbody>
-            <tr>
-                <th>ID</th><td>@Product.ProductId</td>
-            </tr>
-            <tr>
-                <th>Name</th><td>@Product.Name</td>
-            </tr>
-            <tr>
-                <th>Description</th><td>@Product.Description</td>
-            </tr>
-            <tr>
-                <th>Category</th><td>@Product.Category</td>
-            </tr>
-            <tr>
-                <th>Price</th><td>@Product.Price.ToString("C")</td>
-            </tr>
-            </tbody>
-        </table>
-        <NavLink class="btn btn-warning" href="@EditUrl">Edit</NavLink>
-        <NavLink class="btn btn-secondary" href="/admin/products">Back</NavLink>
-        
-        @code {
-        
-            [Inject]
-            public IStoreRepository Repository { get; set; }
-        
-            [Parameter]
-            public long Id { get; set; }
-        
-            public Product Product { get; set; }
-        
-            protected override void OnParametersSet()
-            {
-                Product = Repository.Products.FirstOrDefault(p => p.ProductId == Id);
-            }
-        
-            public string EditUrl => $"/admin/products/edit/{Product.ProductId}";
+    [Route("Products/Edit/{productId:long}")]
+    public ViewResult Edit(int productId)
+    {
+        TempData["Categories"] = storeRepository.Products
+            .Select(x => x.Category)
+            .Distinct()
+            .OrderBy(x => x).ToList();
+
+        return View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
+    }
+
+    [HttpPost]
+    [Route("Products/Edit/{productId:long}")]
+    public IActionResult Edit(Product product)
+    {
+        if (ModelState.IsValid)
+        {
+            storeRepository.SaveProduct(product);
+            return RedirectToAction("Products");
         }
 
--  Restart ASP.NET Core, request http://localhost:5000/admin/products, and click one of the `Details` buttons
-  
-    ![](Images/4.6.png)
+        return View(product);
+    }
 
-- To support the operations to create and edit data, add a Razor Component named `Editor.razor` to the `Pages/Admin` folder
+    . . .
+}
+```
+- To support the operations to create and edit data, add a `_Editor.cshtml` partial View to the `Views/Admin` folder
 
-        @page "/admin/products/edit/{id:long}"
-        @page "/admin/products/create"
+```
+@model (Product Product, string ThemeColor, string TitleText, string CallbackMethodName)
 
-        @inherits OwningComponentBase<IStoreRepository>
+@{
+    var categories = new SelectList(TempData?.Peek("Categories") as IEnumerable<string>);
+    Product product = Model.Product;
+}
 
-        <style>
-            div.validation-message { color: rgb(220, 53, 69); font-weight: 500 }
-        </style>
-
-        <h3 class="bg-@ThemeColor text-white text-center p-1">@TitleText a Product</h3>
-        <EditForm Model="Product" OnValidSubmit="SaveProduct">
-            <DataAnnotationsValidator/>
-            @if (Product.ProductId != 0)
+<h3 class="bg-@Model.ThemeColor text-white text-center p-1">@Model.TitleText a Product</h3>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="@Model.CallbackMethodName" asp-controller="Admin" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (product.ProductId != 0)
             {
                 <div class="form-group">
-                    <label>ID</label>
-                    <input class="form-control" disabled value="@Product.ProductId"/>
+                    <label asp-for="@product.ProductId" class="control-label"></label>
+                    <input asp-for="@product.ProductId" class="form-control" readonly/>
                 </div>
             }
             <div class="form-group">
-                <label>Name</label>
-                <ValidationMessage For="@(() => Product.Name)"/>
-                <InputText class="form-control" @bind-Value="Product.Name"/>
+                <label asp-for="@product.Name" class="control-label"></label>
+                <input asp-for="@product.Name" class="form-control" />
+                <span asp-validation-for="@product.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>Description</label>
-                <ValidationMessage For="@(() => Product.Description)"/>
-                <InputText class="form-control" @bind-Value="Product.Description"/>
+                <label asp-for="@product.Description" class="control-label"></label>
+                <input asp-for="@product.Description" class="form-control" />
+                <span asp-validation-for="@product.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>Category</label>
-                <ValidationMessage For="@(() => Product.Category)"/>
-                <InputText class="form-control" @bind-Value="Product.Category"/>
+                <label asp-for="@product.Price" class="control-label"></label>
+                <input asp-for="@product.Price" class="form-control" />
+                <span asp-validation-for="@product.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>Price</label>
-                <ValidationMessage For="@(() => Product.Price)"/>
-                <InputNumber class="form-control" @bind-Value="Product.Price"/>
+                <label asp-for="@product.Category" class="control-label"></label>
+                <select asp-for="@product.Category" asp-items="@categories" class="form-control"></select>
+                <span asp-validation-for="@product.Category" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-@ThemeColor">Save</button>
-            <NavLink class="btn btn-secondary" href="/admin/products">Cancel</NavLink>
-        </EditForm>
+            <div class="mt-2">
+                <button type="submit" class="btn btn-@Model.ThemeColor">Save</button>
+                <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+```
 
-        @code {
-            public IStoreRepository Repository => Service;
-
-            [Inject]
-            public NavigationManager NavManager { get; set; }
-
-            [Parameter]
-            public long Id { get; set; } = 0;
-
-            public Product Product { get; set; } = new Product();
-
-            protected override void OnParametersSet()
-            {
-                if (Id != 0)
-                {
-                    Product = Repository.Products.FirstOrDefault(p => p.ProductId == Id);
-                }
-            }
-
-            public void SaveProduct()
-            {
-                if (Id == 0)
-                {
-                    Repository.CreateProduct(Product);
-                }
-                else
-                {
-                    Repository.SaveProduct(Product);
-                }
-                NavManager.NavigateTo("/admin/products");
-            }
-
-            public string ThemeColor => Id == 0 ? "primary" : "warning";
-
-            public string TitleText => Id == 0 ? "Create" : "Edit";
-        }
-
-- To see the editor, restart ASP.NET Core, request http://localhost:5000/admin, and click the `Edit` button
+- To see the editor work, restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click the `Edit` button
   
-    ![](Images/4.3.png)  
-
-    ![](Images/4.7.png)   
+![](Images/4.9.png)  
 
 or request http://localhost:5000/admin, and click the `Create` button
   
