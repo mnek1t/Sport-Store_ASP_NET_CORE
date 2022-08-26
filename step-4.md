@@ -347,8 +347,25 @@ namespace SportsStore.Models.Repository
             context.SaveChanges();
         }
 
-        public void SaveProduct(Product p)
+        public void SaveProduct(Product product)
         {
+            if (product.ProductId == 0)
+            {
+                context.Products.Add(product);
+            }
+            else
+            {
+                Product? dbEntry = context.Products?.FirstOrDefault(p => p.ProductId == product.ProductId);
+
+                if (dbEntry != null)
+                {
+                    dbEntry.Name = product.Name;
+                    dbEntry.Description = product.Description;
+                    dbEntry.Price = product.Price;
+                    dbEntry.Category = product.Category;
+                }
+            }
+
             context.SaveChanges();
         }
     }
@@ -415,11 +432,14 @@ namespace SportsStore.Models
                     <td>@p.Category</td>
                     <td>@p.Price.ToString("c")</td>
                     <td>
-                        <a class="btn btn-info btn-sm" asp-controller="Admin" asp-action="Details">
+                        <a class="btn btn-info btn-sm" asp-controller="Admin" asp-action="Details" asp-route-productId="@p.ProductId">
                             Details
                         </a>
-                        <a class="btn btn-warning btn-sm" asp-controller="Admin" asp-action="Edit">
+                        <a class="btn btn-warning btn-sm" asp-controller="Admin" asp-action="Edit" asp-route-productId="@p.ProductId">
                             Edit
+                        </a>
+                        <a class="btn btn-danger btn-sm" asp-controller="Admin" asp-action="Delete" asp-route-productId="@p.ProductId">
+                            Delete
                         </a>
                     </td>
                 </tr>
@@ -508,11 +528,19 @@ public class AdminController : Controller
 {
     . . .
 
-    [Route("Admin/Edit/{productId:int}")]
+    [Route("Products/Edit/{productId:long}")]
     public ViewResult Edit(int productId)
-        => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
-    
+    {
+        TempData["Categories"] = storeRepository.Products
+            .Select(x => x.Category)
+            .Distinct()
+            .OrderBy(x => x).ToList();
+
+        return View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
+    }
+
     [HttpPost]
+    [Route("Products/Edit/{productId:long}")]
     public IActionResult Edit(Product product)
     {
         if (ModelState.IsValid)
@@ -527,9 +555,56 @@ public class AdminController : Controller
     . . .
 }
 ```
-//?????????????
-- To support the operations to create and edit data, add a `Editor.cshtml` artial View to the `Pages/Admin` folder
+- To support the operations to create and edit data, add a `_Editor.cshtml` partial View to the `Views/Admin` folder
 
+```
+@model (Product Product, string ThemeColor, string TitleText, string CallbackMethodName)
+
+@{
+    var categories = new SelectList(TempData?.Peek("Categories") as IEnumerable<string>);
+    Product product = Model.Product;
+}
+
+<h3 class="bg-@Model.ThemeColor text-white text-center p-1">@Model.TitleText a Product</h3>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="@Model.CallbackMethodName" asp-controller="Admin" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (product.ProductId != 0)
+            {
+                <div class="form-group">
+                    <label asp-for="@product.ProductId" class="control-label"></label>
+                    <input asp-for="@product.ProductId" class="form-control" readonly/>
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="@product.Name" class="control-label"></label>
+                <input asp-for="@product.Name" class="form-control" />
+                <span asp-validation-for="@product.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@product.Description" class="control-label"></label>
+                <input asp-for="@product.Description" class="form-control" />
+                <span asp-validation-for="@product.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@product.Price" class="control-label"></label>
+                <input asp-for="@product.Price" class="form-control" />
+                <span asp-validation-for="@product.Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="@product.Category" class="control-label"></label>
+                <select asp-for="@product.Category" asp-items="@categories" class="form-control"></select>
+                <span asp-validation-for="@product.Category" class="text-danger"></span>
+            </div>
+            <div class="mt-2">
+                <button type="submit" class="btn btn-@Model.ThemeColor">Save</button>
+                <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+```
 
 - To see the editor work, restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click the `Edit` button
   
