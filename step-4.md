@@ -31,6 +31,7 @@ using SportsStore.Models.Repository;
 
 namespace SportsStore.Controllers
 {
+    [Route("Admin")]
     public class AdminController : Controller
     {
         private IStoreRepository storeRepository;
@@ -39,8 +40,10 @@ namespace SportsStore.Controllers
         public AdminController(IStoreRepository storeRepository, IOrderRepository orderRepository) 
             => (this.storeRepository, this.orderRepository) = (storeRepository, orderRepository);
 
+        [Route("Orders")]
         public ViewResult Orders() => View(orderRepository.Orders);
 
+        [Route("Products")]
         public ViewResult Products() => View(storeRepository.Products);
     }
 }
@@ -56,7 +59,7 @@ namespace SportsStore.Components
     {
         public IViewComponentResult Invoke()
         {
-            ViewBag.SelectedAction = RouteData?.Values["action"];
+            ViewBag.Selection = Request.Path.Value ?? "Products";
 
             return View(new string[] { "Orders", "Products" });
         }
@@ -69,8 +72,8 @@ namespace SportsStore.Components
 <div class="d-grid gap-2">
     @foreach (string category in Model)
     {
-        <a class="btn @(category == ViewBag.SelectedAction ? "btn-primary" : "btn-outline-secondary")"
-        asp-action="@category" asp-controller="Admin">
+        <a class="btn @(((string)ViewBag.Selection).Contains(category) ? "btn-primary" : "btn-outline-secondary")"
+           asp-action="@category" asp-controller="Admin">
             @category
         </a>
     }
@@ -177,6 +180,8 @@ namespace SportsStore.Controllers
         . . .
 
         [HttpPost]
+        [Route("MarkShipped")]
+
         public IActionResult MarkShipped(int orderId)
         {
             Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
@@ -191,6 +196,7 @@ namespace SportsStore.Controllers
         }
 
         [HttpPost]
+        [Route("Reset")]
         public IActionResult Reset(int orderId)
         {
             Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
@@ -227,7 +233,7 @@ namespace SportsStore.Controllers
                     <th>Quantity</th>
                     <td>
                         <form asp-action=@Model.CallbackMethodName method="post">
-                            <input type="hidden" name="orderId" value="@o.OrderId" />
+                            <input type="hidden" name="OrderId" value="@o.OrderId" />
                             <button type="submit" class="btn btn-sm btn-danger">
                                 @Model.ButtonLabel
                             </button>
@@ -265,6 +271,7 @@ namespace SportsStore.Controllers
 
 <partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
 <partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
+
 <form asp-action="Orders" method="post">
     <button class="btn btn-info">Refresh Data</button>
 </form>
