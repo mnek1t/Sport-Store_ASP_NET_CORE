@@ -610,9 +610,17 @@ public class AdminController : Controller
   
 ![](Images/4.9.png)  
 
-or request http://localhost:5000/admin, and click the `Create` button
+or request http://localhost:5000/Admin/Products, and click the `Create` button
   
-    ![](Images/4.8.png)   
+![](Images/4.10.png)   
+
+- Click the Save button without filling out the form fields, and you will see the validation errors that Razor produces automatically, as shown below
+
+![](Images/4.11.png)
+
+- Fill out the form and click Save again, and you will see the product you created displayed in the table
+
+![](Images/4.12.png)
 
 - To support the operations to delete, add in the `Products.razor` file in the `SportsStore/Pages/Admin` a `button`-tag and a `DeleteProduct` method
 
