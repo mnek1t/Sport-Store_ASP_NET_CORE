@@ -402,7 +402,7 @@ namespace SportsStore.Models
 }
 
 ```
-- To provide the administrator a table of products with links to check and edit, replace the contents of the `Products.cshtml` file with those shown below
+- To provide the administrator a table of products with links to check, edit and delete, replace the contents of the `Products.cshtml` file with those shown below
 
 ```
 @model IQueryable<Product>
