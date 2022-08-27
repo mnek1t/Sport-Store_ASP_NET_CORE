@@ -531,11 +531,6 @@ public class AdminController : Controller
     [Route("Products/Edit/{productId:long}")]
     public ViewResult Edit(int productId)
     {
-        TempData["Categories"] = storeRepository.Products
-            .Select(x => x.Category)
-            .Distinct()
-            .OrderBy(x => x).ToList();
-
         return View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
     }
 
@@ -552,7 +547,23 @@ public class AdminController : Controller
         return View(product);
     }
 
-    . . .
+    [Route("Products/Create")]
+    public ViewResult Create()
+    {
+        return View(new Product());
+    }
+
+    [HttpPost]
+    [Route("Products/Create")]
+    public IActionResult Create(Product product)
+    {
+        if (ModelState.IsValid)
+        {
+            storeRepository.SaveProduct(product);
+            return RedirectToAction("Products");
+        }
+        return View(product);
+    }
 }
 ```
 - To support the operations to create and edit data, add a `_Editor.cshtml` partial View to the `Views/Admin` folder
@@ -561,7 +572,6 @@ public class AdminController : Controller
 @model (Product Product, string ThemeColor, string TitleText, string CallbackMethodName)
 
 @{
-    var categories = new SelectList(TempData?.Peek("Categories") as IEnumerable<string>);
     Product product = Model.Product;
 }
 
@@ -594,7 +604,7 @@ public class AdminController : Controller
             </div>
             <div class="form-group">
                 <label asp-for="@product.Category" class="control-label"></label>
-                <select asp-for="@product.Category" asp-items="@categories" class="form-control"></select>
+                <input asp-for="@product.Category" class="form-control" />
                 <span asp-validation-for="@product.Category" class="text-danger"></span>
             </div>
             <div class="mt-2">
@@ -622,58 +632,104 @@ or request http://localhost:5000/Admin/Products, and click the `Create` button
 
 ![](Images/4.12.png)
 
-- To support the operations to delete, add in the `Products.razor` file in the `SportsStore/Pages/Admin` a `button`-tag and a `DeleteProduct` method
+- To support delete operation add `Delete` and `DeleteProduct` methods to the `AdminController` controller
 
-        @page "/admin/products"
-        @page "/admin"
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
 
-        @inherits OwningComponentBase<IStoreRepository>
+namespace SportsStore.Controllers
+{
+    [Route("Admin")]
+    public class AdminController : Controller
+    {
+        . . .
 
-        <table class="table table-sm table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>ID</th><th>Name</th>
-                <th>Category</th><th>Price</th><td/>
-            </tr>
-            </thead>
-            <tbody>
-            @if (ProductData?.Count() > 0)
-            {
-                @foreach (Product p in ProductData)
-                {
-                    <tr>
-                            ...
-                            <button class="btn btn-danger btn-sm"
-                                    @onclick="@(e => DeleteProduct(p))">
-                                Delete
-                            </button>
+        [Route("Products/Delete/{productId:long}")]
+        public IActionResult Delete(int productId)
+            => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
 
-                        </td>
-                    </tr>
-                }
-            }
-            else
-            {
-                <tr>
-                    <td colspan="5" class="text-center">No Products</td>
-                </tr>
-            }
-            </tbody>
-        </table>
-        <NavLink class="btn btn-primary" href="/admin/products/create">Create</NavLink>
-
-        @code {
-            ...
-
-            public async Task DeleteProduct(Product p)
-            {
-                Repository.DeleteProduct(p);
-                await UpdateData();
-            }
-
+        [HttpPost]
+        [Route("Products/Delete/{productId:long}")]
+        public IActionResult DeleteProduct(int productId)
+        {
+            var product = storeRepository.Products.FirstOrDefault(p => p.ProductId == productId);
+            storeRepository.DeleteProduct(product);
+            return RedirectToAction("Products");
         }
+    }
+}
 
--  Restart ASP.NET Core, request http://localhost:5000/admin/products, and click a `Delete` button to remove an object from the database
+```
+
+- To avoid duplicating code and content for delete and details operations add to the `Views/Admin` folder a `_ProductInfo.cshtml` Partial View that displays information about a single `Product` object
+
+```
+@model SportsStore.Models.Product?
+
+<table class="table table-sm table-bordered table-striped">
+    <tbody>
+    <tr>
+        <th>Id</th>
+        <td>@Model?.ProductId</td>
+    </tr>
+    <tr>
+        <th>Name</th>
+        <td>@Model?.Name</td>
+    </tr>
+    <tr>
+        <th>Description</th>
+        <td>@Model?.Description</td>
+    </tr>
+    <tr>
+        <th>Category</th>
+        <td>@Model?.Category</td>
+    </tr>
+    <tr>
+        <th>Price</th>
+        <td>@Model?.Price.ToString("C")</td>
+    </tr>
+    </tbody>
+</table>
+```
+- Change `Details.cshtml` view (`Views/Admin` folder)
+
+```
+@model SportsStore.Models.Product?
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h3 class="bg-info text-white text-center p-1">Details</h3>
+
+<partial name="_ProductInfo" model="@Model" />
+
+<a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
+<a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
+```
+- Add `Delete.cshtml` view to the `Views/Admin` folder
+
+```
+@model SportsStore.Models.Product?
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h3 class="bg-danger text-white text-center p-1">Are you sure you want to delete this?</h3>
+
+<partial name="_ProductInfo" model="@Model" />
+
+<form asp-action="Delete" asp-controller="Admin" method="post" asp-route-product="@Model">
+    <input type="submit" class="btn btn-danger" value="Delete" />
+    <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
+</form>
+```
+-  Restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click a `Delete` button to remove an object from the database
+
+![](Images/4.13.png)
 
 </details>
 
