@@ -1,4 +1,4 @@
-# Sports Store Application. Part 4
+# Sports Store Application. Part 4 (in progress)
 
 ## Implementation details
 
@@ -730,6 +730,54 @@ namespace SportsStore.Controllers
 -  Restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click a `Delete` button to remove an object from the database
 
 ![](Images/4.13.png)
+
+</details>
+
+<details>
+<summary>
+
+**Creating the Identity Database**
+</summary>
+
+- To add the package that contains the ASP.NET Core Identity support for Entity Framework Core, use a PowerShell command prompt to run the command shown below in the SportsStore folder
+
+```
+dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.0
+```
+- Create a database context file that will act as the bridge between the database and the Identity model objects it provides access to. Add a class file called `AppIdentityDbContext.cs` to the `Models` folder and used it to define the class shown below
+
+```
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+namespace SportsStore.Models
+{
+    public class AppIdentityDbContext : IdentityDbContext<IdentityUser>
+    {
+        public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)
+            : base(options) { }
+    }
+}
+```
+- Add the `"IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActive ResultSets=true"` connection string to the `appsettings.json` file of the SportsStore project
+
+```
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "SportsStoreConnection": "Server=(localdb)\\MSSQLLocalDB;Database=SportsStoreDb;MultipleActiveResultSets=true",
+    "IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActive,ResultSets=true"
+  }
+}
+```
+
 
 </details>
 
