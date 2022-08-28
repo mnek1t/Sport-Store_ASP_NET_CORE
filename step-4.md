@@ -1,4 +1,4 @@
-# Sports Store Application. Part 4 (in progress)
+# Sports Store Application. Part 4
 
 ## Implementation details
 
