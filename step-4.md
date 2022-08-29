@@ -1156,8 +1156,65 @@ namespace SportsStore.Controllers
 ```
 - The final step is a change to the shared administration layout to add a button that will log out the current user by sending a request to the Logout action, as shown below. This is a useful feature that makes it easier to test the application, without which you would need to clear the browser’s cookies to return to the unauthenticated state. Add a Logout Button in the `_AdminLayout` Razor View in the `_AdminLayout.html` file in the `SportsStore/Views/Admin` Folder
 
+```
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SportsStore</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="bg-info text-white p-2">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <span class="navbar-brand ml-2">SPORTS STORE Administration</span>
+                </div>
+                <div class="col-2 text-right">
+                    <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Login">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    . . .
+</html>
+```
+- At the moment, the application is configured to use the developer-friendly error pages, which provide helpful information when a problem occurs. This is not information that end users should see, so add a `Error` Razor View in `Error.cshtml` file to the `Views/Shared` folder with the content shown below
 
- 
+```
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Error</title>
+</head>
+<body class="text-center">
+    <h2 class="text-danger">Error.</h2>
+    <h3 class="text-danger">An error occurred while processing your request.</h3>
+</body>
+</html>
+```
+- Configure Error Handling in the `Program.cs` File in the `SportsStore` Folder
+
+```
+. . .
+var app = builder.Build();
+
+if (app.Environment.IsProduction())
+{
+    app.UseExceptionHandler("/error");
+}
+
+app.UseStaticFiles();
+. . .
+```
+
 </details>
 
 ## Additional Materials
