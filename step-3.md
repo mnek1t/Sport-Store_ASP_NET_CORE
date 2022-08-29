@@ -20,7 +20,7 @@ $ git merge main --ff
 ```
 - Continue your work in Visual Studio or other IDE.
 
-- Builed project, run application and request http://localhost:5000/. Your app should be work.
+- Build project, run application and request http://localhost:5000/. Your application should be work.
 
 - To can override the members of the `Cart` class apply the `virtual` keyword to the `AddItem`, `RemoveLine`, `Clear` methods of the `Cart` class
 
@@ -49,7 +49,7 @@ namespace SportsStore.Models
 }
 ```
 
-- Add a `SessionCart` class  (int the `Models` folder)
+- Add a `SessionCart` class  (in `SessionCart.cs` file in the `Models` folder)
 
 ```
 using Newtonsoft.Json;
