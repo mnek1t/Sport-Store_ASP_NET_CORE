@@ -158,6 +158,15 @@ namespace SportsStore.Controllers
     }
 }
 ```
+- To improve the URLs add new route in the `Program` file after the `default`-route
+```
+. . .
+app.MapControllerRoute(
+    "checkout",
+    "Checkout",
+    new { Controller = "Order", action = "Checkout" });
+. . .
+```
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
@@ -211,6 +220,7 @@ public IActionResult Remove(long productId, string returnUrl)
     });
 }
 ```
+_In the future, to support the routing system, we will use the routing attributes._
 
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
@@ -223,7 +233,7 @@ libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
 
 ```
 
-The libman.json file looks like this (always check for up-to-date versions of the libraries you use)
+The `libman.json` file looks like this (always check for up-to-date versions of the libraries you use)
 
 ```
 {
