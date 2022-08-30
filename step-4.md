@@ -20,7 +20,7 @@ $ git merge main --ff
 ```
 - Continue your work in Visual Studio or other IDE.
 
-- Build project, run application and request http://localhost:5000/. Your application should be work.
+- Build project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
 - Create and add to `Controllers` folder a separate `AdminController.cs` controller for managing orders shipping and the product catalog
 
@@ -49,6 +49,8 @@ namespace SportsStore.Controllers
 }
 
 ```
+`In the future a routing attributes will be used to routing support.`
+
 - Add the `AdminNavigationMenuViewComponent` class to `Components` folder
 
 ```
@@ -67,7 +69,7 @@ namespace SportsStore.Components
     }
 }
 ```
-- Add the `Default.cshtml` Razor view named  to `Views/Shared/Components/AdminNavigationMenu` folder 
+- Add the `Default.cshtml` Razor View  to `Views/Shared/Components/AdminNavigationMenu` folder 
 
 ```
 <div class="d-grid gap-2">
@@ -80,7 +82,7 @@ namespace SportsStore.Components
     }
 </div>
 ```
-- To create the layout for the administration tools, add a `_AdminLayout.cshtml` Layout View with the content shown below to the `Views/Admin` folder 
+- To create the layout view for the administration tools, add to the `Views/Admin` folder a `_AdminLayout.cshtml` Layout Razor View  
 ```
 <!DOCTYPE html>
 <html>
@@ -108,7 +110,7 @@ namespace SportsStore.Components
 </body>
 </html>
 ```
-- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.cshtml` View to the `Views/Admin` folder with the content shown below
+- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.cshtml` Razor View to the `Views/Admin` folder with the content shown below
 
 ```
 @model IQueryable<Order>
