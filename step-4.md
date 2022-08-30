@@ -153,7 +153,7 @@ namespace SportsStore.Models
     {
         . . .
 
-        [BindNever]
+      ➥[BindNever]
         public bool Shipped { get; set; }
 
         . . .
@@ -183,7 +183,7 @@ namespace SportsStore.Controllers
     {
         . . .
 
-        [HttpPost]
+      ➥[HttpPost]
         [Route("MarkShipped")]
 
         public IActionResult MarkShipped(int orderId)
@@ -199,7 +199,7 @@ namespace SportsStore.Controllers
             return RedirectToAction("Orders");
         }
 
-        [HttpPost]
+      ➥[HttpPost]
         [Route("Reset")]
         public IActionResult Reset(int orderId)
         {
@@ -313,11 +313,11 @@ namespace SportsStore.Models.Repository
     {
         IQueryable<Product> Products { get; }
 
-        void SaveProduct(Product p);
+      ➥void SaveProduct(Product p);
 
-        void CreateProduct(Product p);
+      ➥void CreateProduct(Product p);
 
-        void DeleteProduct(Product p);
+      ➥void DeleteProduct(Product p);
     }
 }
 
@@ -339,19 +339,19 @@ namespace SportsStore.Models.Repository
 
         public IQueryable<Product> Products => this.context.Products;
 
-        public void CreateProduct(Product p)
+      ➥public void CreateProduct(Product p)
         {
             context.Add(p);
             context.SaveChanges();
         }
 
-        public void DeleteProduct(Product p)
+      ➥public void DeleteProduct(Product p)
         {
             context.Remove(p);
             context.SaveChanges();
         }
 
-        public void SaveProduct(Product product)
+      ➥public void SaveProduct(Product product)
         {
             if (product.ProductId == 0)
             {
@@ -389,18 +389,18 @@ namespace SportsStore.Models
     {
         public long ProductId { get; set; }
 
-        [Required(ErrorMessage = "Please enter a product name")]
+      ➥[Required(ErrorMessage = "Please enter a product name")]
         public string Name { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Please enter a description")]
+      ➥[Required(ErrorMessage = "Please enter a description")]
         public string Description { get; set; } = string.Empty;
 
-        [Required]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price")]
+      ➥[Required]
+      ➥[Range(0.01, double.MaxValue, ErrorMessage = "Please enter a positive price")]
         [Column(TypeName = "decimal(8, 2)")]
         public decimal Price { get; set; }
 
-        [Required(ErrorMessage = "Please specify a category")]
+      ➥[Required(ErrorMessage = "Please specify a category")]
         public string Category { get; set; } = string.Empty;
     }
 }
