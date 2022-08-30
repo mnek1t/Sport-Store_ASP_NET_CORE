@@ -83,17 +83,22 @@ app.MapControllerRoute(
     "Products/Page{productPage}",
     new { Controller = "Home", action = "Index", productPage = 1 });
 
+app.MapControllerRoute(
+    "default",
+    "/",
+    new { Controller = "Home", action = "Index" });
+
 SeedData.EnsurePopulated(app);
 ...
 ```
 
-| URL | Leads to |
-| ------ | ------ |
-| / | Shows the first page of products from all categories |
-| /Products/Page2 | Shows the specified page (in this case, page 2), showing items from all categories |
-| /Soccer | Shows the first page of items from a specific category (in this case, the `Soccer` category) |
-| /Soccer/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Soccer`) |
-| /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Chess`) |
+| URL | Route Name | Leads to |
+| ------ | ------ | ------ |
+| / | default | Shows the first page of products from all categories |
+| /Products/Page2 | pagination | Shows the specified page (in this case, page 2), showing items from all categories |
+| /Products/Soccer | category | Shows the first page of items from a specific category (in this case, the `Soccer` category) |
+| /Products/Soccer/Page1 | categoryPage | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Soccer`) |
+| /Products/Chess/Page1 | categoryPage | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Chess`) |
 
 ![](Images/2.2.png)
 
