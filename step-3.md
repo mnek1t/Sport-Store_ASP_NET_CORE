@@ -48,7 +48,6 @@ namespace SportsStore.Models
     }
 }
 ```
-
 - Add a `SessionCart` class (in `SessionCart.cs` file in the `Models` folder)
 
 ```
@@ -157,6 +156,7 @@ namespace SportsStore.Controllers
         }
     }
 }
+```
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
