@@ -21,7 +21,7 @@ $ git merge main --ff
 ```
 - Continue your work in Visual Studio or other IDE.
 
-- Builed project, run application and request http://localhost:5000/. Your app should be work.
+- Builed project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
 - Modify the `ProductsListViewModel` class (add the `CurrentCategory` property).
 
