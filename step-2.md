@@ -38,7 +38,6 @@ namespace SportsStore.Models.ViewModels
     }
 }
 ```
-
 - Add the `Category` support to the `HomeController` class.
 
 ```
@@ -70,14 +69,9 @@ public ViewResult Index(string category, int productPage = 1)
 ```
 ...
 app.MapControllerRoute(
-    "catpage",
-    "{category}/Page{productPage:int}",
+    "categoryPage",
+    "Products/{category}/Page{productPage:int}",
     new { Controller = "Home", action = "Index" });
-
-app.MapControllerRoute(
-    "page",
-    "Page{productPage:int}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
 
 app.MapControllerRoute(
     "category",
@@ -96,11 +90,10 @@ SeedData.EnsurePopulated(app);
 | URL | Leads to |
 | ------ | ------ |
 | / | Shows the first page of products from all categories |
-| /Page2 | Shows the specified page (in this case, page 2), showing items from all categories |
-| /Soccer | Shows the first page of items from a specific category (in this case, the Soccer category) |
-| /Soccer/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Soccer) |
-| /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, Chess) |
-
+| /Products/Page2 | Shows the specified page (in this case, page 2), showing items from all categories |
+| /Soccer | Shows the first page of items from a specific category (in this case, the `Soccer` category) |
+| /Soccer/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Soccer`) |
+| /Chess/Page1 | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Chess`) |
 
 ![](Images/2.2.png)
 
@@ -238,7 +231,7 @@ namespace SportsStore.Components
 }
 ```
 
-- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add to it the Razor view named `Default.cshtml`.
+- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add to it the Razor View named `Default.cshtml`.
 
 ```
 @model IEnumerable<string>
@@ -285,7 +278,7 @@ public class NavigationMenuViewComponent : ViewComponent
 ```
 <div class="d-grid gap-2">
     <a class="btn btn-outline-secondary" asp-action="Index"
-       asp-controller="Home" asp-route-category="">
+       asp-controller="Home" asp-route-category="" asp-route-productPage="1">
         Home
     </a>
     @foreach (string category in Model ?? Enumerable.Empty<string>())
