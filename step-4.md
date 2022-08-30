@@ -47,6 +47,7 @@ namespace SportsStore.Controllers
         public ViewResult Products() => View(storeRepository.Products);
     }
 }
+
 ```
 - Add the `AdminNavigationMenuViewComponent` class to `Components` folder
 
@@ -1215,6 +1216,33 @@ app.UseStaticFiles();
 . . .
 ```
 
+- Commit changes.
+
+```
+$ dotnet build
+$ git status
+$ git add *.cs *.proj *.cshtml *.json
+$ git diff --staged
+$ git commit -m "Completing Administration functionality."
+```
+- Push the local branch to the remote branch.
+
+```
+$ git push --set-upstream origin sports-store-application-4
+
+```
+- Switch to the main branch and do a merge according to changes from the sports-store-application-3 branch
+
+```
+$ git checkout main
+$ git merge sports-store-application-4
+```
+- Push the changes from the local main branch to the remote branch
+
+```
+$ git push
+
+```
 </details>
 
 ## Additional Materials
