@@ -532,9 +532,8 @@ namespace SportsStore.Models
 ```
 dotnet ef migrations add Orders
 
-dotnet ef database update
-
 ```
+_This migration will be applied automatically when the application starts because the `SeedData` calls the `Migrate` method provided by Entity Framework Core._
 
 - Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository` interface (the `Models` folder)
 
@@ -550,7 +549,7 @@ namespace SportsStore.Models.Repository
 }
 ```
 
-- To implement the order repository interface,  add a `EFOrderRepository` class (the `Models` folder)
+- To implement the order repository interface, add a `EFOrderRepository` class (in the `EFOrderRepository.cs` file in the `Models` folder)
 
 ```
 using Microsoft.EntityFrameworkCore;
@@ -584,7 +583,7 @@ namespace SportsStore.Models.Repository
     }
 }
 ```
-This class implements the IOrderRepository interface using Entity Framework Core, allowing the set of Order objects that have been stored to be retrieved and allowing for orders to be created or changed.
+This class implements the `IOrderRepository` interface using Entity Framework Core, allowing the set of Order objects that have been stored to be retrieved and allowing for orders to be created or changed.
 
 - Register the `Order Repository Service` in the `Program.cs` file 
 
@@ -596,7 +595,7 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 . . .
 ```   
-- To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete Order button 
+- To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete `Order button` 
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -641,7 +640,7 @@ namespace SportsStore.Controllers
 }
 
 ```
-- Add a Validation Summary to the Checkout.cshtml File in the SportsStore/Views/Order Folder
+- Add a Validation Summary to the `Checkout.cshtml` file in the SportsStore/Views/Order Folder
 
 ```
 <h2>Check out now</h2>
@@ -654,7 +653,7 @@ namespace SportsStore.Controllers
 
 ![](Images/3.8.png)
 
-- To complete the checkout process, create a `Completed.cshtml` View that displays a thank-you message with a summary of the orders
+- To complete the checkout process, create a `Completed.cshtml` Razor View that displays a thank-you message with a summary of the orders
 
 ```
 @model int
@@ -670,7 +669,7 @@ namespace SportsStore.Controllers
     <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
 </div>
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
+- Restart ASP.NET Core and request http://localhost:5000/Checkout 
 
 ![](Images/3.9.png)
 
