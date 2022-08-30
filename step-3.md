@@ -20,7 +20,7 @@ $ git merge main --ff
 ```
 - Continue your work in Visual Studio or other IDE.
 
-- Build project, run application and request http://localhost:5000/. Your application should be work.
+- Build project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
 - To can override the members of the `Cart` class apply the `virtual` keyword to the `AddItem`, `RemoveLine`, `Clear` methods of the `Cart` class
 
@@ -49,7 +49,7 @@ namespace SportsStore.Models
 }
 ```
 
-- Add a `SessionCart` class  (in `SessionCart.cs` file in the `Models` folder)
+- Add a `SessionCart` class (in `SessionCart.cs` file in the `Models` folder)
 
 ```
 using Newtonsoft.Json;
@@ -171,7 +171,7 @@ namespace SportsStore.Controllers
 **Completing the Cart Functionality**
 </summary>
 
-- To remove items from the cart add to the `Index.cshtml` file a `Remove` button  that will submit an HTTP POST request (see `SportsStore/Views/Cart` folder)
+- To remove items from the cart add to the `Index.cshtml` file from `SportsStore/Views/Cart` folder a `Remove` button  that will submit an HTTP POST request
 
 ```
 . . .
@@ -200,6 +200,7 @@ namespace SportsStore.Controllers
 
 ```
 [HttpPost]
+[Route("Cart/Remove")]
 public IActionResult Remove(long productId, string returnUrl)
 {
     Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
@@ -215,14 +216,14 @@ public IActionResult Remove(long productId, string returnUrl)
 
 ![](Images/3.2.png)
 
-- Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see http://fortawesome.github.io/Font-Awesome). To install the client-side package, use a PowerShell command prompt to run the command
+- Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see http://fortawesome.github.io/Font-Awesome). To install the [client-side](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-cli?view=aspnetcore-3.1) package, use a PowerShell command prompt to run the command (or [Visual Studio possibilities](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-vs?view=aspnetcore-6.0))
 
 ```
 libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
 
 ```
 
-The libman.json file looks like this 
+The libman.json file looks like this (always check for up-to-date versions of the libraries you use)
 
 ```
 {
@@ -270,7 +271,7 @@ namespace SportsStore.Components
 @model Cart
 
 <div class="">
-    @if (Model.Lines.Any()) 
+    @if (Model.Lines.Any())
     {
         <small class="navbar-text">
             <b>Your cart:</b>
@@ -278,8 +279,7 @@ namespace SportsStore.Components
             @Model?.ComputeTotalValue().ToString("c")
         </small>
     }
-    <a class="btn btn-sm btn-secondary navbar-btn" asp-controller="Cart" 
-       asp-action="Index"
+    <a asp-route="shoppingCart"
        asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
         <i class="fa fa-shopping-cart"></i>
     </a>
