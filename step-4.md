@@ -121,7 +121,7 @@ namespace SportsStore.Components
 
 <h4>This is the orders information.</h4>
 ```
-and add a `Products.cshtml` View to the `Views/Admin` folder with the content shown below
+and add a `Products.cshtml` Razor View to the `Views/Admin` folder with the content shown below
 
 ```
 @model IQueryable<Product>
@@ -141,7 +141,7 @@ and http://localhost:5000/Admin/Products
 
 ![](Images/4.2.png)
 
-- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the `Order.cs` file (the `Models` Folder)
+- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the `Order` class (the `Order.cs` file in the `Models` Folder)
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -167,9 +167,9 @@ namespace SportsStore.Models
 dotnet ef migrations add ShippedOrders
 
 ```
-The migration will be applied automatically when the application is started and the `SeedData` class calls the `Migrate` method provided by Entity Framework Core.
+_The migration will be applied automatically when the application is started and the `SeedData` class calls the `Migrate` method provided by Entity Framework Core._
 
-- Add to `AdminController` class `MarkShipped` method that will be receive a POST request that specifies the ID of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `true` and saved and  `Reset` method  that will be receive a POST request that specifies the ID of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `false` and saved
+- Add to `AdminController` class `MarkShipped` method that will be receive a POST request that specifies the Id of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `true` and saved and  `Reset` method  that will be receive a POST request that specifies the Id of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `false` and saved
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -178,6 +178,7 @@ using SportsStore.Models.Repository;
 
 namespace SportsStore.Controllers
 {
+    [Route("Admin")]
     public class AdminController : Controller
     {
         . . .
@@ -215,7 +216,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.cshtml` Partial View that displays a table without knowing which category of order it is dealing with the content shown below
+- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.cshtml` Razor Partial View that displays a table without knowing which category of order it is dealing with the content shown below
 
 ```
 @model (IQueryable<Order> Orders, string TableTitle, string ButtonLabel, string CallbackMethodName)
@@ -261,7 +262,7 @@ namespace SportsStore.Controllers
     </tbody>
 </table>
 ```
-- Change a `Orders.cshtml` View that gets the `Order` data from the database and uses the `_OrderTable.cshtml` Partial View to display it to the user
+- Change a `Orders.cshtml` Razor View that gets the `Order` data from the database and uses the `_OrderTable.cshtml` Razor Partial View to display it to the user
 
 ```
 @model IQueryable<Order>
@@ -322,7 +323,7 @@ namespace SportsStore.Models.Repository
 
 ```
 
-- Add implemention of this methods in the `EFStoreRepository` class (the `SportsStore/Models` folder)
+- Add implementation of this methods in the `EFStoreRepository` class (in `EFStoreRepository.cs` file in the `SportsStore/Models` folder)
 
 ```
 namespace SportsStore.Models.Repository
@@ -473,6 +474,7 @@ using SportsStore.Models.Repository;
 
 namespace SportsStore.Controllers
 {
+    [Route("Admin")]
     public class AdminController : Controller
     {
         . . .
@@ -482,7 +484,7 @@ namespace SportsStore.Controllers
         . . .
 }
 ```
-and a `Details.cshtml` view to the `Views/Admin` folder
+and a `Details.cshtml` Razor View to the `Views/Admin` folder
 
 ```
 @model SportsStore.Models.Product?
@@ -527,6 +529,7 @@ and a `Details.cshtml` view to the `Views/Admin` folder
 
 - To implement the abilities to edit and to create of a single `Product` object, add the `Edit` and `Create` action methods accordingly in the `AdminController` class.
 ```
+[Route("Admin")]
 public class AdminController : Controller
 {
     . . .
@@ -569,7 +572,7 @@ public class AdminController : Controller
     }
 }
 ```
-- To support the operations to create and edit data, add a `_Editor.cshtml` partial View to the `Views/Admin` folder
+- To support the operations to create and edit data, add a `_Editor.cshtml` Razor Partial View to the `Views/Admin` folder
 
 ```
 @model (Product Product, string ThemeColor, string TitleText, string CallbackMethodName)
@@ -763,8 +766,7 @@ namespace SportsStore.Controllers
 }
 
 ```
-
-- To avoid duplicating code and content for delete and details operations add to the `Views/Admin` folder a `_ProductInfo.cshtml` Partial View that displays information about a single `Product` object
+- To avoid duplicating code and content for delete and details operations add to the `Views/Admin` folder a `_ProductInfo.cshtml` Razor Partial View that displays information about a single `Product` object
 
 ```
 @model SportsStore.Models.Product?
@@ -794,7 +796,7 @@ namespace SportsStore.Controllers
     </tbody>
 </table>
 ```
-- Change `Details.cshtml` view (`Views/Admin` folder)
+- Change `Details.cshtml` Razor View (in the `Views/Admin` folder)
 
 ```
 @model SportsStore.Models.Product?
@@ -810,7 +812,7 @@ namespace SportsStore.Controllers
 <a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
 <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
 ```
-- Add `Delete.cshtml` view to the `Views/Admin` folder
+- Add `Delete.cshtml` Razor View to the `Views/Admin` folder
 
 ```
 @model SportsStore.Models.Product?
