@@ -22,7 +22,7 @@ $ git merge main --ff
 
 - Build project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
-- Create and add to `Controllers` folder a separate `AdminController.cs` controller for managing orders shipping and the product catalog
+- Create and add to `Controllers` folder a separate `AdminController` controller class for managing orders shipping and the product catalog
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -32,7 +32,7 @@ using SportsStore.Models.Repository;
 namespace SportsStore.Controllers
 {
     [Route("Admin")]
-    public class AdminController : Controller
+  ➥public class AdminController : Controller
     {
         private IStoreRepository storeRepository;
         private IOrderRepository orderRepository;
@@ -58,7 +58,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SportsStore.Components
 {
-    public class AdminNavigationMenuViewComponent : ViewComponent
+  ➥public class AdminNavigationMenuViewComponent : ViewComponent
     {
         public IViewComponentResult Invoke()
         {
@@ -153,8 +153,8 @@ namespace SportsStore.Models
     {
         . . .
 
-      ➥[BindNever]
-        public bool Shipped { get; set; }
+        [BindNever]
+      ➥public bool Shipped { get; set; }
 
         . . .
     }
@@ -183,10 +183,10 @@ namespace SportsStore.Controllers
     {
         . . .
 
-      ➥[HttpPost]
+        [HttpPost]
         [Route("MarkShipped")]
 
-        public IActionResult MarkShipped(int orderId)
+      ➥public IActionResult MarkShipped(int orderId)
         {
             Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
 
@@ -199,9 +199,9 @@ namespace SportsStore.Controllers
             return RedirectToAction("Orders");
         }
 
-      ➥[HttpPost]
+        [HttpPost]
         [Route("Reset")]
-        public IActionResult Reset(int orderId)
+      ➥public IActionResult Reset(int orderId)
         {
             Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
 
@@ -265,20 +265,20 @@ namespace SportsStore.Controllers
 - Change a `Orders.cshtml` Razor View that gets the `Order` data from the database and uses the `_OrderTable.cshtml` Razor Partial View to display it to the user
 
 ```
-@model IQueryable<Order>
-
-@{
-    Layout = "_AdminLayout";
-    var unshippedOrders = Model.Where(o => !o.Shipped);
-    var shippedOrders = Model.Where(o => o.Shipped);
-}
-
-<partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
-<partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
-
-<form asp-action="Orders" method="post">
-    <button class="btn btn-info">Refresh Data</button>
-</form>
+  @model IQueryable<Order>
+  
+  @{
+      Layout = "_AdminLayout";
+      var unshippedOrders = Model.Where(o => !o.Shipped);
+      var shippedOrders = Model.Where(o => o.Shipped);
+  }
+  
+➥<partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
+➥<partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
+  
+  <form asp-action="Orders" method="post">
+      <button class="btn btn-info">Refresh Data</button>
+  </form>
 ```
 - To see your changes, build project, run application and request http://localhost:5000/Admin/Orders.
 
@@ -479,7 +479,7 @@ namespace SportsStore.Controllers
     {
         . . .
         [Route("Admin/Details/{productId:int}")]
-        public ViewResult Details(int productId)
+      ➥public ViewResult Details(int productId)
             => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
         . . .
 }
@@ -535,14 +535,14 @@ public class AdminController : Controller
     . . .
 
     [Route("Products/Edit/{productId:long}")]
-    public ViewResult Edit(int productId)
+  ➥public ViewResult Edit(int productId)
     {
         return View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
     }
 
     [HttpPost]
     [Route("Products/Edit/{productId:long}")]
-    public IActionResult Edit(Product product)
+  ➥public IActionResult Edit(Product product)
     {
         if (ModelState.IsValid)
         {
@@ -554,14 +554,14 @@ public class AdminController : Controller
     }
 
     [Route("Products/Create")]
-    public ViewResult Create()
+  ➥public ViewResult Create()
     {
         return View(new Product());
     }
 
     [HttpPost]
     [Route("Products/Create")]
-    public IActionResult Create(Product product)
+  ➥public IActionResult Create(Product product)
     {
         if (ModelState.IsValid)
         {
@@ -682,15 +682,15 @@ The `libman.json` file looks like this
 - Add `script` tag and `Scripts` Razor Section to `_AdminLayout` Layout Razor View 
 
 ```
-<!DOCTYPE html>
-<html>
-. . .
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-@await RenderSectionAsync("Scripts", required: false)
-
-</body>
-</html>
+  <!DOCTYPE html>
+  <html>
+  . . .
+  
+➥<script src="~/lib/jquery/dist/jquery.min.js"></script>
+➥@await RenderSectionAsync("Scripts", required: false)
+  
+  </body>
+  </html>
 ```
 - Add `_ValidationScriptsPartial.cshtml` Razor Partial View in `Views/Shared` folder
 
@@ -702,34 +702,34 @@ The `libman.json` file looks like this
 - Call `_ValidationScriptsPartial` Razor Partial View in the `Create` Razor View 
 
 ```
-@model SportsStore.Models.Product
-
-@{
-    Layout = "_AdminLayout";
-}
-
-<partial name="_Editor" model='(@Model, "primary", "Create" , "Create")' />
-
-@section Scripts
-{
-    <partial name="_ValidationScriptsPartial" />
-}
+  @model SportsStore.Models.Product
+  
+  @{
+      Layout = "_AdminLayout";
+  }
+  
+  <partial name="_Editor" model='(@Model, "primary", "Create" , "Create")' />
+  
+  @section Scripts
+  {
+    ➥<partial name="_ValidationScriptsPartial" />
+  }
 ```
 and `Edit` Razor View
 
 ```
-@model SportsStore.Models.Product
-
-@{
-    Layout = "_AdminLayout";
-}
-
-<partial name="_Editor" model='(@Model, "warning", "Edit" , "Edit")' />
-
-@section Scripts
-{
-    <partial name="_ValidationScriptsPartial" />
-}
+  @model SportsStore.Models.Product
+  
+  @{
+      Layout = "_AdminLayout";
+  }
+  
+  <partial name="_Editor" model='(@Model, "warning", "Edit" , "Edit")' />
+  
+  @section Scripts
+  {
+    ➥<partial name="_ValidationScriptsPartial" />
+  }
 ```
 - To test the client-side validation feature, restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click the `Create` or `Edit` button. The error message looks like the ones generated by server-side validation, but if you enter text into the field, you will see the error message disappear immediately as the JavaScript code responds to the user interaction.
   
@@ -750,12 +750,12 @@ namespace SportsStore.Controllers
         . . .
 
         [Route("Products/Delete/{productId:long}")]
-        public IActionResult Delete(int productId)
+      ➥public IActionResult Delete(int productId)
             => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
 
         [HttpPost]
         [Route("Products/Delete/{productId:long}")]
-        public IActionResult DeleteProduct(int productId)
+      ➥public IActionResult DeleteProduct(int productId)
         {
             var product = storeRepository.Products.FirstOrDefault(p => p.ProductId == productId);
             storeRepository.DeleteProduct(product);
@@ -855,7 +855,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SportsStore.Models
 {
-    public class AppIdentityDbContext : IdentityDbContext<IdentityUser>
+  ➥public class AppIdentityDbContext : IdentityDbContext<IdentityUser>
     {
         public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)
             : base(options) { }
@@ -875,75 +875,38 @@ namespace SportsStore.Models
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "SportsStoreConnection": "Server=(localdb)\\MSSQLLocalDB;Database=SportsStoreDb;MultipleActiveResultSets=true",
-    "IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActive,ResultSets=true"
+  ➥"IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActive,ResultSets=true"
   }
 }
 ```
 - Configure Identity in the `Program.cs` file in the `SportsStore` Folder. 
 
-~~~
-using Microsoft.EntityFrameworkCore;
-using SportsStore.Models;
-using SportsStore.Models.Repository;
-using Microsoft.AspNetCore.Identity;
+```
+  using Microsoft.EntityFrameworkCore;
+  using SportsStore.Models;
+  using SportsStore.Models.Repository;
+  using Microsoft.AspNetCore.Identity;
+  
+  var builder = WebApplication.CreateBuilder(args);
+  
+  . . .
 
-var builder = WebApplication.CreateBuilder(args);
+  builder.Services.AddScoped<Cart>(SessionCart.GetCart);
+  builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+➥builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));
+➥builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
 
-builder.Services.AddControllersWithViews();
+  var app = builder.Build();
 
-builder.Services.AddDbContext<StoreDbContext>(opts =>
-{
-    opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
-});
+  app.UseStaticFiles();
+  app.UseSession();
 
-builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
-builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
-builder.Services.AddScoped<Cart>(SessionCart.GetCart);
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-**builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));**
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
+  ➥app.UseAuthentication();
+  ➥app.UseAuthorization();
+  . . . 
+  app.Run();
 
-var app = builder.Build();
-
-app.UseStaticFiles();
-app.UseSession();
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    "categoryPage",
-    "Products/{category}/Page{productPage:int}",
-    new { Controller = "Home", action = "Index" });
-
-app.MapControllerRoute(
-    "page",
-    "Page{productPage:int}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
-
-app.MapControllerRoute(
-    "shoppingCart",
-    "Cart",
-    new { Controller = "Cart", action = "Index" });
-
-app.MapControllerRoute(
-    "category",
-    "{category}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
-
-app.MapControllerRoute(
-    "pagination",
-    "Products/Page{productPage:int}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
-
-app.MapDefaultControllerRoute();
-SeedData.EnsurePopulated(app);
-
-app.Run();
-
-~~~
+```
 The Entity Framework Core configuration has been extended to register a `AppIdentityDbContext` context class and use the `AddIdentity` method to configure identity services using built-in classes to represent users and roles. Calling the `UseAuthentication` and `UseAuthorization` methods is necessary to set up intermediate components that implement the security policy.
 
 - To define the schema and apply it to the databa use the Entity Framework Core migrations feature 
@@ -968,7 +931,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SportsStore.Models
 {
-    public static class IdentitySeedData
+  ➥public static class IdentitySeedData
     {
         private const string adminUser = "Admin";
         private const string adminPassword = "Secret123$";
