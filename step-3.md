@@ -157,16 +157,6 @@ namespace SportsStore.Controllers
         }
     }
 }
-```
-- To improve the URLs add new route in the `Program` file after the `default`-route
-```
-. . .
-app.MapControllerRoute(
-    "checkout",
-    "Checkout",
-    new { Controller = "Order", action = "Checkout" });
-. . .
-```
 
 - Restart ASP.NET Core and request http://localhost:5000/
 
@@ -220,8 +210,38 @@ public IActionResult Remove(long productId, string returnUrl)
     });
 }
 ```
-_In the future, to support the routing system, we will use the routing attributes._
+    ```
+-To improve the URLs add new `shoppingCart`, `checkout`, `remove` routes in the `Program` file
 
+```
+. . .
+
+app.MapControllerRoute(
+    "categoryPage",
+    "Products/{category}/Page{productPage:int}",
+    new { Controller = "Home", action = "Index" });
+
+app.MapControllerRoute(
+    "shoppingCart",
+    "Cart",
+    new { Controller = "Cart", action = "Index" });
+
+app.MapControllerRoute(
+    "pagination",
+    "Products/Page{productPage:int}",
+    new { Controller = "Home", action = "Index", productPage = 1 });
+
+app.MapControllerRoute(
+    "default",
+    "/",
+    new { Controller = "Home", action = "Index" });
+
+app.MapControllerRoute(
+    "remove",
+    "Remove",
+    new { Controller = "Cart", action = "Remove" });
+. . .
+```
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
 ![](Images/3.2.png)
@@ -467,8 +487,17 @@ public class OrderController : Controller
     </div>
 </form>
 ```
+
+- Add `checkout` route in the `Program.cs` file
+
+```
+app.MapControllerRoute(
+    "checkout",
+    "Checkout",
+    new { Controller = "Order", action = "Checkout" });
+```
         
-- Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
+- Restart ASP.NET Core and request http://localhost:5000/Checkout 
 
 ![](Images/3.7.png)
 
