@@ -798,36 +798,36 @@ namespace SportsStore.Controllers
 - Change `Details.cshtml` Razor View in the `Views/Admin` folder
 
 ```
-@model SportsStore.Models.Product?
-
-@{
-    Layout = "_AdminLayout";
-}
-
-<h3 class="bg-info text-white text-center p-1">Details</h3>
-
-<partial name="_ProductInfo" model="@Model" />
-
-<a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
-<a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
+  @model SportsStore.Models.Product?
+  
+  @{
+      Layout = "_AdminLayout";
+  }
+  
+  <h3 class="bg-info text-white text-center p-1">Details</h3>
+  
+➥<partial name="_ProductInfo" model="@Model" />
+  
+  <a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
+  <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
 ```
 - Add `Delete.cshtml` Razor View to the `Views/Admin` folder
 
 ```
-@model SportsStore.Models.Product?
-
-@{
-    Layout = "_AdminLayout";
-}
-
-<h3 class="bg-danger text-white text-center p-1">Are you sure you want to delete this?</h3>
-
-<partial name="_ProductInfo" model="@Model" />
-
-<form asp-action="Delete" asp-controller="Admin" method="post" asp-route-product="@Model">
-    <input type="submit" class="btn btn-danger" value="Delete" />
-    <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
-</form>
+  @model SportsStore.Models.Product?
+  
+  @{
+      Layout = "_AdminLayout";
+  }
+  
+  <h3 class="bg-danger text-white text-center p-1">Are you sure you want to delete this?</h3>
+  
+➥<partial name="_ProductInfo" model="@Model" />
+  
+  <form asp-action="Delete" asp-controller="Admin" method="post" asp-route-product="@Model">
+      <input type="submit" class="btn btn-danger" value="Delete" />
+      <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
+  </form>
 ```
 -  Restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click a `Delete` button to remove an object from the database
 
@@ -841,12 +841,12 @@ namespace SportsStore.Controllers
 **Creating the Identity Database**
 </summary>
 
-- To add the package that contains the ASP.NET Core Identity support for Entity Framework Core, use a PowerShell command prompt to run the command shown below in the SportsStore folder
+- To add the package that contains the ASP.NET Core Identity support for Entity Framework Core, use a PowerShell command prompt to run the command shown below in the `SportsStore` folder
 
 ```
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.0
 ```
-- Create a database context file that will act as the bridge between the database and the Identity model objects it provides access to. Add a class file called `AppIdentityDbContext.cs` to the `Models` folder and used it to define the class shown below
+- Create a database context file that will act as the bridge between the database and the `Identity` model objects it provides access to. Add a class file called `AppIdentityDbContext.cs` to the `Models` folder and used it to define the class shown below
 
 ```
 using Microsoft.AspNetCore.Identity;
@@ -901,8 +901,8 @@ namespace SportsStore.Models
   app.UseStaticFiles();
   app.UseSession();
 
-  ➥app.UseAuthentication();
-  ➥app.UseAuthorization();
+➥app.UseAuthentication();
+➥app.UseAuthorization();
   . . . 
   app.Run();
 
@@ -973,11 +973,11 @@ This code ensures the database is created and up-to-date and uses the `UserManag
 - To ensure that the Identity database is seeded when the application starts, add the `IdentitySeedData.EnsurePopulated(app)` statement shown below to the `Program.cs` file
 
 ```
-. . .
-SeedData.EnsurePopulated(app);
-IdentitySeedData.EnsurePopulated(app);
-
-app.Run();
+  . . .
+  SeedData.EnsurePopulated(app);
+➥IdentitySeedData.EnsurePopulated(app);
+  
+  app.Run();
 ```
 _If you need to reset the Identity database, then run the following command:_
 
@@ -987,19 +987,7 @@ dotnet ef database drop --force --context AppIdentityDbContext
 ```
 _Restart the application, and the database will be re-created and populated with seed data._
 
-- Add to AdminContoller [Authorize] attribute
-
-```
-[Route("Admin")]
-[Authorize]
-public class AdminController : Controller
-{
-    . . .
-}
-```
-When an unauthenticated user sends a request that requires authorization, the user is redirected to the `/Account/Login` URL, which the application can use to prompt the user for their credentials.
-
-- To implement basic authorization policy add a `LoginModel.cs` File in the `SportsStore/Models/ViewModels` folder with `LoginModel`
+- To implement basic authorization policy add a `LoginModel.cs` class file in the `SportsStore/Models/ViewModels` folder
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -1018,8 +1006,7 @@ namespace SportsStore.Models.ViewModels
     }
 }
 ```
-
-- Than add `AccountController` (`AccountController.cs` file in the `SportsStore/Controllers` folder)
+- Than add `AccountController` class (`AccountController.cs` file in the `SportsStore/Controllers` folder)
 
 ```
 using Microsoft.AspNetCore.Authorization;
@@ -1029,6 +1016,8 @@ using SportsStore.Models.ViewModels;
 
 namespace SportsStore.Controllers
 {
+    [Authorize]
+    [Route("Account")]
     public class AccountController : Controller
     {
         private UserManager<IdentityUser> userManager;
@@ -1041,6 +1030,8 @@ namespace SportsStore.Controllers
             this.signInManager = signInManager;
         }
 
+        [Route("Login")]
+        [AllowAnonymous]
         public ViewResult Login(string returnUrl)
         {
             return View(new LoginModel
@@ -1050,6 +1041,8 @@ namespace SportsStore.Controllers
         }
 
         [HttpPost]
+        [Route("Login")]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginModel loginModel)
         {
@@ -1072,7 +1065,7 @@ namespace SportsStore.Controllers
             return View(loginModel);
         }
 
-        [Authorize]
+        [Route("Logout")]
         public async Task<RedirectResult> Logout(string returnUrl = "/")
         {
             await signInManager.SignOutAsync();
@@ -1081,6 +1074,8 @@ namespace SportsStore.Controllers
     }
 }
 ```
+When an unauthenticated user sends a request that requires authorization, the user is redirected to the `/Account/Login` URL, which the application can use to prompt the user for their credentials.
+
 - To provide the `Login` method with a view to render, created the `Views/Account` folder and added a `Login.cshtml` Razor View  with the contents shown below
 
 ```
@@ -1167,19 +1162,53 @@ namespace SportsStore.Controllers
 </body>
 </html>
 ```
-- Configure Error Handling in the `Program.cs` File in the `SportsStore` Folder
+- Than add `Error` action method to `HomeController` class
+
+```
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models.Repository;
+using SportsStore.Models.ViewModels;
+
+namespace SportsStore.Controllers
+{
+    public class HomeController : Controller
+    {
+
+        . . .
+        
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+      ➥public IActionResult Error()
+        {
+            return View();
+        }
+    }
+}
+```
+
+
+- Configure Error Handling in the `Program.cs` file in the `SportsStore` Folder
 
 ```
 . . .
-var app = builder.Build();
-
-if (app.Environment.IsProduction())
-{
-    app.UseExceptionHandler("/error");
-}
-
-app.UseStaticFiles();
+  var app = builder.Build();
+  
+➥if (app.Environment.IsProduction())
+  {
+      app.UseExceptionHandler("/error");
+  }
+  
+  app.UseStaticFiles();
 . . .
+➥app.MapControllerRoute(
+      "error",
+      "Error",
+      new { Controller = "Home", action = "Error" });
+  
+  SeedData.EnsurePopulated(app);
+  IdentitySeedData.EnsurePopulated(app);
+  
+  app.Run();
 ```
 
 - Commit changes.
@@ -1197,13 +1226,13 @@ $ git commit -m "Completing Administration functionality."
 $ git push --set-upstream origin sports-store-application-4
 
 ```
-- Switch to the main branch and do a merge according to changes from the sports-store-application-3 branch
+- Switch to the `main` branch and do a merge according to changes from the `sports-store-application-4` branch.
 
 ```
 $ git checkout main
 $ git merge sports-store-application-4
 ```
-- Push the changes from the local main branch to the remote branch
+- Push the changes from the local `main` branch to the remote branch.
 
 ```
 $ git push
