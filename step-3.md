@@ -31,17 +31,17 @@ namespace SportsStore.Models
     {
         . . .
 
-        public virtual void AddItem(Product product, int quantity)
+      ➥public virtual void AddItem(Product product, int quantity)
         {
             . . .
         }
 
-        public virtual void RemoveLine(Product product)
+      ➥public virtual void RemoveLine(Product product)
         {
             . . .
         }
 
-        public virtual void Clear()
+      ➥public virtual void Clear()
         {
             . . .
         }
@@ -56,7 +56,7 @@ using SportsStore.Infrastructure;
 
 namespace SportsStore.Models
 {
-    public class SessionCart : Cart
+  ➥public class SessionCart : Cart
     {
         public static Cart GetCart(IServiceProvider services)
         {
@@ -89,18 +89,18 @@ namespace SportsStore.Models
     }
 }        
 ```
--  Register a service for the `Cart` class in `the Progrem.cs` file
+-  Register a service for the `Cart` class in the `Progrem.cs` file
 
 ```
-using Microsoft.EntityFrameworkCore;
-using SportsStore.Models;
-
-var builder = WebApplication.CreateBuilder(args);    
-. . .
-
-builder.Services.AddSession();
-builder.Services.AddScoped<Cart>(SessionCart.GetCart);
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+  using Microsoft.EntityFrameworkCore;
+  using SportsStore.Models;
+  
+  var builder = WebApplication.CreateBuilder(args);    
+  . . .
+  
+  builder.Services.AddSession();
+➥builder.Services.AddScoped<Cart>(SessionCart.GetCart);
+  builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 . . .
         
 ```     
@@ -145,6 +145,7 @@ namespace SportsStore.Controllers
             if (product != null)
             {
                 this.Cart.AddItem(product, 1);
+
                 return View(new CartViewModel 
                 {
                     Cart = this.Cart, 
@@ -278,7 +279,7 @@ The `libman.json` file looks like this (always check for up-to-date versions of 
 ```
 namespace SportsStore.Components
 {
-    public class CartSummaryViewComponent : ViewComponent
+  ➥public class CartSummaryViewComponent : ViewComponent
     {
         private Cart cart;
 
@@ -316,7 +317,7 @@ namespace SportsStore.Components
 </div>
 ```
 
-- To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, adding the `Cart Summary` in the `_Layout.cshtml` file (the Views/Shared folder)
+- To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, adding the `Cart Summary` in the `_Layout.cshtml` file (the `Views/Shared` folder)
 
 ```
 <!DOCTYPE html>
@@ -377,7 +378,7 @@ If you press the cart icon, you will see summarizes the contents of the cart in 
 
 </summary>
 
-- To represent the shipping details for a customer add a `Order` class (the `Models` folder)
+- To represent the shipping details for a customer add a `Order` class (in the `Models` folder)
 
 ```
 using System.ComponentModel.DataAnnotations;
