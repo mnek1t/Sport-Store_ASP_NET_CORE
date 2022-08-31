@@ -21,7 +21,7 @@ $ git merge main --ff
 ```
 - Continue your work in Visual Studio or other IDE.
 
-- Builed project, run application and request http://localhost:5000/. Your app should be work.
+- Builed project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
 ![](Images/1.1.png)
 
@@ -31,7 +31,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsStore.Models
 {
-    public class Product
+  ➥public class Product
     {
         public long ProductId { get; set; }
 
@@ -49,7 +49,7 @@ namespace SportsStore.Models
 
 ```
 
-- Add the Entity Framework Core Packages to the SportsStore Project. 
+- Add the Entity Framework Core Packages to the `SportsStore` Project. 
 
 ```
 $ dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.0
@@ -72,7 +72,7 @@ $ dotnet tool install --global dotnet-ef --version 6.0.0
         }
     },
     "AllowedHosts": "*",
-    "ConnectionStrings": {
+  ➥"ConnectionStrings": {
     "SportsStoreConnection": "Server=(localdb)\\MSSQLLocalDB;Database=SportsStore;MultipleActiveResultSets=true"
     }
 }
@@ -81,38 +81,37 @@ $ dotnet tool install --global dotnet-ef --version 6.0.0
 - Add the `StoreDbContext` context class in the `StoreDbContext.cs` file to the `SportsStore/Models` folder.
 
 ```
-using Microsoft.EntityFrameworkCore;
-
-public class StoreDbContext: DbContext 
-{
-    public StoreDbContext(DbContextOptions<StoreDbContext> options)
-        : base(options) { }
-
-    public DbSet<Product> Products => Set<Product>();
-}
+  using Microsoft.EntityFrameworkCore;
+  
+➥public class StoreDbContext: DbContext 
+  {
+      public StoreDbContext(DbContextOptions<StoreDbContext> options)
+          : base(options) { }
+  
+      public DbSet<Product> Products => Set<Product>();
+  }
 ```
 - To configure Entity Framework Core, add the following code to the `Program` file: 
 
 ```
-using Microsoft.EntityFrameworkCore;
-using SportsStore.Models;
-
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllersWithViews();
-
-builder.Services.AddDbContext<StoreDbContext>(opts => {
-    opts.UseSqlServer(
-        builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
-});
-
-var app = builder.Build();
-
-app.UseStaticFiles();
-
-app.MapDefaultControllerRoute();
-
-app.Run();
+➥using Microsoft.EntityFrameworkCore;
+➥using SportsStore.Models;
+  
+  var builder = WebApplication.CreateBuilder(args);
+  
+  builder.Services.AddControllersWithViews();
+  
+➥builder.Services.AddDbContext<StoreDbContext>(opts => {
+      opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+  });
+  
+  var app = builder.Build();
+  
+  app.UseStaticFiles();
+  
+  app.MapDefaultControllerRoute();
+  
+  app.Run();
 ```
 
 - Create the `IStoreRepository` interface in the `SportsStore/Models/Repository` folder.
@@ -120,7 +119,7 @@ app.Run();
 ```
 namespace SportsStore.Models.Repository
 {
-    public interface IStoreRepository
+  ➥public interface IStoreRepository
     {
         IQueryable<Product> Products { get; }
     }
@@ -128,12 +127,12 @@ namespace SportsStore.Models.Repository
 
 ```
 
-- Create the `EFStoreRepository` class in the `SportsStore/Models/Repository` folder
+- Create the `EFStoreRepository` class in the `SportsStore/Models/Repository` folder.
 
 ```
 namespace SportsStore.Models.Repository
 {
-    public class EFStoreRepository : IStoreRepository
+  ➥public class EFStoreRepository : IStoreRepository
     {
         private StoreDbContext context;
 
@@ -148,23 +147,23 @@ namespace SportsStore.Models.Repository
 
 ```
 
-- Add `RepositoryService` to the Program.cs file shown below: 
+- Add `RepositoryService` to the `Program.cs` file shown below: 
 
 ```
-using Microsoft.EntityFrameworkCore;
-using SportsStore.Models;
-...
-
-builder.Services.AddDbContext<StoreDbContext>(opts => {
-    opts.UseSqlServer(
-        builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
-});
-
-builder.Services.AddScoped<IStoreRepository, EFStoreRepository>(); 
-
-...
-
-app.Run();
+  using Microsoft.EntityFrameworkCore;
+  using SportsStore.Models;
+  ...
+  
+  builder.Services.AddDbContext<StoreDbContext>(opts => {
+      opts.UseSqlServer(
+          builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+  });
+  
+➥builder.Services.AddScoped<IStoreRepository, EFStoreRepository>(); 
+  
+  ...
+  
+  app.Run();
 ```
 
 - Add a database migration.
@@ -174,14 +173,14 @@ $ dotnet ef migrations add Initial
 
 ```
 
-- To populate the database and provide some sample data, add a class file called `SeedData.cs` to the `Models/Data` folder.
+- To populate the database and provide some sample data, add a `SeedData.cs` class file to the `Models/Data` folder.
 
 ```
 using Microsoft.EntityFrameworkCore;
 
 namespace SportsStore.Models
 {
-    public static class SeedData
+  ➥public static class SeedData
     {
         public static void EnsurePopulated(IApplicationBuilder app)
         {
@@ -269,24 +268,34 @@ namespace SportsStore.Models
 
 ```
 
-- To seed the database when the application starts, add a call to the `EnsurePopulated` method from the `Progrem` file.
+- To seed the database when the application starts, add a call to the `EnsurePopulated` method from the `Progrem.cs` file.
+
+``` 
+  using Microsoft.EntityFrameworkCore; 
+  using SportsStore.Models;
+  
+  var builder = WebApplication.CreateBuilder(args);
+  
+  builder.Services.AddControllersWithViews();
+  
+  builder.Services.AddDbContext<StoreDbContext>(opts => {
+      opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+  });
+  builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+  
+  var app = builder.Build();
+  
+  app.UseStaticFiles();
+  
+  app.MapDefaultControllerRoute();
+
+➥SeedData.EnsurePopulated(app);
+  
+  app.Run();
 
 ```
-using Microsoft.EntityFrameworkCore;
-using SportsStore.Models;
-...
 
-var builder = WebApplication.CreateBuilder(args);
-
-...
-
-SeedData.EnsurePopulated(app);
-
-app.Run();
-
-```
-
-*_If you need to reset the database, then run this command in the SportsStore folder:_
+*_If you need to reset the database, then run this command in the `SportsStore` folder:_
 
 ```
 $ dotnet ef database drop --force --context StoreDbContext
@@ -312,7 +321,7 @@ $ git commit -m "Add data to application."
 
 </summary>   
 
-- Change the `HomeController` class according to following code.
+- Change the `HomeController` class according to following code:
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -322,18 +331,18 @@ namespace SportsStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IStoreRepository repository;
+      ➥private readonly IStoreRepository repository;
 
-        public HomeController(IStoreRepository repository)
+      ➥public HomeController(IStoreRepository repository)
         {
             this.repository = repository;
         }
 
-        public IActionResult Index() => View(repository.Products);
+      ➥public IActionResult Index() => View(repository.Products);
     }
 }
 ```
-- Update `Index.cshtml` file in the `SportsStore/Views/Home` folder.
+- Update `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
 
 ```
 @model IQueryable<Product>
@@ -348,7 +357,7 @@ namespace SportsStore.Controllers
 }
 ```
 
-- Build the solution. Restart ASP.NET Core and request http://localhost:5000
+- Build the solution. Restart ASP.NET Core and request http://localhost:5000.
 
 ![](Images/1.2.png)
 
@@ -374,27 +383,45 @@ $ git commit -m "Add displaying a list of products."
 
 - To add pagination, change the `Controller` class by adding following code.
 ```
-...
-private const int PageSize = 4; 
-...
-public ViewResult Index(int productPage = 1)
-    => this.View(this.repository.Products
-      .OrderBy(p => p.ProductId)
-      .Skip((productPage - 1) * PageSize)
-      .Take(PageSize));
-...
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models.Repository;
+using SportsStore.Models.ViewModels;
+
+namespace SportsStore.Controllers
+{
+    public class HomeController : Controller
+    {
+      ➥private const int PageSize = 4;
+
+        private readonly IStoreRepository repository;
+
+        public HomeController(IStoreRepository repository)
+        {
+            this.repository = repository;
+        }
+
+      ➥public ViewResult Index(int productPage = 1)
+            => this.View(this.repository.Products
+              .OrderBy(p => p.ProductId)
+              .Skip((productPage - 1) * PageSize)
+              .Take(PageSize));
+
+    }
+}
+
 ```
 
 - Restart application and request http://localhost:5000. To view another page, append query string parameters to the end of the URL like this http://localhost:5000/?productPage=2
 
 ![](Images/1.3.png)
 
-- Create the `PagingInfo` class in the `SportsStore/Models/ViewModels` folder.
+- Add the `PagingInfo.cs` class file in the `SportsStore/Models/ViewModels` folder.
 
 ```
 namespace SportsStore.Models.VewModels
 {
-    public class PagingInfo
+  ➥public class PagingInfo
     {
         public int TotalItems { get; set; }
 
@@ -422,7 +449,7 @@ using SportsStore.Models.ViewModels;
 namespace SportsStore.Infrastructure
 {
     [HtmlTargetElement("div", Attributes = "page-model")]
-    public class PageLinkTagHelper : TagHelper
+  ➥public class PageLinkTagHelper : TagHelper
     {
         private IUrlHelperFactory urlHelperFactory;
 
@@ -462,22 +489,21 @@ namespace SportsStore.Infrastructure
 
 ```
 
--  Register the `PageLinkTagHelper` tag helper in the `ViewImports.cshtml` File in the SportsStore/Views Folder
+-  Register the `PageLinkTagHelper` tag helper in the `ViewImports.cshtml` Razor View File in the `SportsStore/Views` Folder
 
 ```
-...
-@using SportsStore.Models
-@using SportsStore.Models.ViewModels
-@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@addTagHelper *, SportsStore
+  @using SportsStore.Models
+➥@using SportsStore.Models.ViewModels
+  @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+➥@addTagHelper *, SportsStore
 ```
 
-- Add a `ProductsListViewModel` class in the `ProductsListViewModel.cs` file to the `Models/ViewModels` folder of the SportsStore project.
+- Add a `ProductsListViewModel.cs` class file in the `Models/ViewModels` folder of the `SportsStore` project.
 
 ```
 namespace SportsStore.Models.ViewModels
 {
-    public class ProductsListViewModel
+  ➥public class ProductsListViewModel
     {
         public IEnumerable<Product> Products { get; set; } = Enumerable.Empty<Product>();
 
@@ -490,28 +516,46 @@ namespace SportsStore.Models.ViewModels
 
 ```
 . . .
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models.Repository;
 using SportsStore.Models.ViewModels;
-. . .
 
-public ViewResult Index(int productPage = 1)
+namespace SportsStore.Controllers
 {
-    return View(new ProductsListViewModel
+    public class HomeController : Controller
     {
-        Products = repository.Products
-                       .OrderBy(p => p.ProductId)
-                       .Skip((productPage - 1) * PageSize)
-                       .Take(PageSize),
-        PagingInfo = new PagingInfo
+        private const int PageSize = 4;
+
+        private readonly IStoreRepository repository;
+
+        public HomeController(IStoreRepository repository)
         {
-            CurrentPage = productPage,
-            ItemsPerPage = PageSize,
-            TotalItems = repository.Products.Count(),
-        },
-    });
+            this.repository = repository;
+        }
+
+      ➥public ViewResult Index(int productPage = 1)
+        {
+            return View(new ProductsListViewModel
+            {
+                Products = repository.Products
+                               .OrderBy(p => p.ProductId)
+                               .Skip((productPage - 1) * PageSize)
+                               .Take(PageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = productPage,
+                    ItemsPerPage = PageSize,
+                    TotalItems = repository.Products.Count(),
+                },
+            });
+        }
+
+    }
 }
-. . .
+
 ```
--  Update the `Index.cshtml` file.
+-  Update the `Index.cshtml` Razor View file.
 ```
 @model ProductsListViewModel
 
@@ -525,7 +569,7 @@ public ViewResult Index(int productPage = 1)
 }
 ```
 
-and add an HTML element that the tag helper will process to create the page links.
+and add to it an HTML element that the tag helper will process to create the page links.
 
 ```
 <div page-model="@Model?.PagingInfo" page-action="Index"></div>
@@ -539,21 +583,35 @@ and add an HTML element that the tag helper will process to create the page link
 
 ![](Images/1.6.png)
 
-- To improve the URL (while used http://localhost/?productPage=2), add a new route in the Program.cs file, that follows the pattern of composable URLs that make sense to a user: http://localhost/Page2:
+- To improve the URL (while used http://localhost/?productPage=2), add a new route in the `Program.cs` file, that follows the pattern of composable URLs that make sense to a user: http://localhost/Products/Page2:
 
 ```
-var builder = WebApplication.CreateBuilder(args);
+  using Microsoft.EntityFrameworkCore; 
+  using SportsStore.Models;
+  
+  var builder = WebApplication.CreateBuilder(args);
+  
+  builder.Services.AddControllersWithViews();
+  
+  builder.Services.AddDbContext<StoreDbContext>(opts => {
+      opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+  });
+  builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+  
+  var app = builder.Build();
+  
+  app.UseStaticFiles();
+  
+  app.MapDefaultControllerRoute();
 
-. . . 
+➥app.MapControllerRoute(
+      "pagination",
+      "Products/Page{productPage:int}",
+       new { Controller = "Home", action = "Index", productPage = 1 });
 
-app.MapControllerRoute(
-    "pagination",
-    "Products/Page{productPage}",
-    new { Controller = "Home", action = "Index" });
-
-. . .
-
-app.Run();
+  SeedData.EnsurePopulated(app);
+  
+  app.Run();
 ```
 - Add and view changes and than commit.
 
@@ -586,7 +644,7 @@ $ libman init -p cdnjs
 $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 ```
 
-- Apply `Bootstrap CSS` to the `_Layout.cshtml` file in the `SportsStore/Views/Shared` folder.
+- Apply `Bootstrap CSS` to the `_Layout.cshtml` Layout Razor View file in the `SportsStore/Views/Shared` folder.
 ```
 <!DOCTYPE html>
 <html>
@@ -611,7 +669,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 </html>
 ```
 
--  Style the content in the `Index.cshtml` file in the `SportsStore/Views/Home` folder.
+- Style the content in the `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
 
 ```
 @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
@@ -636,7 +694,7 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 </div>
 ```
 
-- To style the buttons generated by the PageLinkTagHelper class, add properties to the `PageLinkTagHelper` class in the `PageLinkTagHelper.cs` file in the `SportsStore/Infrastructure` folder
+- To style the buttons generated by the `PageLinkTagHelper` class, add new properties to the `PageLinkTagHelper` class in the `PageLinkTagHelper.cs` file in the `SportsStore/Infrastructure` folder
 
 ```
 public class PageLinkTagHelper : TagHelper
@@ -672,7 +730,7 @@ public class PageLinkTagHelper : TagHelper
 
 - Builed project, restart application and request http://localhost:5000.
 
-- To simplify the `Index.cshtml` view, create a partial view. Add a Razor View called `_ProductSummary.cshtml` to the `Views/Shared` folder and add the markup.
+- To simplify the `Index.cshtml` Razor View, create a Partial View. Add a Razor View called `_ProductSummary.cshtml` to the `Views/Shared` folder and add the markup to it.
 
 ```
 @model Product
