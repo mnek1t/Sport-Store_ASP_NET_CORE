@@ -15,7 +15,7 @@ As a result of completing this task, you will receive an application that implem
 ## .NET Platform
 The task uses the .NET Core CLI command line tool and references applications that target .NET 6.
 
-Visual Studio 2022 is the most convenient tool to get the task done, however, if your work machine is not configured to run this IDE, development can be done with Visual Studio Code and the .NET Core SDK (or other IDE).
+Visual Studio 2022 is the most convenient tool to get the task done, however, if your work machine is not configured to run this IDE, development can be done with Visual Studio Code and the .NET Core SDK (or ather IDE).
 
 ## Branching
 
