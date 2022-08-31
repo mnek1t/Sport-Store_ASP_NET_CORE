@@ -987,14 +987,26 @@ dotnet ef database drop --force --context AppIdentityDbContext
 ```
 _Restart the application, and the database will be re-created and populated with seed data._
 
-- To implement basic authorization policy add a `LoginModel.cs` class file in the `SportsStore/Models/ViewModels` folder
+-To restrict access to the administrative actions in the `AdminController` use The `Authorize` attribute
+
+```
+  [Route("Admin")]
+➥[Authorize]
+  public class AdminController : Controller
+  {
+      . . .
+  }
+```
+When an unauthenticated user sends a request that requires authorization, the user is redirected to the `/Account/Login` URL, which the application can use to prompt the user for their credentials.
+
+- To implement basic authorization policy add in the `SportsStore/Models/ViewModels` folder a `LoginViewModel.cs` class file that presents the user’s credentials 
 
 ```
 using System.ComponentModel.DataAnnotations;
 
 namespace SportsStore.Models.ViewModels
 {
-    public class LoginModel
+    public class LoginViewModel
     {
         [Required]
         public string? Name { get; set; }
@@ -1074,16 +1086,14 @@ namespace SportsStore.Controllers
     }
 }
 ```
-When an unauthenticated user sends a request that requires authorization, the user is redirected to the `/Account/Login` URL, which the application can use to prompt the user for their credentials.
-
 - To provide the `Login` method with a view to render, created the `Views/Account` folder and added a `Login.cshtml` Razor View  with the contents shown below
 
 ```
-@model LoginModel
+@model SportsStore.Models.ViewModels.LoginViewModel
+
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -1093,26 +1103,33 @@ When an unauthenticated user sends a request that requires authorization, the us
 </head>
 <body>
 
-<div class="bg-info text-white p-2">
-    <span class="navbar-brand m-lg-2">SPORTS STORE</span>
-</div>
-<div class="col-md-4">
-    <div class="text-danger" asp-validation-summary="All"></div>
-    <form asp-action="Login" asp-controller="Account" method="post">
-        <input type="hidden" asp-for="ReturnUrl"/>
-        <div class="form-group">
-            <label asp-for="Name"></label>
-            <div asp-validation-for="Name" class="text-danger"></div>
-            <input asp-for="Name" class="form-control"/>
+    <div class="bg-info text-white p-2">
+        <span class="navbar-brand m-lg-2">SPORTS STORE</span>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Login" asp-controller="Account" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input asp-for="ReturnUrl" type="hidden" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary mt-2" type="submit">Log In</button>
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <label asp-for="Password"></label>
-            <div asp-validation-for="Password" class="text-danger"></div>
-            <input asp-for="Password" type="password" class="form-control"/>
-        </div>
-        <button class="btn btn-primary mt-2" type="submit">Log In</button>
-    </form>
-</div>
+    </div>
+
 </body>
 </html>
 ```
