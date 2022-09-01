@@ -19,15 +19,15 @@ Visual Studio 2022 is the most convenient tool to get the task done, however, if
 
 ## Branching
 
-The task consists of four steps. The description of the each step of the task are in the corresponding md-file in the corresponding branch.
+The task consists of four steps. The description of the each step of the task are in the corresponding `md`-file in the corresponding branch.
 
 | Step | Step Description | Feature Branch Name |
 | ------ | ------ | ------ |
 | 0. | Building the basic infrastructure for the SportsStore application. | sports-store-application-0 |
-| 1. | Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. Development the HomeController controller that can create paginated product lists.Setting clean and friendly URL schemes. Stylingof the content. |sports-store-application-1 |
-| 2. |Development the navigate by category. Development the basic building blocks in place for adding items to a shopping cart.|sports-store-application-2 |
-| 3. | Complete shopping cart development with a simple checkout process. |sports-store-application-3 |
-| 4. | Implementation of CRUD operations that allow the administrator to create, read, update and delete products from repository and mark orders as shipped. |sports-store-application-4 |
+| 1. | Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. Development the HomeController controller that can create paginated product lists. Setting clean and friendly URL schemes. Styling of the content. |sports-store-application-1 |
+| 2. | Development the navigate by category. Development the basic building blocks in place for adding items to a shopping cart.|sports-store-application-2 |
+| 3. | Complete shopping cart development with a simple checkout process. | sports-store-application-3 |
+| 4. | Implementation of CRUD operations that allow the administrator to create, read, update and delete products from repository and mark orders as shipped. | sports-store-application-4 |
 
 After completing all steps you will get the final version of the application in the `main` branch.
 
