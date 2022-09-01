@@ -332,7 +332,7 @@ public ViewResult Index(string? category, int productPage = 1)
 ```
 $ dotnet build
 $ git status
-$ git add *.cs *.proj *.cshtml
+$ git add *.cs *.csproj *.cshtml
 $ git diff --staged
 $ git commit -m "Add navigation controls."
 ```
@@ -725,7 +725,7 @@ Clicking the `Continue Shopping button` returns the user to the product page the
 ```
 $ dotnet build
 $ git status
-$ git add *.cs *.proj *.cshtml
+$ git add *.cs *.csproj *.cshtml
 $ git diff --staged
 $ git commit -m "Add shopping cart functionality."
 ```
