@@ -1,5 +1,10 @@
 #  Sports Store Application. Part 2
 
+## Description
+
+- Development the navigate by category. 
+- Development the basic building blocks in place for adding items to a shopping cart.
+
 ## Implementation details
 
 <details>
@@ -23,7 +28,7 @@ $ git merge main --ff
 
 - Builed project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
-- Modify the `ProductsListViewModel` class (add the `CurrentCategory` property).
+- Modify the `ProductsListViewModel` class - add the `CurrentCategory` property.
 
 ```
 namespace SportsStore.Models.ViewModels
@@ -34,30 +39,30 @@ namespace SportsStore.Models.ViewModels
 
         public PagingInfo PagingInfo { get; set; }
 
-        public string? CurrentCategory { get; set; }
+      ➥public string? CurrentCategory { get; set; }
     }
 }
 ```
 - Add the `Category` support to the `HomeController` class.
 
 ```
-public ViewResult Index(string category, int productPage = 1)
-            => View(new ProductsListViewModel
-            {
-                Products = repository.Products
-                .Where(p => category == null || p.Category == category)
-                .OrderBy(p => p.ProductId)
-                .Skip((productPage - 1) * PageSize)
-                .Take(PageSize),
-                PagingInfo = new PagingInfo
-                {
-                    CurrentPage = productPage,
-                    ItemsPerPage = PageSize,
-                    TotalItems = repository.Products.Count(),
-                },
-
-                CurrentCategory = category,
-            });
+➥public ViewResult Index(string? category, int productPage = 1)
+              => View(new ProductsListViewModel
+              {
+                  Products = repository.Products
+                ➥.Where(p => category == null || p.Category == category)
+                  .OrderBy(p => p.ProductId)
+                  .Skip((productPage - 1) * PageSize)
+                  .Take(PageSize),
+                  PagingInfo = new PagingInfo
+                  {
+                      CurrentPage = productPage,
+                      ItemsPerPage = PageSize,
+                      TotalItems = repository.Products.Count(),
+                  },
+  
+                ➥CurrentCategory = category,
+              });
 ```
 
 - Restart ASP.NET Core and select a category using the following URL http://localhost:5000/?category=Soccer. Make sure to use an uppercase `S` in `Soccer`.
@@ -68,27 +73,27 @@ public ViewResult Index(string category, int productPage = 1)
 
 ```
 ...
-app.MapControllerRoute(
-    "categoryPage",
-    "Products/{category}/Page{productPage:int}",
-    new { Controller = "Home", action = "Index" });
-
-app.MapControllerRoute(
-    "category",
-    "{category}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
-
-app.MapControllerRoute(
-    "pagination",
-    "Products/Page{productPage}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
-
-app.MapControllerRoute(
-    "default",
-    "/",
-    new { Controller = "Home", action = "Index" });
-
-SeedData.EnsurePopulated(app);
+➥app.MapControllerRoute(
+      "categoryPage",
+      "Products/{category}/Page{productPage:int}",
+      new { Controller = "Home", action = "Index" });
+  
+➥app.MapControllerRoute(
+      "category",
+      "{category}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      "pagination",
+      "Products/Page{productPage}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+➥app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
+  
+  app.MapDefaultControllerRoute();
 ...
 ```
 
@@ -111,8 +116,8 @@ SeedData.EnsurePopulated(app);
 public class PageLinkTagHelper : TagHelper 
 {
     . . . 
-    [HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
-    public Dictionary<string, object> PageUrlValues { get; set; }  = new Dictionary<string, object>();
+  ➥[HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
+  ➥public Dictionary<string, object> PageUrlValues { get; set; }  = new Dictionary<string, object>();
     . . .
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
@@ -123,8 +128,8 @@ public class PageLinkTagHelper : TagHelper
             for (int i = 1; i <= PageModel.TotalPages; i++)
             {
                 TagBuilder tag = new TagBuilder("a");
-                PageUrlValues["productPage"] = i;
-                tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
+              ➥PageUrlValues["productPage"] = i;
+              ➥tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
                 if (PageClassesEnabled)
                 {
                     tag.AddCssClass(PageClass);
@@ -139,7 +144,7 @@ public class PageLinkTagHelper : TagHelper
    . . . 
 }
 ```
-- Add a new attribute in the `Index.cshtml` file in the `SportsStore/Views/Home` folder.
+- Add a new attribute in the `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
 
 ```
 @model ProductsListViewMode
@@ -150,16 +155,16 @@ public class PageLinkTagHelper : TagHelper
 
 <div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
      page-class="btn" page-class-normal="btn-outline-dark"
-     page-class-selected="btn-primary" page-url-category="@Model.CurrentCategory"
+   ➥page-class-selected="btn-primary" page-url-category="@Model.CurrentCategory"
      class="btn-group pull-right m-1">
 </div>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/Soccer/Page1.
+- Restart ASP.NET Core and request http://localhost:5000/Products/Soccer/Page1.
 
 ![](Images/2.4.png)
 
--  Сreate a folder called `Components`, which is the conventional home of view components, in the `SportsStore` project.
+-  Сreate a folder called `Components`, which is the conventional home of View Components, in the `SportsStore` project.
 
 -  Add the `NavigationMenuViewComponent` class to it.
 
@@ -168,7 +173,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SportsStore.Components
 {
-    public class NavigationMenuViewComponent : ViewComponent
+  ➥public class NavigationMenuViewComponent : ViewComponent
     {
         public string Invoke()
         {
@@ -178,7 +183,7 @@ namespace SportsStore.Components
 }
 ```
 
-- To view the result of the `Invoke` method, open the  `_Layout.cshtml` file and add the tag `<vc:navigation-menu />` as shown below: 
+- To view the result of the `Invoke` method, open the `_Layout.cshtml` Layout Razor View file and add the tag `<vc:navigation-menu />` as shown below: 
 
 ```
 <!DOCTYPE html>
@@ -194,7 +199,7 @@ namespace SportsStore.Components
     </div>
     <div class="row m-1 p-1">
         <div id="categories" class="col-3">
-            <vc:navigation-menu />
+          ➥<vc:navigation-menu />
         </div>
         <div class="col-9">
             @RenderBody()
@@ -218,16 +223,16 @@ namespace SportsStore.Components
 {
     public class NavigationMenuViewComponent : ViewComponent
     {
-        private IStoreRepository repository;
+      ➥private IStoreRepository repository;
 
-        public NavigationMenuViewComponent(IStoreRepository repository)
+      ➥public NavigationMenuViewComponent(IStoreRepository repository)
         {
             this.repository = repository;
         }
 
         public IViewComponentResult Invoke()
         {
-            return View(repository.Products
+          ➥return View(repository.Products
                .Select(x => x.Category)
                .Distinct()
                .OrderBy(x => x));
@@ -236,22 +241,19 @@ namespace SportsStore.Components
 }
 ```
 
-- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add to it the Razor View named `Default.cshtml`.
+- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add to it the `Default.cshtml` Razor View file.
 
 ```
 @model IEnumerable<string>
 
 <div class="d-grid gap-2">
-    <a class="btn btn-outline-secondary" asp-action="Index"
-       asp-controller="Home" asp-route-category="">
+    <a class="btn btn-outline-secondary" asp-route="default">
         Home
     </a>
     @foreach (string category in Model ?? Enumerable.Empty<string>())
     {
         <a class="btn btn-outline-secondary"
-       asp-action="Index" asp-controller="Home"
-       asp-route-category="@category"
-       asp-route-productPage="1">
+        asp-route="category" asp-route-category="@category">
             @category
         </a>
     }
@@ -270,7 +272,7 @@ public class NavigationMenuViewComponent : ViewComponent
         ...
         public IViewComponentResult Invoke() 
         {
-            ViewBag.SelectedCategory = RouteData?.Values["category"];
+          ➥ViewBag.SelectedCategory = RouteData?.Values["category"];
             ...
         }
         ...
@@ -281,17 +283,16 @@ public class NavigationMenuViewComponent : ViewComponent
 - To highlight the selected categories, change the `Default.cshtml` file.
 
 ```
+@model IEnumerable<string>
+
 <div class="d-grid gap-2">
-    <a class="btn btn-outline-secondary" asp-action="Index"
-       asp-controller="Home" asp-route-category="" asp-route-productPage="1">
+    <a class="btn btn-outline-secondary" asp-route="default">
         Home
     </a>
     @foreach (string category in Model ?? Enumerable.Empty<string>())
     {
         <a class="btn @(category == ViewBag.SelectedCategory ? "btn-primary": "btn-outline-secondary")"
-       asp-action="Index" asp-controller="Home"
-       asp-route-category="@category"
-       asp-route-productPage="1">
+           asp-route="category" asp-route-category="@category">
             @category
         </a>
     }
@@ -316,13 +317,12 @@ public ViewResult Index(string? category, int productPage = 1)
         {
             CurrentPage = productPage,
             ItemsPerPage = PageSize,
-            TotalItems = category == null ? repository.Products.Count() : repository.Products.Where(e => e.Category == category).Count(),
+          ➥TotalItems = category == null ? repository.Products.Count() : repository.Products.Where(e => e.Category == category).Count(),
         }
         CurrentCategory = category,
     });
         
 ```
-
 - Restart ASP.NET Core and request http://localhost:5000.
 
 ![](Images/2.8.png)
@@ -346,7 +346,7 @@ $ git commit -m "Add navigation controls."
 
 </summary>
 
-- Add a new `_CartLayout.cshtml` file in the `SportsStore/Views/Shared` folder for the`Cart` views.
+- Add a new `_CartLayout.cshtml` Razor View file in the `SportsStore/Views/Shared` folder for the`Cart` views.
 
 ```
 <!DOCTYPE html>
@@ -367,12 +367,12 @@ $ git commit -m "Add navigation controls."
 </html>
 ```
 
-- Add the `CartController` class in the `SportsStore/Controllers` folder.
+- Add the `CartController.cs` class file in the `SportsStore/Controllers` folder.
 
 ```
 namespace SportsStore.Controllers
 {
-    public class CartController : Controller
+  ➥public class CartController : Controller
     {
         public IActionResult Index()
         {
@@ -382,7 +382,7 @@ namespace SportsStore.Controllers
 }
 ```
 
-- Add the `Index.cshtml` file in the `SportsStore/Views/Cart` folder.
+- Add the `Index.cshtml` Razor View file in the `SportsStore/Views/Cart` folder.
 
 ```
 @{
@@ -392,32 +392,70 @@ namespace SportsStore.Controllers
 <h4>This is the Cart Page</h4>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/Cart/Index.
+- To improve the routing add new "shoppingCart" route to the routing configuration in the `Program.cs` file.
+
+```
+  app.MapControllerRoute(
+      "categoryPage",
+      "Products/{category}/Page{productPage:int}",
+      new { Controller = "Home", action = "Index" });
+  
+➥app.MapControllerRoute(
+      "shoppingCart",
+      "Cart",
+      new { Controller = "Cart", action = "Index" });
+  
+  app.MapControllerRoute(
+      "category",
+      "Products/{category}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      "pagination",
+      "Products/Page{productPage:int}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
+
+  app.MapDefaultControllerRoute();    
+  
+  SeedData.EnsurePopulated(app);
+  IdentitySeedData.EnsurePopulated(app);
+  
+  app.Run();
+```
+
+- Restart ASP.NET Core and request http://localhost:5000/Cart.
 
     ![](Images/2.9.png)
 
-- To create the buttons that will add products to the cart, add the `UrlExtensions` class (`Infrastructure` folder) and define the `PathAndQuery` extension method in it.
+- To create the buttons that will add products to the cart, add the `UrlExtensions.cs` class file (in`Infrastructure` folder) and define the `PathAndQuery` extension method in the `UrlExtensions.cs` class.
 
 ```
 namespace SportsStore.Infrastructure
 {
-    public static class UrlExtensions
+  ➥public static class UrlExtensions
     {
         public static string PathAndQuery(this HttpRequest request)
             => request.QueryString.HasValue ? $"{request.Path}{request.QueryString}" : request.Path.ToString();
     }
 }
 ```
-The extension method generates a URL. The browser will return to this URL after the cart has been updated. If there are Query Parameters in the URL, they should be considered as well.  
+The extension method generates a URL. The browser will return to this URL after the cart has been updated. If there are `Query Parameters` in the URL, they should be considered as well.  
 
 - Add a `SportsStore.Infrastructure` namespace in the` _ViewImports.cshtml` File in the `SportsStore/Views` Folder
 
 ```
-. . .
-@using SportsStore.Infrastructure
-. . .
+  @using SportsStore.Models
+  @using SportsStore.Models.ViewModels
+➥@using SportsStore.Infrastructure
+  @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+  @addTagHelper *, SportsStore
 ```
-- Add the markup for the buttons into the partial view `_ProductSummary.cshtml` within the `SportsStore/Views/Shared` folder.
+- Add the markup for the buttons into the `_ProductSummary.cshtml` Razor Partial View file in the `SportsStore/Views/Shared` folder.
         
 ```
 @model Product
@@ -447,31 +485,33 @@ The extension method generates a URL. The browser will return to this URL after 
 </div>
 ```
 
-- Use the session state mechanism to store information about a user’s cart. In order to do this, add services and middleware to the `Program` file.
+- Use the session state mechanism to store information about a user’s cart. In order to do this, add services and middleware to the `Program.cs` file.
 
 ```
-. . . 
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
-. . . 
-app.UseSession();
-. . .
-```
+  using Microsoft.EntityFrameworkCore; 
+  using SportsStore.Models;
+  
+  var builder = WebApplication.CreateBuilder(args);
+  
+  builder.Services.AddControllersWithViews();
+  
+  builder.Services.AddDbContext<StoreDbContext>(opts => {
+      opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+  });
 
-- To improve the ruting add new "shoppingCart" route to the routing configuration in the `Program` file.
+  builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+  
+➥builder.Services.AddSession();
 
-```
-. . .
-app.MapControllerRoute(
-    "shoppingCart",
-    "Cart",
-    new { Controller = "Cart", action = "Index" });
+  var app = builder.Build();
+  
+  app.UseStaticFiles();
 
-app.MapControllerRoute(
-    "category",
-    "{category}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
-. . .
+➥app.UseSession();
+
+  . . .
+  
+  app.Run()
 ```
 
 - To implement the cart feature, add the `Cart`class and the `CartLine` class (in the `Models` folder) in the `SportsStore` project. 
