@@ -395,6 +395,7 @@ namespace SportsStore.Controllers
 - To improve the routing add new "shoppingCart" route to the routing configuration in the `Program.cs` file.
 
 ```
+  . . .
   app.MapControllerRoute(
       "categoryPage",
       "Products/{category}/Page{productPage:int}",
@@ -470,7 +471,7 @@ The extension method generates a URL. The browser will return to this URL after 
             </span>
         </h4>
     </div>
-    <form id="@Model?.ProductId" asp-controller="Cart" asp-antiforgery="true">
+  ➥<form id="@Model?.ProductId" asp-controller="Cart" asp-antiforgery="true">
         <input type="hidden" asp-for="ProductId" />
         <input type="hidden" name="returnUrl"
                value="@ViewContext.HttpContext.Request.PathAndQuery()" />
@@ -488,8 +489,7 @@ The extension method generates a URL. The browser will return to this URL after 
 - Use the session state mechanism to store information about a user’s cart. In order to do this, add services and middleware to the `Program.cs` file.
 
 ```
-  using Microsoft.EntityFrameworkCore; 
-  using SportsStore.Models;
+  . . .
   
   var builder = WebApplication.CreateBuilder(args);
   
@@ -501,6 +501,7 @@ The extension method generates a URL. The browser will return to this URL after 
 
   builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
   
+➥builder.Services.AddDistributedMemoryCache();
 ➥builder.Services.AddSession();
 
   var app = builder.Build();
@@ -514,12 +515,12 @@ The extension method generates a URL. The browser will return to this URL after 
   app.Run()
 ```
 
-- To implement the cart feature, add the `Cart`class and the `CartLine` class (in the `Models` folder) in the `SportsStore` project. 
+- To implement the cart feature, add the `Cart`class and the `CartLine` class (in files in the `Models` folder). 
 
 ```
 namespace SportsStore.Models
 {
-    public class Cart
+  ➥public class Cart
     {
         private List<CartLine> lines { get; set; } = new List<CartLine>();
 
@@ -555,7 +556,7 @@ namespace SportsStore.Models
 
 namespace SportsStore.Models
 {
-    public class CartLine
+  ➥public class CartLine
     {
         public int CartLineId { get; set; }
 
@@ -566,9 +567,9 @@ namespace SportsStore.Models
 }
 ```
 
-The `Cart` class uses the `CartLine` class to represent a product selected by the customer and the quantity a user wants to buy. The Cart class includes the methods that add an item to the cart, remove a previously added item from the cart, calculate the total cost of the items in the cart, and reset the cart by removing all the items.
+The `Cart` class uses the `CartLine` class to represent a product selected by the customer and the quantity a user wants to buy. The `Cart` class includes the methods that add an item to the cart, remove a previously added item from the cart, calculate the total cost of the items in the cart, and reset the cart by removing all the items.
 
-- To store a `Cart` object (the session state feature in ASP.NET Core stores only int, string, and byte[] values) define extension methods to the `ISession` interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the ion interface that provides access to the session state data to serialize Cart objects into JSON and convert them back. Add the `SessionExtensions` class (the `Infrastructure` folder) and defined the extension methods. To serialization install the Newtonsoft.json package.
+- To store a `Cart` object (the session state feature in ASP.NET Core stores only int, string, and byte[] values) define extension methods to the `ISession` interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the `SessionExtensions.cs` class file (in the `Infrastructure` folder) and defined the extension methods. To serialization install the `Newtonsoft.json` package.
 
 ```
 $ dotnet add package Newtonsoft.Json
@@ -579,7 +580,7 @@ using Newtonsoft.Json;
 
 namespace SportsStore.Infrastructure
 {
-    public static class SessionExtensions
+  ➥public static class SessionExtensions
     {
         public static void SetJson(this ISession session, string key, object value)
         {
@@ -595,14 +596,14 @@ namespace SportsStore.Infrastructure
 }
 ```
 
-- Add the `CartViewModel` class (the `SportsStore/Models/ViewModels` folder).
+- Add the `CartViewModel.cs` class file (in the `SportsStore/Models/ViewModels` folder).
 
 ```
 namespace SportsStore.Models.ViewModels
 {
-    public class CartViewModel
+  ➥public class CartViewModel
     {
-        public Cart? Cart { get; set; } = null!;
+        public Cart? Cart { get; set; } = new();
 
         public string ReturnUrl { get; set; } = "/";
     }
@@ -623,9 +624,9 @@ namespace SportsStore.Controllers
 {
     public class CartController : Controller
     {
-        private IStoreRepository repository;
+      ➥private IStoreRepository repository;
 
-        public CartController(IStoreRepository repository)
+      ➥public CartController(IStoreRepository repository)
         {
             this.repository = repository;
         }
@@ -633,7 +634,7 @@ namespace SportsStore.Controllers
         [HttpGet]
         public IActionResult Index(string returnUrl)
         {
-            return View(new CartViewModel
+          ➥return View(new CartViewModel
             {
                 ReturnUrl = returnUrl ?? "/",
                 Cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart(),
@@ -641,7 +642,7 @@ namespace SportsStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(long productId, string returnUrl)
+      ➥public IActionResult Index(long productId, string returnUrl)
         {
             Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
 
@@ -659,17 +660,17 @@ namespace SportsStore.Controllers
 }
 
 ```
-- Change the `Index.cshtml` file in the `SportsStore/Views/Cart` folder:
+- Change the `Index.cshtml` Razor View file in the `SportsStore/Views/Cart` folder:
 
 ```
-@model CartViewModel
-
-@{
-    this.Layout = "_CartLayout";
-}
-
-<h2>Your cart</h2>
-<table class="table table-bordered table-striped">
+➥@model CartViewModel
+  
+  @{
+      this.Layout = "_CartLayout";
+  }
+  
+➥<h2>Your cart</h2>
+  <table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>Quantity</th>
@@ -699,10 +700,10 @@ namespace SportsStore.Controllers
             </td>
         </tr>
     </tfoot>
-</table>
-<div class="text-center">
-    <a class="btn btn-primary" href="@Model?.ReturnUrl">Continue shopping</a>
-</div>
+  </table>
+  <div class="text-center">
+      <a class="btn btn-primary" href="@Model?.ReturnUrl">Continue shopping</a>
+  </div>
 
 ```
 - Restart ASP.NET Core and request http://localhost:5000. As a result, the basic functions of the shopping cart should be in place. First, products are listed along with the button that adds them to the cart. You can see that by restarting ASP.NET Core and requesting http://localhost:5000.  
