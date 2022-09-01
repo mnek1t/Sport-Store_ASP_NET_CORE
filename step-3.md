@@ -242,7 +242,7 @@ namespace SportsStore.Controllers
 
   app.MapControllerRoute(
       "categoryPage",
-      "Products/{category}/Page{productPage:int}",
+      "Products/{category}/Page{productPage:long}",
       new { Controller = "Home", action = "Index" });
   
   app.MapControllerRoute(
@@ -252,7 +252,7 @@ namespace SportsStore.Controllers
   
   app.MapControllerRoute(
       "pagination",
-      "Products/Page{productPage:int}",
+      "Products/Page{productPage:long}",
       new { Controller = "Home", action = "Index", productPage = 1 });
   
   app.MapControllerRoute(
