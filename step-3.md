@@ -168,7 +168,7 @@ namespace SportsStore.Controllers
 ```
 $ dotnet build
 $ git status
-$ git add *.cs *.proj *.cshtml
+$ git add *.cs *.csproj *.cshtml
 $ git diff --staged
 $ git commit -m "Refining the Cart Model with a Service."
 ```
@@ -751,7 +751,7 @@ namespace SportsStore.Controllers
 ```
 $ dotnet build
 $ git status
-$ git add *.cs *.proj *.cshtml
+$ git add *.cs *.csproj *.cshtml
 $ git diff --staged
 $ git commit -m "Implementing Order Processing."
 ```
