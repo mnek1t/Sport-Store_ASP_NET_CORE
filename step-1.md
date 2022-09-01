@@ -1,5 +1,9 @@
 #  Sports Store Application. Step 1.
 
+## Description 
+
+Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. Development the HomeController controller that can create paginated product lists. Setting clean and friendly URL schemes. Styling of the content.
+
 ## Implementation details
 
 <details>
@@ -114,7 +118,7 @@ $ dotnet tool install --global dotnet-ef --version 6.0.0
   app.Run();
 ```
 
-- Create the `IStoreRepository` interface in the `SportsStore/Models/Repository` folder.
+- Create the `IStoreRepository.cs` interface file in the `SportsStore/Models/Repository` folder.
 
 ```
 namespace SportsStore.Models.Repository
@@ -127,7 +131,7 @@ namespace SportsStore.Models.Repository
 
 ```
 
-- Create the `EFStoreRepository` class in the `SportsStore/Models/Repository` folder.
+- Create the `EFStoreRepository.cs` class file in the `SportsStore/Models/Repository` folder.
 
 ```
 namespace SportsStore.Models.Repository
@@ -342,6 +346,12 @@ namespace SportsStore.Controllers
     }
 }
 ```
+- Update `_ViewImports.cshtml` Razor View file in the `SportsStore/Views` folder.
+
+```
+➥@using SportsStore.Models
+  @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+```
 - Update `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
 
 ```
@@ -356,7 +366,6 @@ namespace SportsStore.Controllers
     </div>
 }
 ```
-
 - Build the solution. Restart ASP.NET Core and request http://localhost:5000.
 
 ![](Images/1.2.png)
@@ -436,7 +445,7 @@ namespace SportsStore.Models.VewModels
 
 - Create the `Infrastructure` folder in the project.
 
-- Create the `PageLinkTagHelper` tag helper class in the `SportsStore/Infrastructure` folder.
+- Create the `PageLinkTagHelper` tag helper class in the `PageLinkTagHelper.cs` file in the `SportsStore/Infrastructure` folder.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -512,7 +521,7 @@ namespace SportsStore.Models.ViewModels
 }
 ```
 
-- Update the `Index` action method in the `HomeController.cs` file in the `SportsStore/Controllers` folder.
+- Update the `Index` action method in the `HomeController` class.
 
 ```
 . . .
@@ -555,7 +564,7 @@ namespace SportsStore.Controllers
 }
 
 ```
--  Update the `Index.cshtml` Razor View file.
+-  Update the `Index.cshtml` Razor View file as show below
 ```
 @model ProductsListViewModel
 
@@ -569,10 +578,21 @@ namespace SportsStore.Controllers
 }
 ```
 
-and add to it an HTML element that the tag helper will process to create the page links.
+and than add to it an HTML element that the tag helper will process to create the page links.
 
 ```
-<div page-model="@Model?.PagingInfo" page-action="Index"></div>
+  @model ProductsListViewModel
+  
+  @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())  
+  {
+      <div>
+          <h3>@p.Name</h3>
+          @p.Description
+          <h4>@p.Price.ToString("c")</h4>
+      </div>
+  }
+
+➥<div page-model="@Model?.PagingInfo" page-action="Index"></div>
 
 ```
 - Build project, restart application and request http://localhost:5000.
@@ -730,7 +750,7 @@ public class PageLinkTagHelper : TagHelper
 
 - Builed project, restart application and request http://localhost:5000.
 
-- To simplify the `Index.cshtml` Razor View, create a Partial View. Add a Razor View called `_ProductSummary.cshtml` to the `Views/Shared` folder and add the markup to it.
+- To simplify the `Index.cshtml` Razor View, create a Razor Partial View. Add a Razor Partial View called `_ProductSummary.cshtml` to the `Views/Shared` folder and add the markup to it.
 
 ```
 @model Product
@@ -752,17 +772,17 @@ public class PageLinkTagHelper : TagHelper
 - Update the `Index.cshtml` file in the `Views/Home` folder. 
 
 ```
-@model ProductsListViewModel
-
-@foreach (var p in Model?.Products ?? Enumerable.Empty<Product>()) 
-{
-    <partial name="_ProductSummary" model="p" />
-}
-
-<div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
-    page-class="btn" page-class-normal="btn-outline-dark"
-    page-class-selected="btn-primary" class="btn-group pull-right m-1">
-</div>
+  @model ProductsListViewModel
+  
+  @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>()) 
+  {
+      <partial name="_ProductSummary" model="p" />
+  }
+  
+  <div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
+      page-class="btn" page-class-normal="btn-outline-dark"
+      page-class-selected="btn-primary" class="btn-group pull-right m-1">
+  </div>
 ```
 - Builed project, run the application and request http://localhost:5000.
 
