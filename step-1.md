@@ -2,7 +2,10 @@
 
 ## Description 
 
-Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. Development the HomeController controller that can create paginated product lists. Setting clean and friendly URL schemes. Styling of the content.
+- Definition of simple domain model with a product repository supported by SQL Server and Entity Framework Core. 
+- Development the HomeController controller that can create paginated product lists. 
+- Setting clean and friendly URL schemes. 
+- Styling of the content.
 
 ## Implementation details
 
@@ -507,7 +510,7 @@ namespace SportsStore.Infrastructure
 ➥@addTagHelper *, SportsStore
 ```
 
-- Add a `ProductsListViewModel.cs` class file in the `Models/ViewModels` folder of the `SportsStore` project.
+- Add a `ProductsListViewModel.cs` class file in the `Models/ViewModels` folder.
 
 ```
 namespace SportsStore.Models.ViewModels
@@ -621,13 +624,13 @@ and than add to it an HTML element that the tag helper will process to create th
   var app = builder.Build();
   
   app.UseStaticFiles();
-  
-  app.MapDefaultControllerRoute();
 
 ➥app.MapControllerRoute(
       "pagination",
       "Products/Page{productPage:int}",
        new { Controller = "Home", action = "Index", productPage = 1 });
+
+  app.MapDefaultControllerRoute();
 
   SeedData.EnsurePopulated(app);
   
@@ -720,13 +723,13 @@ $ libman install bootstrap@5.2.0 -d wwwroot/lib/bootstrap
 public class PageLinkTagHelper : TagHelper
 {
     ...
-    public bool PageClassesEnabled { get; set; } = false;
+  ➥public bool PageClassesEnabled { get; set; } = false;
 
-    public string PageClass { get; set; } = string.Empty;
+  ➥public string PageClass { get; set; } = string.Empty;
 
-    public string PageClassNormal { get; set; } = string.Empty;
+  ➥public string PageClassNormal { get; set; } = string.Empty;
 
-    public string PageClassSelected { get; set; } = string.Empty;
+  ➥public string PageClassSelected { get; set; } = string.Empty;
 
     ...
 
@@ -736,7 +739,7 @@ public class PageLinkTagHelper : TagHelper
             for (int i = 1; i <= PageModel.TotalPages; i++)
             {
                 . . .
-                if (PageClassesEnabled)
+              ➥if (PageClassesEnabled)
                 {
                     tag.AddCssClass(PageClass);
                     tag.AddCssClass(i == PageModel.CurrentPage
@@ -750,7 +753,7 @@ public class PageLinkTagHelper : TagHelper
 
 - Builed project, restart application and request http://localhost:5000.
 
-- To simplify the `Index.cshtml` Razor View, create a Razor Partial View. Add a Razor Partial View called `_ProductSummary.cshtml` to the `Views/Shared` folder and add the markup to it.
+- To simplify the `Index.cshtml` Razor View, create a Razor Partial View. Add a `_ProductSummary.cshtml` Razor Partial View file to the `Views/Shared` folder and add the markup to it.
 
 ```
 @model Product
@@ -776,7 +779,7 @@ public class PageLinkTagHelper : TagHelper
   
   @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>()) 
   {
-      <partial name="_ProductSummary" model="p" />
+    ➥<partial name="_ProductSummary" model="p" />
   }
   
   <div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
@@ -805,14 +808,14 @@ $ git commit -m "Add styling the content."
 $ git push --set-upstream origin sports-store-application-1
 
 ```
-- Switch to the main branch and do a fast-forward merge according to changes from the sports-store-application-1 branch.
+- Switch to the `main` branch and do a fast-forward merge according to changes from the `sports-store-application-1` branch.
 
 ```
 $ git checkout main
 
 $ git merge sports-store-application-1 --ff
 ```
-- Push the changes from the local main branch to the remote branch.
+- Push the changes from the local `main` branch to the remote branch.
 
 ```
 $ git push
