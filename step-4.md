@@ -1,4 +1,8 @@
-# Sports Store Application. Part 4 (in progress)
+# Sports Store Application. Part 4
+
+## Description
+
+Implementation of CRUD operations that allow the administrator to create, read, update and delete products from repository and mark orders as shipped.
 
 ## Implementation details
 
@@ -22,7 +26,7 @@ $ git merge main --ff
 
 - Build project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
-- Create and add to `Controllers` folder a separate `AdminController` controller class for managing orders shipping and the product catalog
+- Create and add to `Controllers` folder a separate `AdminController` controller class for managing orders shipping and the product catalog.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +55,7 @@ namespace SportsStore.Controllers
 ```
 `In the future a routing attributes will be used to routing support.`
 
-- Add the `AdminNavigationMenuViewComponent` class to `Components` folder
+- Add the `AdminNavigationMenuViewComponent.cs` class file to `Components` folder.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -69,9 +73,11 @@ namespace SportsStore.Components
     }
 }
 ```
-- Add the `Default.cshtml` Razor View  to `Views/Shared/Components/AdminNavigationMenu` folder 
+- Add the `Default.cshtml` Razor View file in the `Views/Shared/Components/AdminNavigationMenu` folder.
 
 ```
+@model IEnumerable<string>
+
 <div class="d-grid gap-2">
     @foreach (string category in Model)
     {
@@ -82,7 +88,7 @@ namespace SportsStore.Components
     }
 </div>
 ```
-- To create the layout view for the administration tools, add to the `Views/Admin` folder a `_AdminLayout.cshtml` Layout Razor View  
+- To create the layout view for the administration tools, add to the `Views/Admin` folder a `_AdminLayout.cshtml` Layout Razor View.  
 ```
 <!DOCTYPE html>
 <html>
@@ -110,7 +116,7 @@ namespace SportsStore.Components
 </body>
 </html>
 ```
-- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.cshtml` Razor View to the `Views/Admin` folder with the content shown below
+- To complete the initial setup, add the views that will provide the administration tools, although they will contain placeholder messages at first. Add a `Orders.cshtml` Razor View file to the `Views/Admin` folder with the content shown below.
 
 ```
 @model IQueryable<Order>
@@ -121,7 +127,7 @@ namespace SportsStore.Components
 
 <h4>This is the orders information.</h4>
 ```
-and add a `Products.cshtml` Razor View to the `Views/Admin` folder with the content shown below
+and add a `Products.cshtml` Razor View file to the `Views/Admin` folder with the content shown below.
 
 ```
 @model IQueryable<Product>
@@ -137,7 +143,7 @@ and add a `Products.cshtml` Razor View to the `Views/Admin` folder with the cont
 
 ![](Images/4.1.png)
 
-and http://localhost:5000/Admin/Products
+and http://localhost:5000/Admin/Products.
 
 ![](Images/4.2.png)
 
@@ -169,7 +175,7 @@ dotnet ef migrations add ShippedOrders
 ```
 _The migration will be applied automatically when the application is started and the `SeedData` class calls the `Migrate` method provided by Entity Framework Core._
 
-- Add to `AdminController` class `MarkShipped` method that will be receive a POST request that specifies the Id of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `true` and saved and  `Reset` method  that will be receive a POST request that specifies the Id of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `false` and saved
+- Add to `AdminController` class `MarkShipped` method that will be receive a POST request that specifies the Id of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `true` and saved and  `Reset` method  that will be receive a POST request that specifies the `Id` of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `false` and saved
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -185,7 +191,6 @@ namespace SportsStore.Controllers
 
         [HttpPost]
         [Route("MarkShipped")]
-
       ➥public IActionResult MarkShipped(int orderId)
         {
             Order? order = orderRepository.Orders.FirstOrDefault(o => o.OrderId == orderId);
@@ -294,6 +299,18 @@ Click the `Reset` button, and the order will be updated and moved to the `Unship
 
 ![](Images/4.6.png)
 
+- Add and view changes and than commit.
+
+```
+$ dotnet build
+$ dotnet run
+$ git status
+$ git add *.cs *.cshtml *.csproj
+$ git diff --staged
+$ git commit -m "Managing Orders."
+
+```
+
 </details>
 
 <details>
@@ -376,7 +393,6 @@ namespace SportsStore.Models.Repository
 }
 
 ```
-
 - To validate the values the user provides when editing or creating `Product` objects, add validation attributes to the `Product` data model class
 
 ```
@@ -484,7 +500,7 @@ namespace SportsStore.Controllers
         . . .
 }
 ```
-and a `Details.cshtml` Razor View to the `Views/Admin` folder
+and a `Details.cshtml` Razor View to the `Views/Admin` folder.
 
 ```
 @model SportsStore.Models.Product?
@@ -523,11 +539,11 @@ and a `Details.cshtml` Razor View to the `Views/Admin` folder
 <a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
 <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
 ```
-- Restart ASP.NET Core, request http://localhost:5000/Admin/Products and click `Details` link for some product
+- Restart ASP.NET Core, request http://localhost:5000/Admin/Products and click `Details` link for some product.
 
 ![](Images/4.8.png)
 
-- To implement the abilities to edit and to create of a single `Product` object, add the `Edit` and `Create` action methods accordingly in the `AdminController` class
+- To implement the abilities to edit and to create of a single `Product` object, add the `Edit` and `Create` action methods accordingly in the `AdminController` class.
 ```
 [Route("Admin")]
 public class AdminController : Controller
@@ -572,7 +588,7 @@ public class AdminController : Controller
     }
 }
 ```
-- To support the operations to create and edit data, add a `_Editor.cshtml` Razor Partial View to the `Views/Admin` folder
+- To support the operations to create and edit data, add a `_Editor.cshtml` Razor Partial View to the `Views/Admin` folder.
 
 ```
 @model (Product Product, string ThemeColor, string TitleText, string CallbackMethodName)
@@ -626,15 +642,15 @@ public class AdminController : Controller
   
 ![](Images/4.9.png)  
 
-or request http://localhost:5000/Admin/Products, and click the `Create` button
+or request http://localhost:5000/Admin/Products, and click the `Create` button.
   
 ![](Images/4.10.png)   
 
-- Click the `Save` button without filling out the form fields, and you will see the validation errors that Razor produces automatically, as shown below
+- Click the `Save` button without filling out the form fields, and you will see the validation errors that Razor produces automatically, as shown below.
 
 ![](Images/4.11.png)
 
-- Fill out the form and click `Save` again, and you will see the product you created displayed in the table
+- Fill out the form and click `Save` again, and you will see the product you created displayed in the table.
 
 ![](Images/4.12.png)
 
@@ -679,7 +695,7 @@ The `libman.json` file looks like this
   ]
 }
 ```
-- Add `script` tag and `Scripts` Razor Section to `_AdminLayout` Layout Razor View 
+- Add `script` tag and `Scripts` Razor Section to the `_AdminLayout` Layout Razor View.
 
 ```
   <!DOCTYPE html>
@@ -692,14 +708,14 @@ The `libman.json` file looks like this
   </body>
   </html>
 ```
-- Add `_ValidationScriptsPartial.cshtml` Razor Partial View in `Views/Shared` folder
+- Add `_ValidationScriptsPartial.cshtml` Razor Partial View in the `Views/Shared` folder.
 
 ```
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 ```
 
-- Call `_ValidationScriptsPartial` Razor Partial View in the `Create` Razor View 
+- Call `_ValidationScriptsPartial` Razor Partial View in the `Create` Razor View
 
 ```
   @model SportsStore.Models.Product
@@ -715,7 +731,7 @@ The `libman.json` file looks like this
     ➥<partial name="_ValidationScriptsPartial" />
   }
 ```
-and `Edit` Razor View
+and `Edit` Razor View.
 
 ```
   @model SportsStore.Models.Product
@@ -795,7 +811,7 @@ namespace SportsStore.Controllers
     </tbody>
 </table>
 ```
-- Change `Details.cshtml` Razor View in the `Views/Admin` folder
+- Change `Details.cshtml` Razor View in the `Views/Admin` folder.
 
 ```
   @model SportsStore.Models.Product?
@@ -811,10 +827,10 @@ namespace SportsStore.Controllers
   <a class="btn btn-warning" asp-controller="Admin" asp-action="Edit" asp-route-productId="@Model?.ProductId">Edit</a>
   <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
 ```
-- Add `Delete.cshtml` Razor View to the `Views/Admin` folder
+- Add `Delete.cshtml` Razor View to the `Views/Admin` folder.
 
 ```
-  @model SportsStore.Models.Product?
+  @model SportsStore.Models.Product
   
   @{
       Layout = "_AdminLayout";
@@ -822,9 +838,9 @@ namespace SportsStore.Controllers
   
   <h3 class="bg-danger text-white text-center p-1">Are you sure you want to delete this?</h3>
   
-➥<partial name="_ProductInfo" model="@Model" />
+  <partial name="_ProductInfo" model="@Model" />
   
-  <form asp-action="Delete" asp-controller="Admin" method="post" asp-route-product="@Model">
+  <form asp-action="Delete" asp-controller="Admin" method="post">
       <input type="submit" class="btn btn-danger" value="Delete" />
       <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
   </form>
@@ -1233,7 +1249,7 @@ namespace SportsStore.Controllers
 ```
 $ dotnet build
 $ git status
-$ git add *.cs *.proj *.cshtml *.json
+$ git add *.cs *.csproj *.cshtml *.json
 $ git diff --staged
 $ git commit -m "Completing Administration functionality."
 ```
