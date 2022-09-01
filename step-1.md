@@ -313,7 +313,7 @@ $ dotnet ef database drop --force --context StoreDbContext
 ```
 $ dotnet build
 $ git status
-$ git add *.cs *.json *.proj
+$ git add *.cs *.json *.csproj
 $ git diff --staged
 $ git commit -m "Add data to application."
 
