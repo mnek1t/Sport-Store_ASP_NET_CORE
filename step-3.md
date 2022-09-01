@@ -1,5 +1,9 @@
 #  Sports Store Application. Part 3
 
+## Description
+
+Complete shopping cart development with a simple checkout process.
+
 ## Implementation details
 
 <details>
@@ -92,15 +96,11 @@ namespace SportsStore.Models
 -  Register a service for the `Cart` class in the `Progrem.cs` file
 
 ```
-  using Microsoft.EntityFrameworkCore;
-  using SportsStore.Models;
-  
-  var builder = WebApplication.CreateBuilder(args);    
   . . .
   
   builder.Services.AddSession();
 ➥builder.Services.AddScoped<Cart>(SessionCart.GetCart);
-  builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+➥builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 . . .
         
 ```     
@@ -119,13 +119,13 @@ namespace SportsStore.Controllers
     {
         private IStoreRepository repository;
 
-        public CartController(IStoreRepository repository, Cart cart)
+      ➥public CartController(IStoreRepository repository, Cart cart)
         {
             this.repository = repository;
             this.Cart = cart;
         }
 
-        public Cart Cart { get; set; }
+      ➥public Cart Cart { get; set; }
 
         [HttpGet]
         public IActionResult Index(string returnUrl)
@@ -138,7 +138,7 @@ namespace SportsStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(long productId, string returnUrl)
+      ➥public IActionResult Index(long productId, string returnUrl)
         {
             Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
 
@@ -163,6 +163,15 @@ namespace SportsStore.Controllers
 
 ![](Images/3.1.png)
 
+- Build project, add and view changes and than commit.
+
+```
+$ dotnet build
+$ git status
+$ git add *.cs *.proj *.cshtml
+$ git diff --staged
+$ git commit -m "Refining the Cart Model with a Service."
+```
 </details>
 
 <details>
@@ -171,7 +180,7 @@ namespace SportsStore.Controllers
 **Completing the Cart Functionality**
 </summary>
 
-- To remove items from the cart add to the `Index.cshtml` file from `SportsStore/Views/Cart` folder a `Remove` button  that will submit an HTTP POST request
+- To remove items from the cart add to the `Index.cshtml` Razor View file from `SportsStore/Views/Cart` folder a `Remove` button  that will submit an HTTP POST request
 
 ```
 . . .
@@ -182,7 +191,7 @@ namespace SportsStore.Controllers
         <td class="text-right">
             @((line.Quantity * line.Product.Price).ToString("c"))
         </td>
-        <td class="text-center">
+      ➥<td class="text-center">
             <form method="post" asp-action="Remove" asp-controller="Cart">
                 <input type="hidden" name="ProductID" value="@line.Product.ProductId"/>
                 <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/>
@@ -196,52 +205,66 @@ namespace SportsStore.Controllers
 . . .
 ```
 
-- Add a `Remove` method to the `CartController` class
+- Add a `Remove` action method to the `CartController` class
 
 ```
-[HttpPost]
-[Route("Cart/Remove")]
-public IActionResult Remove(long productId, string returnUrl)
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Infrastructure;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+using SportsStore.Models.ViewModels;
+
+namespace SportsStore.Controllers
 {
-    Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
-    return View("Index", new CartViewModel
+    public class CartController : Controller
     {
-        Cart = Cart,
-        ReturnUrl = returnUrl ?? "/"
-    });
-}
+        . . .
+
+        [HttpPost]
+        [Route("Cart/Remove")]
+      ➥public IActionResult Remove(long productId, string returnUrl)
+        {
+            Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
+            return View("Index", new CartViewModel
+            {
+                Cart = Cart,
+                ReturnUrl = returnUrl ?? "/"
+            });
+        }
+        . . . 
+    }
+} 
 ```
-    ```
--To improve the URLs add new `shoppingCart`, `checkout`, `remove` routes in the `Program` file
+-Add new `remove` route in the `Program` file
 
 ```
 . . .
 
-app.MapControllerRoute(
-    "categoryPage",
-    "Products/{category}/Page{productPage:int}",
-    new { Controller = "Home", action = "Index" });
-
-app.MapControllerRoute(
-    "shoppingCart",
-    "Cart",
-    new { Controller = "Cart", action = "Index" });
-
-app.MapControllerRoute(
-    "pagination",
-    "Products/Page{productPage:int}",
-    new { Controller = "Home", action = "Index", productPage = 1 });
-
-app.MapControllerRoute(
-    "default",
-    "/",
-    new { Controller = "Home", action = "Index" });
-
-app.MapControllerRoute(
-    "remove",
-    "Remove",
-    new { Controller = "Cart", action = "Remove" });
-. . .
+  app.MapControllerRoute(
+      "categoryPage",
+      "Products/{category}/Page{productPage:int}",
+      new { Controller = "Home", action = "Index" });
+  
+  app.MapControllerRoute(
+      "shoppingCart",
+      "Cart",
+      new { Controller = "Cart", action = "Index" });
+  
+  app.MapControllerRoute(
+      "pagination",
+      "Products/Page{productPage:int}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
+  
+➥app.MapControllerRoute(
+      "remove",
+      "Remove",
+      new { Controller = "Cart", action = "Remove" });
+  . . .
 ```
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
@@ -334,7 +357,7 @@ namespace SportsStore.Components
             <div class="row">
                 <div class="col navbar-brand">SPORTS STORE</div>
                 <div class="col-6 navbar-text text-end">
-                    <vc:cart-summary />
+                  ➥<vc:cart-summary />
                 </div>
             </div>
         </div>
@@ -369,6 +392,16 @@ If you press the cart icon, you will see summarizes the contents of the cart in 
 
 ![](Images/3.6.png)
 
+- Add and view changes and than commit.
+
+```
+$ dotnet build
+$ dotnet run
+$ git status
+$ git add *.cs *.cshtml *.json *.csproj
+$ git diff --staged
+$ git commit -m "Completing the Cart Functionality."
+```
 </details>
 
 <details>
@@ -378,7 +411,7 @@ If you press the cart icon, you will see summarizes the contents of the cart in 
 
 </summary>
 
-- To represent the shipping details for a customer add a `Order` class (in the `Models` folder)
+- To represent the shipping details for a customer add a `Order.cs` class file (in the `Models` folder)
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -386,7 +419,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace SportsStore.Models
 {
-    public class Order
+  ➥public class Order
     {
         [BindNever]
         public int OrderId { get; set; }
@@ -423,23 +456,38 @@ namespace SportsStore.Models
 -  Add a `Checkout` button to the cart view (in the `Index.cshtml` file in the `SportsStore/Views/Cart` folder)
 
 ```
+@model CartViewModel
+
+@{
+    Layout = "_CartLayout";
+}
+
+<h2>Your cart</h2>
+<table class="table table-bordered table-striped">
 . . .
+</table>
 <div class="text-center">
     <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
-    <a class="btn btn-primary" asp-action="Checkout" asp-controller="Order">
+  ➥<a class="btn btn-primary" asp-action="Checkout" asp-controller="Order">
         Checkout
     </a>
 </div>
-. . .
 
 ```
 
-- Add a class `OrderController` (the `Controllers` folder) with a `Checkout` action method
+- Add a `OrderController.cs` class file in the `Controllers` folder with a `Checkout` action method
 
 ```
-public class OrderController : Controller 
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
 {
-    public ViewResult Checkout() => View(new Order());
+  ➥public class OrderController : Controller
+    {
+        public ViewResult Checkout() => View(new Order());
+    }
 }
 ```
 
@@ -492,15 +540,39 @@ public class OrderController : Controller
 - Add `checkout` route in the `Program.cs` file
 
 ```
-app.MapControllerRoute(
-    "checkout",
-    "Checkout",
-    new { Controller = "Order", action = "Checkout" });
+  . . .
+  app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
+  
+  app.MapControllerRoute(
+      "remove",
+      "Remove",
+      new { Controller = "Cart", action = "Remove" });
+
+➥app.MapControllerRoute(
+      "checkout",
+      "Checkout",
+      new { Controller = "Order", action = "Checkout" });
+  . . .    
 ```
-        
+    
 - Restart ASP.NET Core and request http://localhost:5000/Checkout 
 
 ![](Images/3.7.png)
+
+- Add and view changes and than commit.
+
+```
+$ dotnet build
+$ dotnet run
+$ git status
+$ git add *.cs *.cshtml
+$ git diff --staged
+$ git commit -m "Submitting Orders."
+
+```
 
 </details>
 
@@ -523,12 +595,12 @@ namespace SportsStore.Models
 
         public DbSet<Product> Products => this.Set<Product>();
 
-        public DbSet<Order> Orders => Set<Order>();
+      ➥public DbSet<Order> Orders => Set<Order>();
     }
 }
 ```
 
--  To create the migration, use a PowerShell command prompt to run the command
+-  To create the migration, use a PowerShell command prompt to run the command:
 
 ```
 dotnet ef migrations add Orders
@@ -536,12 +608,12 @@ dotnet ef migrations add Orders
 ```
 _This migration will be applied automatically when the application starts because the `SeedData` calls the `Migrate` method provided by Entity Framework Core._
 
-- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository` interface (the `Models` folder)
+- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository.cs` interface file (in the `Models` folder)
 
 ```
 namespace SportsStore.Models.Repository
 {
-    public interface IOrderRepository
+  ➥public interface IOrderRepository
     {
         IQueryable<Order> Orders { get; }
 
@@ -557,7 +629,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SportsStore.Models.Repository
 {
-    public class EFOrderRepository : IOrderRepository
+  ➥public class EFOrderRepository : IOrderRepository
     {
         private StoreDbContext context;
 
@@ -584,16 +656,16 @@ namespace SportsStore.Models.Repository
     }
 }
 ```
-This class implements the `IOrderRepository` interface using Entity Framework Core, allowing the set of Order objects that have been stored to be retrieved and allowing for orders to be created or changed.
+This class implements the `IOrderRepository` interface using Entity Framework Core, allowing the set of `Order` objects that have been stored to be retrieved and allowing for orders to be created or changed.
 
 - Register the `Order Repository Service` in the `Program.cs` file 
 
 ```
 . . .
-builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
-builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
+  builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+➥builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+  builder.Services.AddDistributedMemoryCache();
+  builder.Services.AddSession();
 . . .
 ```   
 - To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete `Order button` 
@@ -607,20 +679,20 @@ namespace SportsStore.Controllers
 {
     public class OrderController : Controller
     {
-        private IOrderRepository orderRepository;
+      ➥private IOrderRepository orderRepository;
 
-        private Cart cart;
+      ➥private Cart cart;
 
-        public OrderController(IOrderRepository orderRepository, Cart cart)
+      ➥public OrderController(IOrderRepository orderRepository, Cart cart)
         {
             this.orderRepository = orderRepository;
             this.cart = cart;
         }
 
-        public ViewResult Checkout() => View(new Order());
+      ➥public ViewResult Checkout() => View(new Order());
 
         [HttpPost]
-        public IActionResult Checkout(Order order)
+      ➥public IActionResult Checkout(Order order)
         {
             if (!cart.Lines.Any())
             {
@@ -641,7 +713,7 @@ namespace SportsStore.Controllers
 }
 
 ```
-- Add a Validation Summary to the `Checkout.cshtml` file in the SportsStore/Views/Order Folder
+- Add a Validation Summary to the `Checkout.cshtml` Razor View file in the `SportsStore/Views/Order` Folder
 
 ```
 <h2>Check out now</h2>
@@ -650,7 +722,7 @@ namespace SportsStore.Controllers
 <form asp-action="Checkout" method="post">
 . . .
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
+- Restart ASP.NET Core and request http://localhost:5000/Checkout 
 
 ![](Images/3.8.png)
 
@@ -679,9 +751,9 @@ namespace SportsStore.Controllers
 ```
 $ dotnet build
 $ git status
-$ git add *.cs *.proj *.cshtml *.json
+$ git add *.cs *.proj *.cshtml
 $ git diff --staged
-$ git commit -m "Completing cart functionality."
+$ git commit -m "Implementing Order Processing."
 ```
 
 - Push the local branch to the remote branch.
