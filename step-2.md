@@ -389,7 +389,7 @@ namespace SportsStore.Controllers
     this.Layout = "_CartLayout";
 }
 
-<h4>This is the Cart Page</h4>
+<h4>This is the Cart View</h4>
 ```
 
 - To improve the routing add new "shoppingCart" route to the routing configuration in the `Program.cs` file.
