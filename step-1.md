@@ -180,7 +180,7 @@ $ dotnet ef migrations add Initial
 
 ```
 
-- To populate the database and provide some sample data, add a `SeedData.cs` class file to the `Models/Data` folder.
+- To populate the database and provide some sample data, add a `SeedData.cs` class file to the `Models` folder.
 
 ```
 using Microsoft.EntityFrameworkCore;
