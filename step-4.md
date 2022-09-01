@@ -1230,7 +1230,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- Configure Error Handling in the `Program.cs` file in the `SportsStore` Folder
+- Configure Error Handling in the `Program.cs` file in the `SportsStore` Folder.
 
 ```
 . . .
@@ -1253,6 +1253,8 @@ namespace SportsStore.Controllers
   
   app.Run();
 ```
+- To see error handling change runtime environment on `Production`.
+
 - Commit changes.
 
 ```
