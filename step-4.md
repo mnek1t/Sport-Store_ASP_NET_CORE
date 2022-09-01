@@ -811,7 +811,7 @@ namespace SportsStore.Controllers
     </tbody>
 </table>
 ```
-- Change `Details.cshtml` Razor View in the `Views/Admin` folder.
+- Change `Details.cshtml` Razor View file.
 
 ```
   @model SportsStore.Models.Product?
@@ -845,10 +845,20 @@ namespace SportsStore.Controllers
       <a class="btn btn-secondary" asp-controller="Admin" asp-action="Products">Back</a>
   </form>
 ```
--  Restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click a `Delete` button to remove an object from the database
+-  Restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click a `Delete` button to remove an object from the database.
 
 ![](Images/4.14.png)
 
+- Add and view changes and than commit.
+
+```
+$ dotnet build
+$ dotnet run
+$ git status
+$ git add *.cs *.cshtml *.json *.csproj
+$ git diff --staged
+$ git commit -m "Adding Catalog Management."
+```
 </details>
 
 <details>
@@ -862,7 +872,7 @@ namespace SportsStore.Controllers
 ```
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.0
 ```
-- Create a database context file that will act as the bridge between the database and the `Identity` model objects it provides access to. Add a class file called `AppIdentityDbContext.cs` to the `Models` folder and used it to define the class shown below
+- Create a database context file that will act as the bridge between the database and the `Identity` model objects it provides access to. Add a class file called `AppIdentityDbContext.cs` to the `Models` folder and used it to define the class shown below.
 
 ```
 using Microsoft.AspNetCore.Identity;
@@ -878,7 +888,7 @@ namespace SportsStore.Models
     }
 }
 ```
-- Add the `"IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActiveResultSets=true"` connection string to the `appsettings.json` file of the SportsStore project
+- Add the `"IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActiveResultSets=true"` connection string to the `appsettings.json` file of the `SportsStore` project.
 
 ```
 {
@@ -925,7 +935,7 @@ namespace SportsStore.Models
 ```
 The Entity Framework Core configuration has been extended to register a `AppIdentityDbContext` context class and use the `AddIdentity` method to configure identity services using built-in classes to represent users and roles. Calling the `UseAuthentication` and `UseAuthorization` methods is necessary to set up intermediate components that implement the security policy.
 
-- To define the schema and apply it to the databa use the Entity Framework Core migrations feature 
+- To define the schema and apply it to the databa use the Entity Framework Core migrations feature. 
 
 ```
 dotnet ef migrations add Initial --context AppIdentityDbContext
@@ -937,9 +947,9 @@ Once Entity Framework Core has generated the initial migration, run the followin
 dotnet ef database update --context AppIdentityDbContext
 
 ```
-The result is a new LocalDB database called `Identity` that you can inspect using the Visual Studio SQL Server Object Explorer.
+The result is a new LocalDB database called `Identity` that you can inspect, for example, using the Visual Studio SQL Server Object Explorer.
 
-- To explicitly create the `Admin` user by seeding the database when the application starts add a class file called `IdentitySeedData.cs` to the `Models` folder and defined the static class shown below. The Contents of the `IdentitySeedData.cs` File in the `SportsStore/Models` Folder.
+- To explicitly create the `Admin` user by seeding the database when the application starts add a class file called `IdentitySeedData.cs` to the `Models` folder and defined the static class shown below. The Contents of the `IdentitySeedData.cs` File in the `SportsStore/Models` folder.
 
 ```
 using Microsoft.AspNetCore.Identity;
@@ -986,7 +996,7 @@ namespace SportsStore.Models
 ```
 This code ensures the database is created and up-to-date and uses the `UserManager<T>` class, which is provided as a service by ASP.NET Core Identity for managing users. The database is searched for the `Admin` user account, which is created—with a password of `Secret123$` —if it is not present. Do not change the hard-coded password in this example because Identity has a validation policy that requires passwords to contain a number and range of characters. 
 
-- To ensure that the Identity database is seeded when the application starts, add the `IdentitySeedData.EnsurePopulated(app)` statement shown below to the `Program.cs` file
+- To ensure that the Identity database is seeded when the application starts, add the `IdentitySeedData.EnsurePopulated(app)` statement shown below to the `Program.cs` file.
 
 ```
   . . .
@@ -1005,9 +1015,9 @@ _Restart the application, and the database will be re-created and populated with
 
 -To restrict access to the administrative actions in the `AdminController` use The `Authorize` attribute
 
-```
-  [Route("Admin")]
+``` 
 ➥[Authorize]
+  [Route("Admin")]
   public class AdminController : Controller
   {
       . . .
@@ -1022,7 +1032,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SportsStore.Models.ViewModels
 {
-    public class LoginViewModel
+  ➥public class LoginViewModel
     {
         [Required]
         public string? Name { get; set; }
@@ -1034,7 +1044,7 @@ namespace SportsStore.Models.ViewModels
     }
 }
 ```
-- Than add `AccountController` class (`AccountController.cs` file in the `SportsStore/Controllers` folder)
+- Than add `AccountController` class (in the `AccountController.cs` file in the `SportsStore/Controllers` folder)
 
 ```
 using Microsoft.AspNetCore.Authorization;
@@ -1046,13 +1056,13 @@ namespace SportsStore.Controllers
 {
     [Authorize]
     [Route("Account")]
-    public class AccountController : Controller
+    
+  ➥public class AccountController : Controller
     {
         private UserManager<IdentityUser> userManager;
         private SignInManager<IdentityUser> signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -1060,9 +1070,9 @@ namespace SportsStore.Controllers
 
         [Route("Login")]
         [AllowAnonymous]
-        public ViewResult Login(string returnUrl)
+        public ViewResult Login(string returnUrl = "/")
         {
-            return View(new LoginModel
+            return View(new LoginViewModel
             {
                 ReturnUrl = returnUrl
             });
@@ -1072,35 +1082,37 @@ namespace SportsStore.Controllers
         [Route("Login")]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginModel loginModel)
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
             if (ModelState.IsValid)
             {
-                IdentityUser user = await userManager.FindByNameAsync(loginModel.Name);
+                IdentityUser user = await userManager.FindByNameAsync(loginViewModel.Name);
+                
                 if (user != null)
                 {
                     await signInManager.SignOutAsync();
-                    if ((await signInManager.PasswordSignInAsync(user,
-                            loginModel.Password, false, false)).Succeeded)
+
+                    if ((await signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false)).Succeeded)
                     {
-                        return Redirect(loginModel?.ReturnUrl ?? "/Admin");
+                        return RedirectToAction("Products", "Admin");
                     }
                 }
 
-                ModelState.AddModelError(string.Empty, "Invalid name or password");
+                ModelState.AddModelError(string.Empty, "Invalid name or password.");
             }
 
-            return View(loginModel);
+            return View(loginViewModel);
         }
 
         [Route("Logout")]
-        public async Task<RedirectResult> Logout(string returnUrl = "/")
+        public async Task<IActionResult> Logout(string returnUrl = "/")
         {
             await signInManager.SignOutAsync();
-            return Redirect(returnUrl);
+            return RedirectToAction("Login", returnUrl);
         }
     }
 }
+
 ```
 - To provide the `Login` method with a view to render, created the `Views/Account` folder and added a `Login.cshtml` Razor View  with the contents shown below
 
@@ -1218,8 +1230,6 @@ namespace SportsStore.Controllers
     }
 }
 ```
-
-
 - Configure Error Handling in the `Program.cs` file in the `SportsStore` Folder
 
 ```
@@ -1243,7 +1253,6 @@ namespace SportsStore.Controllers
   
   app.Run();
 ```
-
 - Commit changes.
 
 ```
@@ -1251,7 +1260,7 @@ $ dotnet build
 $ git status
 $ git add *.cs *.csproj *.cshtml *.json
 $ git diff --staged
-$ git commit -m "Completing Administration functionality."
+$ git commit -m "Creating the Identity Database."
 ```
 - Push the local branch to the remote branch.
 
