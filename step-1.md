@@ -402,14 +402,14 @@ namespace SportsStore.Controllers
 {
     public class HomeController : Controller
     {
-      ➥private const int PageSize = 4;
-
         private readonly IStoreRepository repository;
 
         public HomeController(IStoreRepository repository)
         {
             this.repository = repository;
         }
+
+      public int PageSize = 4;
 
       ➥public ViewResult Index(int productPage = 1)
             => this.View(this.repository.Products
@@ -533,14 +533,14 @@ namespace SportsStore.Controllers
 {
     public class HomeController : Controller
     {
-        private const int PageSize = 4;
-
         private readonly IStoreRepository repository;
 
         public HomeController(IStoreRepository repository)
         {
             this.repository = repository;
         }
+
+        public int PageSize = 4;
 
       ➥public ViewResult Index(int productPage = 1)
         {
