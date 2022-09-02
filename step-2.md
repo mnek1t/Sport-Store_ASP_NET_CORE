@@ -28,7 +28,7 @@ $ git merge main --ff
 
 - Builed project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
-- Modify the `ProductsListViewModel` class - add the `CurrentCategory` property.
+- Add the `CurrentCategory` property to the `ProductsListViewModel` class.
 
 ```
 namespace SportsStore.Models.ViewModels
@@ -144,7 +144,7 @@ public class PageLinkTagHelper : TagHelper
    . . . 
 }
 ```
-- Add a new attribute in the `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
+- Add a new attribute to the `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
 
 ```
 @model ProductsListViewMode
@@ -241,7 +241,7 @@ namespace SportsStore.Components
 }
 ```
 
-- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add to it the `Default.cshtml` Razor View file.
+- Create the `Views/Shared/Components/NavigationMenu` folder in the `SportsStore` project and add to it to the `Default.cshtml` Razor View file.
 
 ```
 @model IEnumerable<string>
@@ -327,10 +327,9 @@ public ViewResult Index(string? category, int productPage = 1)
 
 ![](Images/2.8.png)
 
-- Build project, add and view changes and than commit.
+- Add and view changes and than commit.
 
 ```
-$ dotnet build
 $ git status
 $ git add *.cs *.csproj *.cshtml
 $ git diff --staged
@@ -346,7 +345,7 @@ $ git commit -m "Add navigation controls."
 
 </summary>
 
-- Add a new `_CartLayout.cshtml` Razor View file in the `SportsStore/Views/Shared` folder for the`Cart` views.
+- Add a new `_CartLayout.cshtml` Layout Razor View file to the `SportsStore/Views/Shared` folder for the`Cart` views.
 
 ```
 <!DOCTYPE html>
@@ -367,7 +366,7 @@ $ git commit -m "Add navigation controls."
 </html>
 ```
 
-- Add the `CartController.cs` class file in the `SportsStore/Controllers` folder.
+- Add the `CartController.cs` class file to the `SportsStore/Controllers` folder.
 
 ```
 namespace SportsStore.Controllers
@@ -382,7 +381,7 @@ namespace SportsStore.Controllers
 }
 ```
 
-- Add the `Index.cshtml` Razor View file in the `SportsStore/Views/Cart` folder.
+- Add the `Index.cshtml` Razor View file to the `SportsStore/Views/Cart` folder.
 
 ```
 @{
@@ -392,7 +391,7 @@ namespace SportsStore.Controllers
 <h4>This is the Cart View</h4>
 ```
 
-- To improve the routing add new "shoppingCart" route to the routing configuration in the `Program.cs` file.
+- To improve the routing add new "shoppingCart" route to the routing configuration to the `Program.cs` file.
 
 ```
   . . .
@@ -447,7 +446,7 @@ namespace SportsStore.Infrastructure
 ```
 The extension method generates a URL. The browser will return to this URL after the cart has been updated. If there are `Query Parameters` in the URL, they should be considered as well.  
 
-- Add a `SportsStore.Infrastructure` namespace in the` _ViewImports.cshtml` File in the `SportsStore/Views` Folder
+- Add a `SportsStore.Infrastructure` namespace to the` _ViewImports.cshtml` file in the `SportsStore/Views` folder.
 
 ```
   @using SportsStore.Models
@@ -569,7 +568,7 @@ namespace SportsStore.Models
 
 The `Cart` class uses the `CartLine` class to represent a product selected by the customer and the quantity a user wants to buy. The `Cart` class includes the methods that add an item to the cart, remove a previously added item from the cart, calculate the total cost of the items in the cart, and reset the cart by removing all the items.
 
-- To store a `Cart` object (the session state feature in ASP.NET Core stores only int, string, and byte[] values) define extension methods to the `ISession` interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the `SessionExtensions.cs` class file (in the `Infrastructure` folder) and defined the extension methods. To serialization install the `Newtonsoft.json` package.
+- To store a `Cart` object (the session state feature in ASP.NET Core stores only `int`, `string`, and `byte[]` values) define extension methods to the `ISession` interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the interface that provides access to the session state data to serialize `Cart` objects into JSON and convert them back. Add the `SessionExtensions.cs` class file to the `Infrastructure` folder and defined the extension methods. To serialization install the `Newtonsoft.json` package.
 
 ```
 $ dotnet add package Newtonsoft.Json
@@ -596,7 +595,7 @@ namespace SportsStore.Infrastructure
 }
 ```
 
-- Add the `CartViewModel.cs` class file (in the `SportsStore/Models/ViewModels` folder).
+- Add the `CartViewModel.cs` class file to the `SportsStore/Models/ViewModels` folder.
 
 ```
 namespace SportsStore.Models.ViewModels
@@ -611,7 +610,7 @@ namespace SportsStore.Models.ViewModels
 
 ```
 
-- Change the `CartController` class:
+- Change the `CartController` class.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -660,7 +659,7 @@ namespace SportsStore.Controllers
 }
 
 ```
-- Change the `Index.cshtml` Razor View file in the `SportsStore/Views/Cart` folder:
+- Change the `Index.cshtml` Razor View file in the `SportsStore/Views/Cart` folder.
 
 ```
 ➥@model CartViewModel
@@ -720,10 +719,9 @@ Clicking the `Continue Shopping button` returns the user to the product page the
 
 ![](Images/2.13.png)
 
-- Commit changes.
+- Add and view changes and than commit..
 
 ```
-$ dotnet build
 $ git status
 $ git add *.cs *.csproj *.cshtml
 $ git diff --staged
@@ -768,17 +766,17 @@ $ git push
 
 </details>
 
-<details><summary>Books
+<details><summary>[Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). 
 </summary> 
 
-1.  [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 1. Chapeter 8. SportsStore: Navigation and Cart.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 13. Using URL Routing.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 16. Using the Platform Features, Part 2.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 18. Creating the Example Project.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 21. Using Controllers with Views. Part I.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 22. Using Controllers with Views. Part II.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 23. Using Razor Pages.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 24. Using View Components.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 25. Using Tag Helpers.
+1. Part I. Chapeter 8. SportsStore: Navigation and Cart.
+1. Part II. Chapeter 13. Using URL Routing.
+1. Part II. Chapeter 16. Using the Platform Features, Part 2.
+1. Part III. Chapeter 18. Creating the Example Project.
+1. Part III. Chapeter 21. Using Controllers with Views. Part I.
+1. Part III. Chapeter 22. Using Controllers with Views. Part II.
+1. Part III. Chapeter 23. Using Razor Pages.
+1. Part III. Chapeter 24. Using View Components.
+1. Part III. Chapeter 25. Using Tag Helpers.
 
 </details>
