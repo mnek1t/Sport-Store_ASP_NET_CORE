@@ -773,8 +773,8 @@ $ git push
 1. Part Ⅱ. Chapeter 13. Using URL Routing.
 1. Part Ⅱ. Chapeter 16. Using the Platform Features, Part 2.
 1. Part Ⅲ. Chapeter 18. Creating the Example Project.
-1. Part Ⅲ. Chapeter 21. Using Controllers with Views. Part I.
-1. Part Ⅲ. Chapeter 22. Using Controllers with Views. Part II.
+1. Part Ⅲ. Chapeter 21. Using Controllers with Views. Part 1.
+1. Part Ⅲ. Chapeter 22. Using Controllers with Views. Part 2.
 1. Part Ⅲ. Chapeter 23. Using Razor Pages.
 1. Part Ⅲ. Chapeter 24. Using View Components.
 1. Part Ⅲ. Chapeter 25. Using Tag Helpers.
