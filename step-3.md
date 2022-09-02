@@ -52,7 +52,7 @@ namespace SportsStore.Models
     }
 }
 ```
-- Add a `SessionCart` class (in `SessionCart.cs` file in the `Models` folder)
+- Add a `SessionCart` class to `SessionCart.cs` file to the `Models` folder.
 
 ```
 using Newtonsoft.Json;
@@ -93,7 +93,7 @@ namespace SportsStore.Models
     }
 }        
 ```
--  Register a service for the `Cart` class in the `Progrem.cs` file
+-  Register a service for the `Cart` class in the `Progrem.cs` file.
 
 ```
   . . .
@@ -104,7 +104,7 @@ namespace SportsStore.Models
 . . .
         
 ```     
-- Simplify the `CartController` class where `Cart` objects are used
+- Simplify the `CartController` class where `Cart` objects are used.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -159,14 +159,13 @@ namespace SportsStore.Controllers
 }
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/
+- Restart ASP.NET Core and request http://localhost:5000/.
 
 ![](Images/3.1.png)
 
-- Build project, add and view changes and than commit.
+- Add and view changes and than commit.
 
 ```
-$ dotnet build
 $ git status
 $ git add *.cs *.csproj *.cshtml
 $ git diff --staged
@@ -180,7 +179,7 @@ $ git commit -m "Refining the Cart Model with a Service."
 **Completing the Cart Functionality**
 </summary>
 
-- To remove items from the cart add to the `Index.cshtml` Razor View file from `SportsStore/Views/Cart` folder a `Remove` button  that will submit an HTTP POST request
+- To remove items from the cart add to the `Index.cshtml` Razor View file from `SportsStore/Views/Cart` folder a `Remove` button  that will submit an HTTP POST request.
 
 ```
 . . .
@@ -205,7 +204,7 @@ $ git commit -m "Refining the Cart Model with a Service."
 . . .
 ```
 
-- Add a `Remove` action method to the `CartController` class
+- Add a `Remove` action method to the `CartController` class.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -235,7 +234,7 @@ namespace SportsStore.Controllers
     }
 } 
 ```
--Add new `remove` route in the `Program` file
+- Add new `remove` route to the `Program` file.
 
 ```
 . . .
@@ -297,7 +296,7 @@ The `libman.json` file looks like this (always check for up-to-date versions of 
 }
 ```
 
-- Add a `CartSummaryViewComponent` class (the `Components` folder)
+- Add a `CartSummaryViewComponent` class to the `CartSummaryViewComponent.cs` file to the `Components` folder.
 
 ```
 namespace SportsStore.Components
@@ -319,7 +318,7 @@ namespace SportsStore.Components
 }
 ```
 
-- Created the `Views/Shared/Components/CartSummary` folder and add to it a View Component named `Default.cshtml` with the content
+- Created the `Views/Shared/Components/CartSummary` folder and add to it a View Component named `Default.cshtml` with the following content.
 
 ```
 @model Cart
@@ -340,7 +339,7 @@ namespace SportsStore.Components
 </div>
 ```
 
-- To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, adding the `Cart Summary` in the `_Layout.cshtml` file (the `Views/Shared` folder)
+- To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, add the `Cart Summary` to the `_Layout.cshtml` file to the `Views/Shared` folder.
 
 ```
 <!DOCTYPE html>
@@ -380,23 +379,21 @@ Add `Human Chess Board`.
 
 ![](Images/3.3.png)
 
-Than click `Continue shopping button`.
+Click `Continue shopping button`.
 
 ![](Images/3.4.png)
 
-The widget that summarizes the contents of the cart looks like this
+The widget that summarizes the contents of the cart looks like this.
 
 ![](Images/3.5.png)
 
-If you press the cart icon, you will see summarizes the contents of the cart in details
+If you press the cart icon, you will see summarizes the contents of the cart in details.
 
 ![](Images/3.6.png)
 
 - Add and view changes and than commit.
 
 ```
-$ dotnet build
-$ dotnet run
 $ git status
 $ git add *.cs *.cshtml *.json *.csproj
 $ git diff --staged
@@ -411,7 +408,7 @@ $ git commit -m "Completing the Cart Functionality."
 
 </summary>
 
-- To represent the shipping details for a customer add a `Order.cs` class file (in the `Models` folder)
+- To represent the shipping details for a customer add a `Order.cs` class file to the `Models` folder.
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -453,7 +450,7 @@ namespace SportsStore.Models
 }
 ```
 
--  Add a `Checkout` button to the cart view (in the `Index.cshtml` file in the `SportsStore/Views/Cart` folder)
+-  Add a `Checkout` button to the cart view to the `Index.cshtml` file to the `SportsStore/Views/Cart` folder.
 
 ```
 @model CartViewModel
@@ -475,7 +472,7 @@ namespace SportsStore.Models
 
 ```
 
-- Add a `OrderController.cs` class file in the `Controllers` folder with a `Checkout` action method
+- Add a `OrderController` class with a `Checkout` action method to the `OrderController.cs` file to the `Controllers` folder.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -491,7 +488,7 @@ namespace SportsStore.Controllers
 }
 ```
 
-- Create the `Views/Order` folder and added to it a Razor View called `Checkout.cshtml`
+- Create the `Views/Order` folder and added to it a Razor View called `Checkout.cshtml`.
 
 ```   
 @model Order
@@ -537,7 +534,7 @@ namespace SportsStore.Controllers
 </form>
 ```
 
-- Add `checkout` route in the `Program.cs` file
+- Add `checkout` route to the `Program.cs` file
 
 ```
   . . .
@@ -558,15 +555,13 @@ namespace SportsStore.Controllers
   . . .    
 ```
     
-- Restart ASP.NET Core and request http://localhost:5000/Checkout 
+- Restart ASP.NET Core and request http://localhost:5000/Checkout.
 
 ![](Images/3.7.png)
 
 - Add and view changes and than commit.
 
 ```
-$ dotnet build
-$ dotnet run
 $ git status
 $ git add *.cs *.cshtml
 $ git diff --staged
@@ -583,7 +578,7 @@ $ git commit -m "Submitting Orders."
 
 </summary>
 
-- Add a new `Orders` property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
+- Add a new `Orders` property to the `StoreDbContext` database context class.
 
 ```
 namespace SportsStore.Models
@@ -600,7 +595,7 @@ namespace SportsStore.Models
 }
 ```
 
--  To create the migration, use a PowerShell command prompt to run the command:
+-  To create the migration, use a PowerShell command prompt to run the command.
 
 ```
 dotnet ef migrations add Orders
@@ -608,7 +603,7 @@ dotnet ef migrations add Orders
 ```
 _This migration will be applied automatically when the application starts because the `SeedData` calls the `Migrate` method provided by Entity Framework Core._
 
-- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository.cs` interface file (in the `Models` folder)
+- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository.cs` interface file to the `Models` folder.
 
 ```
 namespace SportsStore.Models.Repository
@@ -622,7 +617,7 @@ namespace SportsStore.Models.Repository
 }
 ```
 
-- To implement the order repository interface, add a `EFOrderRepository` class (in the `EFOrderRepository.cs` file in the `Models` folder)
+- To implement the order repository interface, add a `EFOrderRepository` class to the `EFOrderRepository.cs` file to the `Models` folder.
 
 ```
 using Microsoft.EntityFrameworkCore;
@@ -658,7 +653,7 @@ namespace SportsStore.Models.Repository
 ```
 This class implements the `IOrderRepository` interface using Entity Framework Core, allowing the set of `Order` objects that have been stored to be retrieved and allowing for orders to be created or changed.
 
-- Register the `Order Repository Service` in the `Program.cs` file 
+- Register the `Order Repository Service` in the `Program.cs` file. 
 
 ```
 . . .
@@ -668,7 +663,7 @@ This class implements the `IOrderRepository` interface using Entity Framework Co
   builder.Services.AddSession();
 . . .
 ```   
-- To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete `Order button` 
+- To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete `Order button`. 
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -713,20 +708,22 @@ namespace SportsStore.Controllers
 }
 
 ```
-- Add a Validation Summary to the `Checkout.cshtml` Razor View file in the `SportsStore/Views/Order` Folder
+- Add a Validation Summary to the `Checkout.cshtml` Razor View file.
 
 ```
-<h2>Check out now</h2>
-<p>Please enter your details, and we'll ship your goods right away!</p>
-<div asp-validation-summary="All" class="text-danger"></div>
-<form asp-action="Checkout" method="post">
+  @model Order
+  
+  <h2>Check out now</h2>
+  <p>Please enter your details, and we'll ship your goods right away!</p>
+➥<div asp-validation-summary="All" class="text-danger"></div>
+  <form asp-action="Checkout" method="post">
 . . .
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Checkout 
+- Restart ASP.NET Core and request http://localhost:5000/Checkout. 
 
 ![](Images/3.8.png)
 
-- To complete the checkout process, create a `Completed.cshtml` Razor View that displays a thank-you message with a summary of the orders
+- To complete the checkout process, create a `Completed.cshtml` Razor View that displays a thank-you message with a summary of the orders.
 
 ```
 @model int
@@ -742,14 +739,13 @@ namespace SportsStore.Controllers
     <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
 </div>
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Checkout 
+- Restart ASP.NET Core and request http://localhost:5000/Checkout. 
 
 ![](Images/3.9.png)
 
-- Commit changes.
+- Add and view changes and than commit.
 
 ```
-$ dotnet build
 $ git status
 $ git add *.cs *.csproj *.cshtml
 $ git diff --staged
@@ -795,19 +791,19 @@ $ git push
 
 </details>
 
-<details><summary>Books
+<details><summary>[Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/).
 </summary> 
 
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 1. Chapeter 9. SportsStore: Completing the Cart.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 13. Using URL Routing.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 14. Using Dependency Injection.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 15. Using the Platform Features. Part 1.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 16. Using the Platform Features. Part 2.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 17. Working with Data.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 21. Using Controllers with Views. Part 1.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 22. Using Controllers with Views. Part 2.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 24. Using View Components.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 28. Using Model Binding.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 29. Using Model Validation.
+1. Part I. Chapeter 9. SportsStore: Completing the Cart.
+1. Part II. Chapeter 13. Using URL Routing.
+1. Part II. Chapeter 14. Using Dependency Injection.
+1. Part II. Chapeter 15. Using the Platform Features. Part 1.
+1. Part II. Chapeter 16. Using the Platform Features. Part 2.
+1. Part II. Chapeter 17. Working with Data.
+1. Part III. Chapeter 21. Using Controllers with Views. Part 1.
+1. Part III. Chapeter 22. Using Controllers with Views. Part 2.
+1. Part III. Chapeter 24. Using View Components.
+1. Part III. Chapeter 28. Using Model Binding.
+1. Part III. Chapeter 29. Using Model Validation.
 
 </details>
