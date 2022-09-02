@@ -913,20 +913,8 @@ namespace SportsStore.Models
   using SportsStore.Models.Repository;
   using Microsoft.AspNetCore.Identity;
   
-  var builder = WebApplication.CreateBuilder(args);
-  
-  builder.Services.AddControllersWithViews();
-  
-  builder.Services.AddDbContext<StoreDbContext>(opts =>
-  {
-      opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
-  });
-  
-  builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
-  builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
-  builder.Services.AddDistributedMemoryCache();
-  builder.Services.AddSession();
-  builder.Services.AddScoped<Cart>(SessionCart.GetCart);
+  . . .
+
   builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
   
 ➥builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));
@@ -934,12 +922,7 @@ namespace SportsStore.Models
   
   var app = builder.Build();
   
-  if (app.Environment.IsProduction())
-  {
-      app.UseExceptionHandler("/Error");
-  }
-  
-  app.UseStatusCodePages();
+  . . .
   app.UseStaticFiles();
   app.UseSession();
   
@@ -951,43 +934,7 @@ namespace SportsStore.Models
       "Products/{category}/Page{productPage:int}",
       new { Controller = "Home", action = "Index" });
   
-  app.MapControllerRoute(
-      "shoppingCart",
-      "Cart",
-      new { Controller = "Cart", action = "Index" });
-  
-  app.MapControllerRoute(
-      "category",
-      "Products/{category}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
-  
-  app.MapControllerRoute(
-      "pagination",
-      "Products/Page{productPage:int}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
-  
-  app.MapControllerRoute(
-      "default",
-      "/",
-      new { Controller = "Home", action = "Index" });
-  
-  app.MapControllerRoute(
-      "checkout",
-      "Checkout",
-      new { Controller = "Order", action = "Checkout" });
-  
-  app.MapControllerRoute(
-      "remove",
-      "Remove",
-      new { Controller = "Cart", action = "Remove" });
-  
-  app.MapControllerRoute(
-      "error",
-      "Error",
-      new { Controller = "Home", action = "Error" });
-  
-  SeedData.EnsurePopulated(app);
-  IdentitySeedData.EnsurePopulated(app);
+  . . .
   
   app.Run();
 ```
@@ -1291,16 +1238,79 @@ namespace SportsStore.Controllers
 - Configure Error Handling in the `Program.cs` file in the `SportsStore` Folder.
 
 ```
-. . .
+  using Microsoft.EntityFrameworkCore;
+  using SportsStore.Models;
+  using SportsStore.Models.Repository;
+  using Microsoft.AspNetCore.Identity;
+  
+  var builder = WebApplication.CreateBuilder(args);
+  
+  builder.Services.AddControllersWithViews();
+  
+  builder.Services.AddDbContext<StoreDbContext>(opts =>
+  {
+      opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+  });
+  
+  builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+  builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+  builder.Services.AddDistributedMemoryCache();
+  builder.Services.AddSession();
+  builder.Services.AddScoped<Cart>(SessionCart.GetCart);
+  builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+  
+  builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));
+  builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
+  
   var app = builder.Build();
   
 ➥if (app.Environment.IsProduction())
   {
-      app.UseExceptionHandler("/error");
+      app.UseExceptionHandler("/Error");
   }
   
+  app.UseStatusCodePages();
   app.UseStaticFiles();
-. . .
+  app.UseSession();
+  
+  app.UseAuthentication();
+  app.UseAuthorization();
+  
+  app.MapControllerRoute(
+      "categoryPage",
+      "Products/{category}/Page{productPage:int}",
+      new { Controller = "Home", action = "Index" });
+  
+  app.MapControllerRoute(
+      "shoppingCart",
+      "Cart",
+      new { Controller = "Cart", action = "Index" });
+  
+  app.MapControllerRoute(
+      "category",
+      "Products/{category}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      "pagination",
+      "Products/Page{productPage:int}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
+  
+  app.MapControllerRoute(
+      "checkout",
+      "Checkout",
+      new { Controller = "Order", action = "Checkout" });
+  
+  app.MapControllerRoute(
+      "remove",
+      "Remove",
+      new { Controller = "Cart", action = "Remove" });
+  
 ➥app.MapControllerRoute(
       "error",
       "Error",
@@ -1311,7 +1321,7 @@ namespace SportsStore.Controllers
   
   app.Run();
 ```
-- To see error handling change runtime environment on `Production`.
+_To see error handling change the runtime environment on `Production`._
 
 - Commit changes.
 
