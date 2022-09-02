@@ -1363,19 +1363,19 @@ $ git push
 <details><summary>[Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/)
 </summary> 
 
-1. Part I. Chapeter 10. SportsStore: Administration.
-1. Part I. Chapeter 11. SportsStore: Security and Deployment.
-1. Part II. Chapeter 13. Using URL Routing.
-1. Part II. Chapeter 14. Using Dependency Injection.
-1. Part II. Chapeter 15. Using the Platform Features. Part 1.
-1. Part II. Chapeter 16. Using the Platform Features. Part 2.
-1. Part II. Chapeter 17. Working with Data.
-1. Part III. Chapeter 21. Using Controllers with Views. Part 1.
-1. Part III. Chapeter 22. Using Controllers with Views. Part 2.
-1. Part III. Chapeter 24. Using View Components.
-1. Part III. Chapeter 28. Using Model Binding.
-1. Part III. Chapeter 29. Using Model Validation.
-1. Part III. Chapeter 30. Using Filters.
-1. Part IV. Chapeter 38. Using ASP.NET Core Identity.
+1. Part Ⅰ. Chapeter 10. SportsStore: Administration.
+1. Part Ⅰ. Chapeter 11. SportsStore: Security and Deployment.
+1. Part Ⅱ. Chapeter 13. Using URL Routing.
+1. Part Ⅱ. Chapeter 14. Using Dependency Injection.
+1. Part Ⅱ. Chapeter 15. Using the Platform Features. Part 1.
+1. Part Ⅱ. Chapeter 16. Using the Platform Features. Part 2.
+1. Part Ⅱ. Chapeter 17. Working with Data.
+1. Part Ⅲ. Chapeter 21. Using Controllers with Views. Part 1.
+1. Part Ⅲ. Chapeter 22. Using Controllers with Views. Part 2.
+1. Part Ⅲ. Chapeter 24. Using View Components.
+1. Part Ⅲ. Chapeter 28. Using Model Binding.
+1. Part Ⅲ. Chapeter 29. Using Model Validation.
+1. Part Ⅲ. Chapeter 30. Using Filters.
+1. Part Ⅳ. Chapeter 38. Using ASP.NET Core Identity.
 
 </details>
