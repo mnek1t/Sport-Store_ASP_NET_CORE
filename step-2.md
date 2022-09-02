@@ -769,14 +769,14 @@ $ git push
 <details><summary>[Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). 
 </summary> 
 
-1. Part I. Chapeter 8. SportsStore: Navigation and Cart.
-1. Part II. Chapeter 13. Using URL Routing.
-1. Part II. Chapeter 16. Using the Platform Features, Part 2.
-1. Part III. Chapeter 18. Creating the Example Project.
-1. Part III. Chapeter 21. Using Controllers with Views. Part I.
-1. Part III. Chapeter 22. Using Controllers with Views. Part II.
-1. Part III. Chapeter 23. Using Razor Pages.
-1. Part III. Chapeter 24. Using View Components.
-1. Part III. Chapeter 25. Using Tag Helpers.
+1. Part Ⅰ. Chapeter 8. SportsStore: Navigation and Cart.
+1. Part Ⅱ. Chapeter 13. Using URL Routing.
+1. Part Ⅱ. Chapeter 16. Using the Platform Features, Part 2.
+1. Part Ⅲ. Chapeter 18. Creating the Example Project.
+1. Part Ⅲ. Chapeter 21. Using Controllers with Views. Part I.
+1. Part Ⅲ. Chapeter 22. Using Controllers with Views. Part II.
+1. Part Ⅲ. Chapeter 23. Using Razor Pages.
+1. Part Ⅲ. Chapeter 24. Using View Components.
+1. Part Ⅲ. Chapeter 25. Using Tag Helpers.
 
 </details>
