@@ -1049,7 +1049,7 @@ namespace SportsStore.Models.ViewModels
     }
 }
 ```
-- Than add `AccountController` class (in the `AccountController.cs` file in the `SportsStore/Controllers` folder)
+- Than add `AccountController` class (to the `AccountController.cs` file to the `SportsStore/Controllers` folder)
 
 ```
 using Microsoft.AspNetCore.Authorization;
@@ -1119,7 +1119,7 @@ namespace SportsStore.Controllers
 }
 
 ```
-- To provide the `Login` method with a view to render, created the `Views/Account` folder and added a `Login.cshtml` Razor View  with the contents shown below
+- To provide the `Login` action method with a view to render, created the `Views/Account` folder and added a `Login.cshtml` Razor View file with the contents shown below.
 
 ```
 @model SportsStore.Models.ViewModels.LoginViewModel
@@ -1127,6 +1127,7 @@ namespace SportsStore.Controllers
 @{
     Layout = null;
 }
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -1135,8 +1136,7 @@ namespace SportsStore.Controllers
     <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-
-    <div class="bg-info text-white p-2">
+<div class="bg-info text-white p-2">
         <span class="navbar-brand m-lg-2">SPORTS STORE</span>
     </div>
     <div class="row">
@@ -1162,11 +1162,11 @@ namespace SportsStore.Controllers
             </form>
         </div>
     </div>
-
 </body>
 </html>
+
 ```
-- The final step is a change to the shared administration layout to add a button that will log out the current user by sending a request to the Logout action, as shown below. This is a useful feature that makes it easier to test the application, without which you would need to clear the browser’s cookies to return to the unauthenticated state. Add a Logout Button in the `_AdminLayout` Razor View in the `_AdminLayout.html` file in the `SportsStore/Views/Admin` Folder
+- The final step is a change to the shared administration layout to add a button that will log out the current user by sending a request to the `Logout` action, as shown below. This is a useful feature that makes it easier to test the application, without which you would need to clear the browser’s cookies to return to the unauthenticated state. Add a `Logout` Button in the `_AdminLayout.html` Razor View file in the `SportsStore/Views/Admin` folder.
 
 ```
 <!DOCTYPE html>
@@ -1192,7 +1192,7 @@ namespace SportsStore.Controllers
     . . .
 </html>
 ```
-- At the moment, the application is configured to use the developer-friendly error pages, which provide helpful information when a problem occurs. This is not information that end users should see, so add a `Error` Razor View in `Error.cshtml` file to the `Views/Shared` folder with the content shown below
+- At the moment, the application is configured to use the developer-friendly error pages, which provide helpful information when a problem occurs. This is not information that end users should see, so add a `Error.cshtml` Razor View file to the `Views/Shared` folder with the content shown below.
 
 ```
 @{
@@ -1212,7 +1212,7 @@ namespace SportsStore.Controllers
 </body>
 </html>
 ```
-- Than add `Error` action method to `HomeController` class
+- Than add `Error` action method to the `HomeController` class.
 
 ```
 using System.Diagnostics;
