@@ -26,7 +26,7 @@ $ git merge main --ff
 
 - Build project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
-- Create and add to `Controllers` folder a separate `AdminController` controller class for managing orders shipping and the product catalog.
+- Create and add to the `AdminController.cs` file to the `Controllers` folder a separate `AdminController` controller class for managing orders shipping and the product catalog.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -73,7 +73,7 @@ namespace SportsStore.Components
     }
 }
 ```
-- Add the `Default.cshtml` Razor View file in the `Views/Shared/Components/AdminNavigationMenu` folder.
+- Add the `Default.cshtml` Razor View file to the `Views/Shared/Components/AdminNavigationMenu` folder.
 
 ```
 @model IEnumerable<string>
@@ -88,7 +88,7 @@ namespace SportsStore.Components
     }
 </div>
 ```
-- To create the layout view for the administration tools, add to the `Views/Admin` folder a `_AdminLayout.cshtml` Layout Razor View.  
+- To create the Layout Razor View for the administration tools, add to the `Views/Admin` folder a `_AdminLayout.cshtml` Layout Razor View file.  
 ```
 <!DOCTYPE html>
 <html>
@@ -127,7 +127,7 @@ namespace SportsStore.Components
 
 <h4>This is the orders information.</h4>
 ```
-and add a `Products.cshtml` Razor View file to the `Views/Admin` folder with the content shown below.
+And than add a `Products.cshtml` Razor View file to the `Views/Admin` folder with the content shown below.
 
 ```
 @model IQueryable<Product>
@@ -147,7 +147,7 @@ and http://localhost:5000/Admin/Products.
 
 ![](Images/4.2.png)
 
-- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the `Order` class (the `Order.cs` file in the `Models` Folder)
+- To create a simple administration tool that will let to view the orders that have been received and mark them as shipped, at first change the data model so that adminstator can record which orders have been shipped. Add a `Shipped` property in the `Order` class (the `Order.cs` file in the `Models` Folder).
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -175,7 +175,7 @@ dotnet ef migrations add ShippedOrders
 ```
 _The migration will be applied automatically when the application is started and the `SeedData` class calls the `Migrate` method provided by Entity Framework Core._
 
-- Add to `AdminController` class `MarkShipped` method that will be receive a POST request that specifies the Id of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `true` and saved and  `Reset` method  that will be receive a POST request that specifies the `Id` of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `false` and saved
+- Add to `AdminController` class `MarkShipped` action method that will be receive a POST request that specifies the `Id` of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `true` and saved and  `Reset` action method  that will be receive a POST request that specifies the `Id` of an order, which is used to locate the corresponding `Order` object from the repository so that the `Shipped` property can be set to `false` and saved.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -221,7 +221,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.cshtml` Razor Partial View that displays a table without knowing which category of order it is dealing with the content shown below
+- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.cshtml` Razor Partial View that displays a table without knowing which category of order it is dealing with the content shown below.
 
 ```
 @model (IQueryable<Order> Orders, string TableTitle, string ButtonLabel, string CallbackMethodName)
@@ -289,28 +289,25 @@ namespace SportsStore.Controllers
 
 ![](Images/4.3.png)
 
-- To see the new features, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/Admin/Orders, and you will see a summary of the order you created displayed in the `Unshipped Orders table`. Click the `Ship` button, and the order will be updated and moved to the `Shipped Orders table`, as shown below
+- To see the new features, request http://localhost:5000, and create an order. Once you have at least one order in the database, request http://localhost:5000/Admin/Orders, and you will see a summary of the order you created displayed in the `Unshipped Orders table`. Click the `Ship` button, and the order will be updated and moved to the `Shipped Orders table`, as shown below.
 
 ![](Images/4.4.png)
 
 ![](Images/4.5.png)
 
-Click the `Reset` button, and the order will be updated and moved to the `Unshipped Orders table`, as shown below
+Click the `Reset` button, and the order will be updated and moved to the `Unshipped Orders table`, as shown below.
 
 ![](Images/4.6.png)
 
 - Add and view changes and than commit.
 
 ```
-$ dotnet build
-$ dotnet run
 $ git status
 $ git add *.cs *.cshtml *.csproj
 $ git diff --staged
 $ git commit -m "Managing Orders."
 
 ```
-
 </details>
 
 <details>
@@ -320,8 +317,7 @@ $ git commit -m "Managing Orders."
 
 </summary>
 
-
-- To add the features that allow a administrator to create, modify and delete products add new methods to the `IStoreRepository` interface
+- To add the features that allow a administrator to create, modify and delete products add new methods to the `IStoreRepository` interface.
 
 ```
 namespace SportsStore.Models.Repository
@@ -339,8 +335,7 @@ namespace SportsStore.Models.Repository
 }
 
 ```
-
-- Add implementation of this methods in the `EFStoreRepository` class (in `EFStoreRepository.cs` file in the `SportsStore/Models` folder)
+- Add implementation of this methods in the `EFStoreRepository` class.
 
 ```
 namespace SportsStore.Models.Repository
@@ -356,15 +351,15 @@ namespace SportsStore.Models.Repository
 
         public IQueryable<Product> Products => this.context.Products;
 
-      ➥public void CreateProduct(Product p)
+      ➥public void CreateProduct(Product product)
         {
-            context.Add(p);
+            context.Add(product);
             context.SaveChanges();
         }
 
-      ➥public void DeleteProduct(Product p)
+      ➥public void DeleteProduct(Product product)
         {
-            context.Remove(p);
+            context.Remove(product);
             context.SaveChanges();
         }
 
@@ -393,7 +388,7 @@ namespace SportsStore.Models.Repository
 }
 
 ```
-- To validate the values the user provides when editing or creating `Product` objects, add validation attributes to the `Product` data model class
+- To validate the values the user provides when editing or creating `Product` objects, add validation attributes to the `Product` data model class.
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -422,7 +417,7 @@ namespace SportsStore.Models
 }
 
 ```
-- To provide the administrator a table of products with links to check, edit and delete, replace the contents of the `Products.cshtml` file with those shown below
+- To provide the administrator a table of products with links to check, edit and delete, replace the contents of the `Products.cshtml` Razor View file with those shown below.
 
 ```
 @model IQueryable<Product>
@@ -481,7 +476,7 @@ namespace SportsStore.Models
 
 ![](Images/4.7.png)
 
-- To display all the fields for a single `Product` object add an `Details` action method in the `AdminController` class
+- To display all the fields for a single `Product` object add an `Details` action method in the `AdminController` class.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -500,7 +495,7 @@ namespace SportsStore.Controllers
         . . .
 }
 ```
-and a `Details.cshtml` Razor View to the `Views/Admin` folder.
+Add a `Details.cshtml` Razor View file to the `Views/Admin` folder.
 
 ```
 @model SportsStore.Models.Product?
@@ -584,11 +579,12 @@ public class AdminController : Controller
             storeRepository.SaveProduct(product);
             return RedirectToAction("Products");
         }
+
         return View(product);
     }
 }
 ```
-- To support the operations to create and edit data, add a `_Editor.cshtml` Razor Partial View to the `Views/Admin` folder.
+- To support the operations to create and edit data, add a `_Editor.cshtml` Razor Partial View file to the `Views/Admin` folder.
 
 ```
 @model (Product Product, string ThemeColor, string TitleText, string CallbackMethodName)
@@ -661,7 +657,7 @@ libman install jquery@3.6.1 -d wwwroot/lib/jquery
 libman install jquery-validate@1.19.5 -d wwwroot/lib/jquery-validate
 libman install jquery-validation-unobtrusive@4.0.0 -d wwwroot/lib/jquery-validationunobtrusive
 ```
-The `libman.json` file looks like this
+The `libman.json` file looks like this.
 
 ```
 {
@@ -708,7 +704,7 @@ The `libman.json` file looks like this
   </body>
   </html>
 ```
-- Add `_ValidationScriptsPartial.cshtml` Razor Partial View in the `Views/Shared` folder.
+- Add `_ValidationScriptsPartial.cshtml` Razor Partial View file to the `Views/Shared` folder.
 
 ```
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -751,7 +747,7 @@ and `Edit` Razor View.
   
 ![](Images/4.13.png)  
 
-- To support delete operation add `Delete` and `DeleteProduct` action methods to the `AdminController` controller
+- To support delete operation add `Delete` and `DeleteProduct` action methods to the `AdminController` controller.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -781,7 +777,7 @@ namespace SportsStore.Controllers
 }
 
 ```
-- To avoid duplicating code and content for delete and details operations add to the `Views/Admin` folder a `_ProductInfo.cshtml` Razor Partial View that displays information about a single `Product` object
+- To avoid duplicating code and content for delete and details operations add to the `Views/Admin` folder a `_ProductInfo.cshtml` Razor Partial View that displays information about a single `Product` object.
 
 ```
 @model SportsStore.Models.Product?
@@ -852,8 +848,6 @@ namespace SportsStore.Controllers
 - Add and view changes and than commit.
 
 ```
-$ dotnet build
-$ dotnet run
 $ git status
 $ git add *.cs *.cshtml *.json *.csproj
 $ git diff --staged
@@ -867,7 +861,7 @@ $ git commit -m "Adding Catalog Management."
 **Creating the Identity Database**
 </summary>
 
-- To add the package that contains the ASP.NET Core Identity support for Entity Framework Core, use a PowerShell command prompt to run the command shown below in the `SportsStore` folder
+- To add the package that contains the ASP.NET Core Identity support for Entity Framework Core, use a PowerShell command prompt to run the command shown below in the `SportsStore` folder.
 
 ```
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.0
@@ -905,7 +899,7 @@ namespace SportsStore.Models
   }
 }
 ```
-- Configure Identity in the `Program.cs` file in the `SportsStore` Folder. 
+- Configure Identity in the `Program.cs` file. 
 
 ```
   using Microsoft.EntityFrameworkCore;
@@ -954,7 +948,7 @@ dotnet ef database update --context AppIdentityDbContext
 ```
 The result is a new LocalDB database called `Identity` that you can inspect, for example, using the Visual Studio SQL Server Object Explorer.
 
-- To explicitly create the `Admin` user by seeding the database when the application starts add a class file called `IdentitySeedData.cs` to the `Models` folder and defined the static class shown below. The Contents of the `IdentitySeedData.cs` File in the `SportsStore/Models` folder.
+- To explicitly create the `Admin` user by seeding the database when the application starts add a class file called `IdentitySeedData.cs` to the `Models` folder and defined the `IdentitySeedData` static class shown below.
 
 ```
 using Microsoft.AspNetCore.Identity;
@@ -999,7 +993,7 @@ namespace SportsStore.Models
 }
 
 ```
-This code ensures the database is created and up-to-date and uses the `UserManager<T>` class, which is provided as a service by ASP.NET Core Identity for managing users. The database is searched for the `Admin` user account, which is created—with a password of `Secret123$` —if it is not present. Do not change the hard-coded password in this example because Identity has a validation policy that requires passwords to contain a number and range of characters. 
+This code ensures the database is created and up-to-date and uses the `UserManager<T>` class, which is provided as a service by ASP.NET Core Identity for managing users. The database is searched for the `Admin` user account, which is created—with a password of `Secret123$` — if it is not present. Do not change the hard-coded password in this example because Identity has a validation policy that requires passwords to contain a number and range of characters. 
 
 - To ensure that the Identity database is seeded when the application starts, add the `IdentitySeedData.EnsurePopulated(app)` statement shown below to the `Program.cs` file.
 
@@ -1018,7 +1012,7 @@ dotnet ef database drop --force --context AppIdentityDbContext
 ```
 _Restart the application, and the database will be re-created and populated with seed data._
 
--To restrict access to the administrative actions in the `AdminController` use The `Authorize` attribute
+- To restrict access to the administrative actions in the `AdminController` use the `Authorize` attribute.
 
 ``` 
 ➥[Authorize]
@@ -1030,7 +1024,7 @@ _Restart the application, and the database will be re-created and populated with
 ```
 When an unauthenticated user sends a request that requires authorization, the user is redirected to the `/Account/Login` URL, which the application can use to prompt the user for their credentials.
 
-- To implement basic authorization policy add in the `SportsStore/Models/ViewModels` folder a `LoginViewModel.cs` class file that presents the user’s credentials 
+- To implement basic authorization policy add to the `SportsStore/Models/ViewModels` folder a `LoginViewModel.cs` class file that presents the user’s credentials.
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -1119,7 +1113,7 @@ namespace SportsStore.Controllers
 }
 
 ```
-- To provide the `Login` action method with a view to render, created the `Views/Account` folder and added a `Login.cshtml` Razor View file with the contents shown below.
+- To provide the `Login` action method with a view to render, created the `Views/Account` folder and added a `Login.cshtml` Razor View file with the content shown below.
 
 ```
 @model SportsStore.Models.ViewModels.LoginViewModel
@@ -1235,7 +1229,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- Configure Error Handling in the `Program.cs` file in the `SportsStore` Folder.
+- Configure Error Handling in the `Program.cs` file.
 
 ```
   using Microsoft.EntityFrameworkCore;
@@ -1323,10 +1317,9 @@ namespace SportsStore.Controllers
 ```
 _To see error handling change the runtime environment on `Production`._
 
-- Commit changes.
+- Add and view changes and than commit.
 
 ```
-$ dotnet build
 $ git status
 $ git add *.cs *.csproj *.cshtml *.json
 $ git diff --staged
@@ -1370,16 +1363,19 @@ $ git push
 <details><summary>Books
 </summary> 
 
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 1. Chapeter 9. SportsStore: Completing the Cart.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 13. Using URL Routing.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 14. Using Dependency Injection.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 15. Using the Platform Features. Part 1.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 16. Using the Platform Features. Part 2.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 17. Working with Data.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 21. Using Controllers with Views. Part 1.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 22. Using Controllers with Views. Part 2.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 24. Using View Components.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 28. Using Model Binding.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 29. Using Model Validation.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part I. Chapeter 10. SportsStore: Administration.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part I. Chapeter 11. SportsStore: Security and Deployment.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part II. Chapeter 13. Using URL Routing.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part II. Chapeter 14. Using Dependency Injection.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part II. Chapeter 15. Using the Platform Features. Part 1.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part II. Chapeter 16. Using the Platform Features. Part 2.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part II. Chapeter 17. Working with Data.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part III. Chapeter 21. Using Controllers with Views. Part 1.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part III. Chapeter 22. Using Controllers with Views. Part 2.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part III. Chapeter 24. Using View Components.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part III. Chapeter 28. Using Model Binding.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part III. Chapeter 29. Using Model Validation.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part III. Chapeter 30. Using Filters.
+1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part IV. Chapeter 38. Using ASP.NET Core Identity.
 
 </details>
