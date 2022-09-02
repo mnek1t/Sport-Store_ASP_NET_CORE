@@ -840,8 +840,8 @@ $ git push
 
 1. Part Ⅰ. Chapeter 7. SportsStore: A Real Application.
 1. Part Ⅲ. Chapeter 18. Creating the Example Project.
-1. Part Ⅲ. Chapeter 21. Using Controllers with Views. Part I.
-1. Part Ⅲ. Chapeter 22. Using Controllers with Views. Part II.
+1. Part Ⅲ. Chapeter 21. Using Controllers with Views. Part 1.
+1. Part Ⅲ. Chapeter 22. Using Controllers with Views. Part 2.
 1. Part Ⅲ. Chapeter 23. Using Razor Pages.
 1. Part Ⅲ. Chapeter 25. Using Tag Helpers.
 
