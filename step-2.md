@@ -147,15 +147,16 @@ public class PageLinkTagHelper : TagHelper
 - Add a new attribute to the `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
 
 ```
-@model ProductsListViewMode
+@model ProductsListViewModel
 
-@foreach (var p in Model.Products) 
+@foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
 {
-    <partial name="ProductSummary" model="p" />
+    <partial name="_ProductSummary" model="p" />
+}
 
-<div page-model="@Model.PagingInfo" page-action="Index" page-classes-enabled="true"
+<div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
      page-class="btn" page-class-normal="btn-outline-dark"
-   ➥page-class-selected="btn-primary" page-url-category="@Model.CurrentCategory"
+   ➥page-class-selected="btn-primary" page-url-category="@Model?.CurrentCategory!"
      class="btn-group pull-right m-1">
 </div>
 ```
