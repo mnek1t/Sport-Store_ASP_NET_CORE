@@ -522,7 +522,9 @@ namespace SportsStore.Models
 {
   ➥public class Cart
     {
-        private List<CartLine> lines { get; set; } = new List<CartLine>();
+        private List<CartLine> lines = new List<CartLine>();
+
+        public IReadOnlyList<CartLine> Lines { get { return lines; } }
 
         public void AddItem(Product product, int quantity)
         {
