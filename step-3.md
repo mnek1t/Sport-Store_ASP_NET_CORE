@@ -723,7 +723,7 @@ namespace SportsStore.Controllers
 
 ![](Images/3.8.png)
 
-- To complete the checkout process, create a `Completed.cshtml` Razor View that displays a thank-you message with a summary of the orders.
+- To complete the checkout process, create a `Completed.cshtml` Razor View that displays a thank-you message with a summary of the orders
 
 ```
 @model int
@@ -739,6 +739,52 @@ namespace SportsStore.Controllers
     <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
 </div>
 ```
+and `Checkout` action method to the `OrderController` class.
+
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class OrderController : Controller
+    {
+        private IOrderRepository orderRepository;
+
+        private Cart cart;
+
+        public OrderController(IOrderRepository orderRepository, Cart cart)
+        {
+            this.orderRepository = orderRepository;
+            this.cart = cart;
+        }
+
+        public ViewResult Checkout() => View(model: new Order());
+
+        [HttpPost]
+      ➥public IActionResult Checkout(Order order)
+        {
+            if (!cart.Lines.Any())
+            {
+                ModelState.AddModelError(key: string.Empty, errorMessage: "Sorry, your cart is empty!");
+            }
+
+            if (ModelState.IsValid)
+            {
+                order.Lines = cart.Lines.ToArray();
+                orderRepository.SaveOrder(order: order);
+                cart.Clear();
+                return View(viewName: "Completed", model: order.OrderId);
+            }
+
+            return View();
+        }
+    }
+}
+
+```
+
 - Restart ASP.NET Core and request http://localhost:5000/Checkout. 
 
 ![](Images/3.9.png)
