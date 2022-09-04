@@ -736,7 +736,7 @@ namespace SportsStore.Controllers
     <h2>Thanks!</h2>
     <p>Thanks for placing order #@Model.</p>
     <p>We'll ship your goods as soon as possible.</p>
-    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
+    <a class="btn btn-primary" asp-route="default">Return to Store</a>
 </div>
 ```
 and `Checkout` action method to the `OrderController` class.
