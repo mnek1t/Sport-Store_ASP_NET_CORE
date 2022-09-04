@@ -221,7 +221,7 @@ namespace SportsStore.Controllers
     }
 }
 ```
-- To avoid duplicating code and content, create and add to the `Views/Order` folder a `_OrderTable.cshtml` Razor Partial View that displays a table without knowing which category of order it is dealing with the content shown below.
+- To avoid duplicating code and content, create and add to the `Views/Admin` folder a `_OrderTable.cshtml` Razor Partial View that displays a table without knowing which category of order it is dealing with the content shown below.
 
 ```
 @model (IQueryable<Order> Orders, string TableTitle, string ButtonLabel, string CallbackMethodName)
