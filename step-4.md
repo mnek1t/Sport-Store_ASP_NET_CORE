@@ -644,7 +644,7 @@ public class AdminController : Controller
   
 ➥<partial name="_Editor" model='(@Model, "warning", "Edit" , "Edit")' />
 ```
-- Add a `Create.cshtml` Razor View file to the `Views/Admin` folder, to edit a single `Product` object use `_Editor.cshtml` Razor Partial View.
+- Add a `Create.cshtml` Razor View file to the `Views/Admin` folder, to create a single `Product` object use `_Editor.cshtml` Razor Partial View.
 
 ```
   @model SportsStore.Models.Product
