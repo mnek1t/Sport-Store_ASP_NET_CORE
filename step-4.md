@@ -495,7 +495,7 @@ namespace SportsStore.Controllers
         . . .
 }
 ```
-Add a `Details.cshtml` Razor View file to the `Views/Admin` folder.
+- Add a `Details.cshtml` Razor View file to the `Views/Admin` folder.
 
 ```
 @model SportsStore.Models.Product?
@@ -632,6 +632,28 @@ public class AdminController : Controller
         </form>
     </div>
 </div>
+```
+- Add a `Edit.cshtml` Razor View file to the `Views/Admin` folder, to edit a single `Product` object use `_Editor.cshtml` Razor Partial View.
+
+```
+  @model SportsStore.Models.Product
+  
+  @{
+      Layout = "_AdminLayout";
+  }
+  
+➥<partial name="_Editor" model='(@Model, "warning", "Edit" , "Edit")' />
+```
+- Add a `Create.cshtml` Razor View file to the `Views/Admin` folder, to edit a single `Product` object use `_Editor.cshtml` Razor Partial View.
+
+```
+  @model SportsStore.Models.Product
+  
+  @{
+      Layout = "_AdminLayout";
+  }
+  
+➥<partial name="_Editor" model='(@Model, "primary", "Create" , "Create")' />
 ```
 
 - To see the editor work, restart ASP.NET Core, request http://localhost:5000/Admin/Products, and click the `Edit` button
