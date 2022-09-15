@@ -466,8 +466,6 @@ namespace SportsStore.Models
 <div class="text-center">
     <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
   ➥<a class="btn btn-primary" asp-route="checkout">Checkout</a>
-        Checkout
-    </a>
 </div>
 
 ```
