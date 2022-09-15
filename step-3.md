@@ -601,7 +601,7 @@ dotnet ef migrations add Orders
 ```
 _This migration will be applied automatically when the application starts because the `SeedData` calls the `Migrate` method provided by Entity Framework Core._
 
-- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository.cs` interface file to the `Models` folder.
+- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository.cs` interface file to the `Models/Repository` folder.
 
 ```
 namespace SportsStore.Models.Repository
