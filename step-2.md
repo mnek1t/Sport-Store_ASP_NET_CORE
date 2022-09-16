@@ -69,7 +69,7 @@ namespace SportsStore.Models.ViewModels
 
 ![](Images/2.1.png)
 
-- To improve the URLs like `/?category = Soccer`, change the routing configuration in the `Program` file. Create a more useful set of URLs. It is important to add the new routes in the order they are shown below. Than remove `app.MapDefaultControllerRoute()`. 
+- To improve the URLs like `/?category = Soccer`, change the routing configuration in the `Program` file. Create a more useful set of URLs. It is important to add the new routes in the order they are shown below.
 
 ```
 ...
@@ -93,6 +93,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "/",
     defaults: new { Controller = "Home", action = "Index" });    
+
+app.MapDefaultControllerRoute() 
 
 SeedData.EnsurePopulated(app: app);
 
@@ -130,8 +132,9 @@ public class PageLinkTagHelper : TagHelper
             for (int i = 1; i <= PageModel.TotalPages; i++)
             {
                 TagBuilder tag = new TagBuilder("a");
-              ➥PageUrlValues["productPage"] = i;
-              ➥tag.Attributes["href"] = urlHelper.Action(PageAction, PageUrlValues);
+              ➥PageUrlValues[key: "productPage"] = i;
+              ➥tag.Attributes[key: "href"] = urlHelper.Action(action: PageAction, values: PageUrlValues);
+              ➥tag.Attributes[key: "href"] = urlHelper.RouteUrl(routeName: PageRoute, values: PageUrlValues);
                 if (PageClassesEnabled)
                 {
                     tag.AddCssClass(PageClass);
@@ -156,11 +159,11 @@ public class PageLinkTagHelper : TagHelper
     <partial name="_ProductSummary" model="p" />
 }
 
-<div page-model="@Model?.PagingInfo" page-action="Index" page-classes-enabled="true"
-     page-class="btn" page-class-normal="btn-outline-dark"
-   ➥page-class-selected="btn-primary" page-url-category="@Model?.CurrentCategory!"
-     class="btn-group pull-right m-1">
-</div>
+➥<div page-model="@Model?.PagingInfo" page-classes-enabled="true" page-route=@route
+       page-class="btn" page-class-normal="btn-outline-dark"
+     ➥page-class-selected="btn-primary" page-url-category="@Model?.CurrentCategory!"
+       class="btn-group pull-right m-1">
+  </div>
 ```
 
 - Restart ASP.NET Core and request http://localhost:5000/Products/Soccer/Page1.
