@@ -623,9 +623,9 @@ and than add to it an HTML element that the tag helper will process to create th
   app.UseStaticFiles();
 
 ➥app.MapControllerRoute(
-      "pagination",
-      "Products/Page{productPage:int}",
-       new { Controller = "Home", action = "Index", productPage = 1 });
+    name: "pagination",
+    pattern: "Products/Page{productPage:int}",
+    defaults: new { Controller = "Home", action = "Index", productPage = 1 });     
 
   app.MapDefaultControllerRoute();
 
