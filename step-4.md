@@ -675,9 +675,9 @@ or request http://localhost:5000/Admin/Products, and click the `Create` button.
 - In order the application to perform client-side validation based on the data annotations applied to the domain model class add the JavaScript libraries that provide the client-side feature to the application. To install the [client-side](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-cli?view=aspnetcore-3.1) package, use a PowerShell command prompt to run the following commands (or use [Visual Studio possibilities](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-vs?view=aspnetcore-6.0))
 
 ```
-libman install jquery@3.6.1 -d wwwroot/lib/jquery
-libman install jquery-validate@1.19.5 -d wwwroot/lib/jquery-validate
-libman install jquery-validation-unobtrusive@4.0.0 -d wwwroot/lib/jquery-validationunobtrusive
+libman install jquery -d wwwroot/lib/jquery
+libman install jquery-validate -d wwwroot/lib/jquery-validate
+libman install jquery-validation-unobtrusive -d wwwroot/lib/jquery-validationunobtrusive
 ```
 The `libman.json` file looks like this.
 
@@ -946,9 +946,9 @@ namespace SportsStore.Models
 ➥app.UseAuthorization();
   
   app.MapControllerRoute(
-      "categoryPage",
-      "Products/{category}/Page{productPage:int}",
-      new { Controller = "Home", action = "Index" });
+      name: "pagination",
+      pattern: "Products/Page{productPage:int}",
+      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
   
   . . .
   
@@ -1293,39 +1293,39 @@ namespace SportsStore.Controllers
   app.UseAuthorization();
   
   app.MapControllerRoute(
-      "categoryPage",
-      "Products/{category}/Page{productPage:int}",
-      new { Controller = "Home", action = "Index" });
+      name: "pagination",
+      pattern: "Products/Page{productPage:int}",
+      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
   
   app.MapControllerRoute(
-      "shoppingCart",
-      "Cart",
-      new { Controller = "Cart", action = "Index" });
+      name: "categoryPage",
+      pattern: "{category}/Page{productPage:int}",
+      defaults: new { Controller = "Home", action = "Index" });
+
+  app.MapControllerRoute(
+      name: "category",
+      pattern: "Products/{category}",
+      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
   
   app.MapControllerRoute(
-      "category",
-      "Products/{category}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
+      name: "shoppingCart",
+      pattern: "Cart",
+      defaults: new { Controller = "Cart", action = "Index" });
   
   app.MapControllerRoute(
-      "pagination",
-      "Products/Page{productPage:int}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
+      name: "default",
+      pattern: "/",
+      defaults: new { Controller = "Home", action = "Index" });
   
   app.MapControllerRoute(
-      "default",
-      "/",
-      new { Controller = "Home", action = "Index" });
+      name: "checkout",
+      pattern: "Checkout",
+      defaults: new { Controller = "Order", action = "Checkout" });
   
   app.MapControllerRoute(
-      "checkout",
-      "Checkout",
-      new { Controller = "Order", action = "Checkout" });
-  
-  app.MapControllerRoute(
-      "remove",
-      "Remove",
-      new { Controller = "Cart", action = "Remove" });
+      name: "remove",
+      pattern: "Remove",
+      defaults: new { Controller = "Cart", action = "Remove" });
   
 ➥app.MapControllerRoute(
       "error",
