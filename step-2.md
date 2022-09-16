@@ -120,6 +120,7 @@ app.Run();
 public class PageLinkTagHelper : TagHelper 
 {
     . . . 
+  ➥public string? PageRoute { get; set; }
   ➥[HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
   ➥public Dictionary<string, object> PageUrlValues { get; set; }  = new Dictionary<string, object>();
     . . .
@@ -152,12 +153,16 @@ public class PageLinkTagHelper : TagHelper
 - Add a new attribute to the `Index.cshtml` Razor View file in the `SportsStore/Views/Home` folder.
 
 ```
-@model ProductsListViewModel
-
-@foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
-{
-    <partial name="_ProductSummary" model="p" />
-}
+  @model ProductsListViewModel
+  
+➥@{
+      var route = this.Model.CurrentCategory is null ? "pagination" : "categoryPage";
+  }
+  
+  @foreach (var p in Model?.Products ?? Enumerable.Empty<Product>())
+  {
+      <partial name="_ProductSummary" model="p" />
+  }
 
 ➥<div page-model="@Model?.PagingInfo" page-classes-enabled="true" page-route=@route
        page-class="btn" page-class-normal="btn-outline-dark"
@@ -409,19 +414,18 @@ namespace SportsStore.Controllers
   
   app.MapControllerRoute(
       name: "categoryPage",
-      pattern: "Products/{category}/Page{productPage:int}",
+      pattern: "{category}/Page{productPage:int}",
       defaults: new { Controller = "Home", action = "Index" });
-  
-➥app.MapControllerRoute(
-      name: "shoppingCart",
-      pattern: "Cart",
-      defaults: new { Controller = "Cart", action = "Index" });
 
   app.MapControllerRoute(
     name: "category",
     pattern: "Products/{category}",
     defaults: new { Controller = "Home", action = "Index", productPage = 1 });
-  
+   
+➥app.MapControllerRoute(
+      name: "shoppingCart",
+      pattern: "Cart",
+      defaults: new { Controller = "Cart", action = "Index" }); 
   . . .
 ```
 
