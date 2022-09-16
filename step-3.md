@@ -220,6 +220,7 @@ namespace SportsStore.Controllers
         . . .
 
         [HttpPost]
+        [Route("Cart/Remove")]
       ➥public IActionResult Remove(long productId, string returnUrl)
         {
             Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
@@ -239,34 +240,29 @@ namespace SportsStore.Controllers
 . . .
 
   app.MapControllerRoute(
-      name: "pagination",
-      pattern: "Products/Page{productPage:int}",
-      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
+      "categoryPage",
+      "Products/{category}/Page{productPage:long}",
+      new { Controller = "Home", action = "Index" });
   
   app.MapControllerRoute(
-      name: "categoryPage",
-      pattern: "{category}/Page{productPage:int}",
-      defaults: new { Controller = "Home", action = "Index" });
+      "shoppingCart",
+      "Cart",
+      new { Controller = "Cart", action = "Index" });
   
   app.MapControllerRoute(
-      name: "category",
-      pattern: "Products/{category}",
-      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
+      "pagination",
+      "Products/Page{productPage:long}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
   
   app.MapControllerRoute(
-      name: "shoppingCart",
-      pattern: "Cart",
-      defaults: new { Controller = "Cart", action = "Index" });
-  
-  app.MapControllerRoute(
-      name: "default",
-      pattern: "/",
-      defaults: new { Controller = "Home", action = "Index" });
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
   
 ➥app.MapControllerRoute(
-      name: "remove",
-      pattern: "Remove",
-      defaults: new { Controller = "Cart", action = "Remove" });
+      "remove",
+      "Remove",
+      new { Controller = "Cart", action = "Remove" });
   . . .
 ```
 - Restart ASP.NET Core and request http://localhost:5000/Cart
@@ -540,15 +536,20 @@ namespace SportsStore.Controllers
 
 ```
   . . .
-➥app.MapControllerRoute(
-      "checkout",
-      "Checkout",
-      new { Controller = "Order", action = "Checkout" });
+  app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
   
   app.MapControllerRoute(
       "remove",
       "Remove",
       new { Controller = "Cart", action = "Remove" });
+
+➥app.MapControllerRoute(
+      "checkout",
+      "Checkout",
+      new { Controller = "Order", action = "Checkout" });
   . . .    
 ```
     
