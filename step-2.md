@@ -69,7 +69,7 @@ namespace SportsStore.Models.ViewModels
 
 ![](Images/2.1.png)
 
-- To improve the URLs like `/?category = Soccer`, change the routing configuration in the `Program` file. Create a more useful set of URLs. It is important to add the new routes in the order they are shown.
+- To improve the URLs like `/?category = Soccer`, change the routing configuration in the `Program` file. Create a more useful set of URLs. It is important to add the new routes in the order they are shown below. Than remove `app.MapDefaultControllerRoute()`. 
 
 ```
 ...
@@ -94,7 +94,7 @@ app.MapControllerRoute(
     pattern: "/",
     defaults: new { Controller = "Home", action = "Index" });    
 
-IdentitySeedData.EnsurePopulated(app: app);
+SeedData.EnsurePopulated(app: app);
 
 app.Run();
 ```
@@ -715,7 +715,7 @@ Clicking the `Continue Shopping button` returns the user to the product page the
 
 ![](Images/2.13.png)
 
-- Add and view changes and than commit..
+- Add and view changes and than commit.
 
 ```
 $ git status
