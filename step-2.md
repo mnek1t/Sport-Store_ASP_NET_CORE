@@ -73,28 +73,30 @@ namespace SportsStore.Models.ViewModels
 
 ```
 ...
+
+app.MapControllerRoute(
+    name: "pagination",
+    pattern: "Products/Page{productPage:int}",
+    defaults: new { Controller = "Home", action = "Index", productPage = 1 });
+
 ➥app.MapControllerRoute(
-      "categoryPage",
-      "Products/{category}/Page{productPage:int}",
-      new { Controller = "Home", action = "Index" });
-  
-➥app.MapControllerRoute(
-      "category",
-      "{category}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
-  
-  app.MapControllerRoute(
-      "pagination",
-      "Products/Page{productPage}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
+     name: "categoryPage",
+     pattern: "Products/{category}/Page{productPage:int}",
+     defaults: new { Controller = "Home", action = "Index" });
   
 ➥app.MapControllerRoute(
-      "default",
-      "/",
-      new { Controller = "Home", action = "Index" });
-  
-  app.MapDefaultControllerRoute();
-...
+    name: "category",
+    pattern: "Products/{category}",
+    defaults: new { Controller = "Home", action = "Index", productPage = 1 });
+
+➥app.MapControllerRoute(
+    name: "default",
+    pattern: "/",
+    defaults: new { Controller = "Home", action = "Index" });    
+
+IdentitySeedData.EnsurePopulated(app: app);
+
+app.Run();
 ```
 
 | URL | Route Name | Leads to |
@@ -396,37 +398,28 @@ namespace SportsStore.Controllers
 
 ```
   . . .
+  
   app.MapControllerRoute(
-      "categoryPage",
-      "Products/{category}/Page{productPage:int}",
-      new { Controller = "Home", action = "Index" });
+      name: "pagination",
+      pattern: "Products/Page{productPage:int}",
+      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      name: "categoryPage",
+      pattern: "Products/{category}/Page{productPage:int}",
+      defaults: new { Controller = "Home", action = "Index" });
   
 ➥app.MapControllerRoute(
-      "shoppingCart",
-      "Cart",
-      new { Controller = "Cart", action = "Index" });
-  
-  app.MapControllerRoute(
-      "category",
-      "Products/{category}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
-  
-  app.MapControllerRoute(
-      "pagination",
-      "Products/Page{productPage:int}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
-  
-  app.MapControllerRoute(
-      "default",
-      "/",
-      new { Controller = "Home", action = "Index" });
+      name: "shoppingCart",
+      pattern: "Cart",
+      defaults: new { Controller = "Cart", action = "Index" });
 
-  app.MapDefaultControllerRoute();    
+  app.MapControllerRoute(
+    name: "category",
+    pattern: "Products/{category}",
+    defaults: new { Controller = "Home", action = "Index", productPage = 1 });
   
-  SeedData.EnsurePopulated(app);
-  IdentitySeedData.EnsurePopulated(app);
-  
-  app.Run();
+  . . .
 ```
 
 - Restart ASP.NET Core and request http://localhost:5000/Cart.
