@@ -238,21 +238,6 @@ namespace SportsStore.Controllers
 
 ```
 . . .
-
-  app.MapControllerRoute(
-      "categoryPage",
-      "Products/{category}/Page{productPage:long}",
-      new { Controller = "Home", action = "Index" });
-  
-  app.MapControllerRoute(
-      "shoppingCart",
-      "Cart",
-      new { Controller = "Cart", action = "Index" });
-  
-  app.MapControllerRoute(
-      "pagination",
-      "Products/Page{productPage:long}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
   
   app.MapControllerRoute(
       "default",
@@ -540,16 +525,17 @@ namespace SportsStore.Controllers
       "default",
       "/",
       new { Controller = "Home", action = "Index" });
-  
+ 
+➥app.MapControllerRoute(
+      "checkout",
+      "Checkout",
+      new { Controller = "Order", action = "Checkout" });
+
   app.MapControllerRoute(
       "remove",
       "Remove",
       new { Controller = "Cart", action = "Remove" });
 
-➥app.MapControllerRoute(
-      "checkout",
-      "Checkout",
-      new { Controller = "Order", action = "Checkout" });
   . . .    
 ```
     
@@ -615,7 +601,7 @@ namespace SportsStore.Models.Repository
 }
 ```
 
-- To implement the order repository interface, add a `EFOrderRepository` class to the `EFOrderRepository.cs` file to the `Models` folder.
+- To implement the order repository interface, add a `EFOrderRepository` class to the `EFOrderRepository.cs` file to the `Models/Repository` folder.
 
 ```
 using Microsoft.EntityFrameworkCore;
