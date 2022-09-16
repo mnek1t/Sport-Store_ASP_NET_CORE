@@ -917,7 +917,7 @@ namespace SportsStore.Models
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "SportsStoreConnection": "Server=(localdb)\\MSSQLLocalDB;Database=SportsStoreDb;MultipleActiveResultSets=true",
-  ➥"IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActive,ResultSets=true"
+  ➥"IdentityConnection": "Server=(localdb)\\MSSQLLocalDB;Database=Identity;MultipleActiveResultSets=true"
   }
 }
 ```
