@@ -81,7 +81,7 @@ app.MapControllerRoute(
 
 ➥app.MapControllerRoute(
      name: "categoryPage",
-     pattern: "Products/{category}/Page{productPage:int}",
+     pattern: "{category}/Page{productPage:int}",
      defaults: new { Controller = "Home", action = "Index" });
   
 ➥app.MapControllerRoute(
@@ -104,8 +104,8 @@ app.Run();
 | / | default | Shows the first page of products from all categories |
 | /Products/Page2 | pagination | Shows the specified page (in this case, page 2), showing items from all categories |
 | /Products/Soccer | category | Shows the first page of items from a specific category (in this case, the `Soccer` category) |
-| /Products/Soccer/Page1 | categoryPage | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Soccer`) |
-| /Products/Chess/Page1 | categoryPage | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Chess`) |
+| /Soccer/Page1 | categoryPage | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Soccer`) |
+| /Chess/Page1 | categoryPage | Shows the specified page (in this case, page 1) of items from the specified category (in this case, `Chess`) |
 
 ![](Images/2.2.png)
 
