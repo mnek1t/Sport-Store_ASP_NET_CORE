@@ -489,7 +489,7 @@ namespace SportsStore.Controllers
     public class AdminController : Controller
     {
         . . .
-        [Route("Admin/Details/{productId:int}")]
+        [Route("Details/{productId:int}")]
       ➥public ViewResult Details(int productId)
             => View(storeRepository.Products.FirstOrDefault(p => p.ProductId == productId));
         . . .
