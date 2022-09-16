@@ -220,7 +220,6 @@ namespace SportsStore.Controllers
         . . .
 
         [HttpPost]
-        [Route("Cart/Remove")]
       ➥public IActionResult Remove(long productId, string returnUrl)
         {
             Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
@@ -240,29 +239,34 @@ namespace SportsStore.Controllers
 . . .
 
   app.MapControllerRoute(
-      "categoryPage",
-      "Products/{category}/Page{productPage:long}",
-      new { Controller = "Home", action = "Index" });
+      name: "pagination",
+      pattern: "Products/Page{productPage:int}",
+      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
   
   app.MapControllerRoute(
-      "shoppingCart",
-      "Cart",
-      new { Controller = "Cart", action = "Index" });
+      name: "categoryPage",
+      pattern: "{category}/Page{productPage:int}",
+      defaults: new { Controller = "Home", action = "Index" });
   
   app.MapControllerRoute(
-      "pagination",
-      "Products/Page{productPage:long}",
-      new { Controller = "Home", action = "Index", productPage = 1 });
+      name: "category",
+      pattern: "Products/{category}",
+      defaults: new { Controller = "Home", action = "Index", productPage = 1 });
   
   app.MapControllerRoute(
-      "default",
-      "/",
-      new { Controller = "Home", action = "Index" });
+      name: "shoppingCart",
+      pattern: "Cart",
+      defaults: new { Controller = "Cart", action = "Index" });
+  
+  app.MapControllerRoute(
+      name: "default",
+      pattern: "/",
+      defaults: new { Controller = "Home", action = "Index" });
   
 ➥app.MapControllerRoute(
-      "remove",
-      "Remove",
-      new { Controller = "Cart", action = "Remove" });
+      name: "remove",
+      pattern: "Remove",
+      defaults: new { Controller = "Cart", action = "Remove" });
   . . .
 ```
 - Restart ASP.NET Core and request http://localhost:5000/Cart
@@ -272,7 +276,7 @@ namespace SportsStore.Controllers
 - Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see http://fortawesome.github.io/Font-Awesome). To install the [client-side](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-cli?view=aspnetcore-3.1) package, use a PowerShell command prompt to run the command (or use [Visual Studio possibilities](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-vs?view=aspnetcore-6.0))
 
 ```
-libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
+libman install font-awesome -d wwwroot/lib/font-awesome
 
 ```
 
@@ -536,20 +540,15 @@ namespace SportsStore.Controllers
 
 ```
   . . .
-  app.MapControllerRoute(
-      "default",
-      "/",
-      new { Controller = "Home", action = "Index" });
+➥app.MapControllerRoute(
+      "checkout",
+      "Checkout",
+      new { Controller = "Order", action = "Checkout" });
   
   app.MapControllerRoute(
       "remove",
       "Remove",
       new { Controller = "Cart", action = "Remove" });
-
-➥app.MapControllerRoute(
-      "checkout",
-      "Checkout",
-      new { Controller = "Order", action = "Checkout" });
   . . .    
 ```
     
