@@ -373,7 +373,7 @@ namespace SportsStore.Components
 </html>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/Page2. 
+- Restart ASP.NET Core and request http://localhost:5000/Products/Page2. 
 
 Add `Human Chess Board`.
 
