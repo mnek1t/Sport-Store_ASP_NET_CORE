@@ -258,7 +258,8 @@ namespace SportsStore.Components
 @model IEnumerable<string>
 
 <div class="d-grid gap-2">
-    <a class="btn btn-outline-secondary" asp-route="default">
+    <a class="btn @(string.IsNullOrEmpty(ViewBag.SelectedCategory) ? "btn-primary" :"btn-outline-secondary")"
+       asp-route="default">
         Home
     </a>
     @foreach (string category in Model ?? Enumerable.Empty<string>())
