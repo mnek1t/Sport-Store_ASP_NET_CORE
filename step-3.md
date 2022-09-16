@@ -1,5 +1,9 @@
 #  Sports Store Application. Part 3
 
+## Description
+
+Complete shopping cart development with a simple checkout process.
+
 ## Implementation details
 
 <details>
@@ -8,19 +12,19 @@
 **Refining the Cart Model with a Service**
 </summary>
 
-- Go to the cloned repository of the previous step `Sport Store Application. Part 3`. 
+- Go to the cloned repository of the previous step `Sport Store Application. Part 2`. 
 
 - Switch to the `sports-store-application-3` branch and do a fast-forward merge according to changes from the `main` branch.
 
 ```
 $ git checkout sports-store-application-3
 
-$ git merge main -ff
+$ git merge main --ff
 
 ```
-- Continue your work in Visual Studio or ather IDE.
+- Continue your work in Visual Studio or other IDE.
 
-- Builed project, run application and request http://localhost:5000/. Your app should be work.
+- Build project, run application and request http://localhost:5000/. All functionalities implemented in the previous step should work.
 
 - To can override the members of the `Cart` class apply the `virtual` keyword to the `AddItem`, `RemoveLine`, `Clear` methods of the `Cart` class
 
@@ -31,25 +35,24 @@ namespace SportsStore.Models
     {
         . . .
 
-        public virtual void AddItem(Product product, int quantity)
+      ➥public virtual void AddItem(Product product, int quantity)
         {
             . . .
         }
 
-        public virtual void RemoveLine(Product product)
+      ➥public virtual void RemoveLine(Product product)
         {
             . . .
         }
 
-        public virtual void Clear()
+      ➥public virtual void Clear()
         {
             . . .
         }
     }
 }
 ```
-
-- Add a `SessionCart` class  (int the `Models` folder)
+- Add a `SessionCart` class to `SessionCart.cs` file to the `Models` folder.
 
 ```
 using Newtonsoft.Json;
@@ -57,7 +60,7 @@ using SportsStore.Infrastructure;
 
 namespace SportsStore.Models
 {
-    public class SessionCart : Cart
+  ➥public class SessionCart : Cart
     {
         public static Cart GetCart(IServiceProvider services)
         {
@@ -90,22 +93,18 @@ namespace SportsStore.Models
     }
 }        
 ```
--  Register a service for the `Cart` class in `the Progrem.cs` file
+-  Register a service for the `Cart` class in the `Progrem.cs` file.
 
 ```
-using Microsoft.EntityFrameworkCore;
-using SportsStore.Models;
-
-var builder = WebApplication.CreateBuilder(args);    
-. . .
-
-builder.Services.AddSession();
-builder.Services.AddScoped<Cart>(SessionCart.GetCart);
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+  . . .
+  
+  builder.Services.AddSession();
+➥builder.Services.AddScoped<Cart>(SessionCart.GetCart);
+➥builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 . . .
         
 ```     
-- Simplify the `CartController` class where `Cart` objects are used
+- Simplify the `CartController` class where `Cart` objects are used.
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -120,13 +119,13 @@ namespace SportsStore.Controllers
     {
         private IStoreRepository repository;
 
-        public CartController(IStoreRepository repository, Cart cart)
+      ➥public CartController(IStoreRepository repository, Cart cart)
         {
             this.repository = repository;
             this.Cart = cart;
         }
 
-        public Cart Cart { get; set; }
+      ➥public Cart Cart { get; set; }
 
         [HttpGet]
         public IActionResult Index(string returnUrl)
@@ -139,13 +138,14 @@ namespace SportsStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(long productId, string returnUrl)
+      ➥public IActionResult Index(long productId, string returnUrl)
         {
             Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
 
             if (product != null)
             {
                 this.Cart.AddItem(product, 1);
+
                 return View(new CartViewModel 
                 {
                     Cart = this.Cart, 
@@ -159,10 +159,18 @@ namespace SportsStore.Controllers
 }
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/
+- Restart ASP.NET Core and request http://localhost:5000/.
 
 ![](Images/3.1.png)
 
+- Add and view changes and than commit.
+
+```
+$ git status
+$ git add *.cs *.csproj *.cshtml
+$ git diff --staged
+$ git commit -m "Refining the Cart Model with a Service."
+```
 </details>
 
 <details>
@@ -171,7 +179,7 @@ namespace SportsStore.Controllers
 **Completing the Cart Functionality**
 </summary>
 
-- To remove items from the cart add to the `Index.cshtml` file a `Remove` button  that will submit an HTTP POST request (see `SportsStore/Views/Cart` folder)
+- To remove items from the cart add to the `Index.cshtml` Razor View file from `SportsStore/Views/Cart` folder a `Remove` button  that will submit an HTTP POST request.
 
 ```
 . . .
@@ -182,7 +190,7 @@ namespace SportsStore.Controllers
         <td class="text-right">
             @((line.Quantity * line.Product.Price).ToString("c"))
         </td>
-        <td class="text-center">
+      ➥<td class="text-center">
             <form method="post" asp-action="Remove" asp-controller="Cart">
                 <input type="hidden" name="ProductID" value="@line.Product.ProductId"/>
                 <input type="hidden" name="returnUrl" value="@Model?.ReturnUrl"/>
@@ -196,33 +204,79 @@ namespace SportsStore.Controllers
 . . .
 ```
 
-- Add a `Remove` method to the `CartController` class
+- Add a `Remove` action method to the `CartController` class.
 
 ```
-[HttpPost]
-public IActionResult Remove(long productId, string returnUrl)
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Infrastructure;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+using SportsStore.Models.ViewModels;
+
+namespace SportsStore.Controllers
 {
-    Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
-    return View("Index", new CartViewModel
+    public class CartController : Controller
     {
-        Cart = Cart,
-        ReturnUrl = returnUrl ?? "/"
-    });
-}
-```
+        . . .
 
+        [HttpPost]
+        [Route("Cart/Remove")]
+      ➥public IActionResult Remove(long productId, string returnUrl)
+        {
+            Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product)
+            return View("Index", new CartViewModel
+            {
+                Cart = Cart,
+                ReturnUrl = returnUrl ?? "/"
+            });
+        }
+        . . . 
+    }
+} 
+```
+- Add new `remove` route to the `Program` file.
+
+```
+. . .
+
+  app.MapControllerRoute(
+      "categoryPage",
+      "Products/{category}/Page{productPage:long}",
+      new { Controller = "Home", action = "Index" });
+  
+  app.MapControllerRoute(
+      "shoppingCart",
+      "Cart",
+      new { Controller = "Cart", action = "Index" });
+  
+  app.MapControllerRoute(
+      "pagination",
+      "Products/Page{productPage:long}",
+      new { Controller = "Home", action = "Index", productPage = 1 });
+  
+  app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
+  
+➥app.MapControllerRoute(
+      "remove",
+      "Remove",
+      new { Controller = "Cart", action = "Remove" });
+  . . .
+```
 - Restart ASP.NET Core and request http://localhost:5000/Cart
 
 ![](Images/3.2.png)
 
-- Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see http://fortawesome.github.io/Font-Awesome). To install the client-side package, use a PowerShell command prompt to run the command
+- Add a widget that summarizes the contents of the cart and that can be clicked to display the cart contents throughout the application. Use the `Font Awesome` package, which is an excellent set of open source icons that are integrated into applications as fonts, where each character in the font is a different image (see http://fortawesome.github.io/Font-Awesome). To install the [client-side](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-cli?view=aspnetcore-3.1) package, use a PowerShell command prompt to run the command (or use [Visual Studio possibilities](https://docs.microsoft.com/en-us/aspnet/core/client-side/libman/libman-vs?view=aspnetcore-6.0))
 
 ```
-libman install font-awesome@5.15.4 -d wwwroot/lib/font-awesome
+libman install font-awesome -d wwwroot/lib/font-awesome
 
 ```
 
-The libman.json file looks like this 
+The `libman.json` file looks like this (always check for up-to-date versions of the libraries you use)
 
 ```
 {
@@ -242,12 +296,12 @@ The libman.json file looks like this
 }
 ```
 
-- Add a `CartSummaryViewComponent` class (the `Components` folder)
+- Add a `CartSummaryViewComponent` class to the `CartSummaryViewComponent.cs` file to the `Components` folder.
 
 ```
 namespace SportsStore.Components
 {
-    public class CartSummaryViewComponent : ViewComponent
+  ➥public class CartSummaryViewComponent : ViewComponent
     {
         private Cart cart;
 
@@ -264,13 +318,13 @@ namespace SportsStore.Components
 }
 ```
 
-- Created the `Views/Shared/Components/CartSummary` folder and add to it a View Component named `Default.cshtml` with the content
+- Created the `Views/Shared/Components/CartSummary` folder and add to it a View Component named `Default.cshtml` with the following content.
 
 ```
 @model Cart
 
 <div class="">
-    @if (Model.Lines.Any()) 
+    @if (Model.Lines.Any())
     {
         <small class="navbar-text">
             <b>Your cart:</b>
@@ -278,15 +332,14 @@ namespace SportsStore.Components
             @Model?.ComputeTotalValue().ToString("c")
         </small>
     }
-    <a class="btn btn-sm btn-secondary navbar-btn" asp-controller="Cart" 
-       asp-action="Index"
+    <a asp-route="shoppingCart"
        asp-route-returnurl="@ViewContext.HttpContext.Request.PathAndQuery()">
         <i class="fa fa-shopping-cart"></i>
     </a>
 </div>
 ```
 
-- To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, adding the `Cart Summary` in the `_Layout.cshtml` file (the Views/Shared folder)
+- To display a button with the Font Awesome cart icon and, if there are items in the cart, provides a snapshot that details the number of items and their total value, add the `Cart Summary` to the `_Layout.cshtml` file to the `Views/Shared` folder.
 
 ```
 <!DOCTYPE html>
@@ -303,7 +356,7 @@ namespace SportsStore.Components
             <div class="row">
                 <div class="col navbar-brand">SPORTS STORE</div>
                 <div class="col-6 navbar-text text-end">
-                    <vc:cart-summary />
+                  ➥<vc:cart-summary />
                 </div>
             </div>
         </div>
@@ -320,24 +373,32 @@ namespace SportsStore.Components
 </html>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/Page2. 
+- Restart ASP.NET Core and request http://localhost:5000/Products/Page2. 
 
 Add `Human Chess Board`.
 
 ![](Images/3.3.png)
 
-Than click `Continue shopping button`.
+Click `Continue shopping button`.
 
 ![](Images/3.4.png)
 
-The widget that summarizes the contents of the cart looks like this
+The widget that summarizes the contents of the cart looks like this.
 
 ![](Images/3.5.png)
 
-If you press the cart icon, you will see summarizes the contents of the cart in details
+If you press the cart icon, you will see summarizes the contents of the cart in details.
 
 ![](Images/3.6.png)
 
+- Add and view changes and than commit.
+
+```
+$ git status
+$ git add *.cs *.cshtml *.json *.csproj
+$ git diff --staged
+$ git commit -m "Completing the Cart Functionality."
+```
 </details>
 
 <details>
@@ -347,7 +408,7 @@ If you press the cart icon, you will see summarizes the contents of the cart in 
 
 </summary>
 
-- To represent the shipping details for a customer add a `Order` class (the `Models` folder)
+- To represent the shipping details for a customer add a `Order.cs` class file to the `Models` folder.
 
 ```
 using System.ComponentModel.DataAnnotations;
@@ -355,7 +416,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace SportsStore.Models
 {
-    public class Order
+  ➥public class Order
     {
         [BindNever]
         public int OrderId { get; set; }
@@ -389,30 +450,43 @@ namespace SportsStore.Models
 }
 ```
 
--  Add a `Checkout` button to the cart view (in the `Index.cshtml` file in the `SportsStore/Views/Cart` folder)
+-  Add a `Checkout` button to the cart view to the `Index.cshtml` file to the `SportsStore/Views/Cart` folder.
 
 ```
+@model CartViewModel
+
+@{
+    Layout = "_CartLayout";
+}
+
+<h2>Your cart</h2>
+<table class="table table-bordered table-striped">
 . . .
+</table>
 <div class="text-center">
     <a class="btn btn-primary" href="@Model.ReturnUrl">Continue shopping</a>
-    <a class="btn btn-primary" asp-action="Checkout" asp-controller="Order">
-        Checkout
-    </a>
+  ➥<a class="btn btn-primary" asp-route="checkout">Checkout</a>
 </div>
-. . .
 
 ```
 
-- Add a class `OrderController` (the `Controllers` folder) with a `Checkout` action method
+- Add a `OrderController` class with a `Checkout` action method to the `OrderController.cs` file to the `Controllers` folder.
 
 ```
-public class OrderController : Controller 
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
 {
-    public ViewResult Checkout() => View(new Order());
+  ➥public class OrderController : Controller
+    {
+        public ViewResult Checkout() => View(new Order());
+    }
 }
 ```
 
-- Create the `Views/Order` folder and added to it a Razor View called `Checkout.cshtml`
+- Create the `Views/Order` folder and added to it a Razor View called `Checkout.cshtml`.
 
 ```   
 @model Order
@@ -457,10 +531,41 @@ public class OrderController : Controller
     </div>
 </form>
 ```
-        
-- Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
+
+- Add `checkout` route to the `Program.cs` file
+
+```
+  . . .
+  app.MapControllerRoute(
+      "default",
+      "/",
+      new { Controller = "Home", action = "Index" });
+  
+  app.MapControllerRoute(
+      "remove",
+      "Remove",
+      new { Controller = "Cart", action = "Remove" });
+
+➥app.MapControllerRoute(
+      "checkout",
+      "Checkout",
+      new { Controller = "Order", action = "Checkout" });
+  . . .    
+```
+    
+- Restart ASP.NET Core and request http://localhost:5000/Checkout.
 
 ![](Images/3.7.png)
+
+- Add and view changes and than commit.
+
+```
+$ git status
+$ git add *.cs *.cshtml
+$ git diff --staged
+$ git commit -m "Submitting Orders."
+
+```
 
 </details>
 
@@ -471,7 +576,7 @@ public class OrderController : Controller
 
 </summary>
 
-- Add a new `Orders` property to the `StoreDbContext` database context class (the `SportsStore/Models` folder)
+- Add a new `Orders` property to the `StoreDbContext` database context class.
 
 ```
 namespace SportsStore.Models
@@ -483,26 +588,25 @@ namespace SportsStore.Models
 
         public DbSet<Product> Products => this.Set<Product>();
 
-        public DbSet<Order> Orders => Set<Order>();
+      ➥public DbSet<Order> Orders => Set<Order>();
     }
 }
 ```
 
--  To create the migration, use a PowerShell command prompt to run the command
+-  To create the migration, use a PowerShell command prompt to run the command.
 
 ```
 dotnet ef migrations add Orders
 
-dotnet ef database update
-
 ```
+_This migration will be applied automatically when the application starts because the `SeedData` calls the `Migrate` method provided by Entity Framework Core._
 
-- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository` interface (the `Models` folder)
+- Follow the same pattern that was used for the `Product` repository for providing access to `Order` objects. Add the `IOrderRepository.cs` interface file to the `Models/Repository` folder.
 
 ```
 namespace SportsStore.Models.Repository
 {
-    public interface IOrderRepository
+  ➥public interface IOrderRepository
     {
         IQueryable<Order> Orders { get; }
 
@@ -511,14 +615,14 @@ namespace SportsStore.Models.Repository
 }
 ```
 
-- To implement the order repository interface,  add a `EFOrderRepository` class (the `Models` folder)
+- To implement the order repository interface, add a `EFOrderRepository` class to the `EFOrderRepository.cs` file to the `Models` folder.
 
 ```
 using Microsoft.EntityFrameworkCore;
 
 namespace SportsStore.Models.Repository
 {
-    public class EFOrderRepository : IOrderRepository
+  ➥public class EFOrderRepository : IOrderRepository
     {
         private StoreDbContext context;
 
@@ -545,19 +649,19 @@ namespace SportsStore.Models.Repository
     }
 }
 ```
-This class implements the IOrderRepository interface using Entity Framework Core, allowing the set of Order objects that have been stored to be retrieved and allowing for orders to be created or changed.
+This class implements the `IOrderRepository` interface using Entity Framework Core, allowing the set of `Order` objects that have been stored to be retrieved and allowing for orders to be created or changed.
 
-- Register the `Order Repository Service` in the `Program.cs` file 
+- Register the `Order Repository Service` in the `Program.cs` file. 
 
 ```
 . . .
-builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
-builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession();
+  builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+➥builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
+  builder.Services.AddDistributedMemoryCache();
+  builder.Services.AddSession();
 . . .
 ```   
-- To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete Order button 
+- To complete the `OrderController` class modify the constructor so that it receives the services it requires to process an order and add an action method that will handle the HTTP form POST request when the user clicks the Complete `Order button`. 
 
 ```
 using Microsoft.AspNetCore.Mvc;
@@ -568,20 +672,20 @@ namespace SportsStore.Controllers
 {
     public class OrderController : Controller
     {
-        private IOrderRepository orderRepository;
+      ➥private IOrderRepository orderRepository;
 
-        private Cart cart;
+      ➥private Cart cart;
 
-        public OrderController(IOrderRepository orderRepository, Cart cart)
+      ➥public OrderController(IOrderRepository orderRepository, Cart cart)
         {
             this.orderRepository = orderRepository;
             this.cart = cart;
         }
 
-        public ViewResult Checkout() => View(new Order());
+      ➥public ViewResult Checkout() => View(new Order());
 
         [HttpPost]
-        public IActionResult Checkout(Order order)
+      ➥public IActionResult Checkout(Order order)
         {
             if (!cart.Lines.Any())
             {
@@ -602,20 +706,22 @@ namespace SportsStore.Controllers
 }
 
 ```
-- Add a Validation Summary to the Checkout.cshtml File in the SportsStore/Views/Order Folder
+- Add a Validation Summary to the `Checkout.cshtml` Razor View file.
 
 ```
-<h2>Check out now</h2>
-<p>Please enter your details, and we'll ship your goods right away!</p>
-<div asp-validation-summary="All" class="text-danger"></div>
-<form asp-action="Checkout" method="post">
+  @model Order
+  
+  <h2>Check out now</h2>
+  <p>Please enter your details, and we'll ship your goods right away!</p>
+➥<div asp-validation-summary="All" class="text-danger"></div>
+  <form asp-action="Checkout" method="post">
 . . .
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
+- Restart ASP.NET Core and request http://localhost:5000/Checkout. 
 
 ![](Images/3.8.png)
 
-- To complete the checkout process, create a `Completed.cshtml` View that displays a thank-you message with a summary of the orders
+- To complete the checkout process, create a `Completed.cshtml` Razor View that displays a thank-you message with a summary of the orders
 
 ```
 @model int
@@ -628,12 +734,89 @@ namespace SportsStore.Controllers
     <h2>Thanks!</h2>
     <p>Thanks for placing order #@Model.</p>
     <p>We'll ship your goods as soon as possible.</p>
-    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Store</a>
+    <a class="btn btn-primary" asp-route="default">Return to Store</a>
 </div>
 ```
-- Restart ASP.NET Core and request http://localhost:5000/Order/Checkout 
+and `Checkout` action method to the `OrderController` class.
+
+```
+using Microsoft.AspNetCore.Mvc;
+using SportsStore.Models;
+using SportsStore.Models.Repository;
+
+namespace SportsStore.Controllers
+{
+    public class OrderController : Controller
+    {
+        private IOrderRepository orderRepository;
+
+        private Cart cart;
+
+        public OrderController(IOrderRepository orderRepository, Cart cart)
+        {
+            this.orderRepository = orderRepository;
+            this.cart = cart;
+        }
+
+        public ViewResult Checkout() => View(model: new Order());
+
+        [HttpPost]
+      ➥public IActionResult Checkout(Order order)
+        {
+            if (!cart.Lines.Any())
+            {
+                ModelState.AddModelError(key: string.Empty, errorMessage: "Sorry, your cart is empty!");
+            }
+
+            if (ModelState.IsValid)
+            {
+                order.Lines = cart.Lines.ToArray();
+                orderRepository.SaveOrder(order: order);
+                cart.Clear();
+                return View(viewName: "Completed", model: order.OrderId);
+            }
+
+            return View();
+        }
+    }
+}
+
+```
+
+- Restart ASP.NET Core and request http://localhost:5000/Checkout. 
 
 ![](Images/3.9.png)
+
+- Add and view changes and than commit.
+
+```
+$ git status
+$ git add *.cs *.csproj *.cshtml
+$ git diff --staged
+$ git commit -m "Implementing Order Processing."
+```
+
+- Push the local branch to the remote branch.
+
+```
+$ git push --set-upstream origin sports-store-application-3
+
+```
+- Switch to the `main` branch and do a merge according to changes from the `sports-store-application-3` branch.
+
+```
+$ git checkout main
+
+$ git merge sports-store-application-3
+```
+- Push the changes from the local `main` branch to the remote branch.
+
+```
+$ git push
+
+```
+- Go to the `Sports Store Application. Step 4`. (branch `sports-store-application-4`).
+
 
 </details>
 
@@ -652,19 +835,19 @@ namespace SportsStore.Controllers
 
 </details>
 
-<details><summary>Books
+<details><summary>[Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/).
 </summary> 
 
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 1. Chapeter 9. SportsStore: Completing the Cart.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 13. Using URL Routing.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 14. Using Dependency Injection.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 15. Using the Platform Features. Part 1.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 16. Using the Platform Features. Part 2.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 2. Chapeter 17. Working with Data.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 21. Using Controllers with Views. Part 1.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 22. Using Controllers with Views. Part 2.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 24. Using View Components.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 28. Using Model Binding.
-1. [Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). Part 3. Chapeter 29. Using Model Validation.
+1. Part Ⅰ. Chapeter 9. SportsStore: Completing the Cart.
+1. Part Ⅱ. Chapeter 13. Using URL Routing.
+1. Part Ⅱ. Chapeter 14. Using Dependency Injection.
+1. Part Ⅱ. Chapeter 15. Using the Platform Features. Part 1.
+1. Part Ⅱ. Chapeter 16. Using the Platform Features. Part 2.
+1. Part Ⅱ. Chapeter 17. Working with Data.
+1. Part Ⅲ. Chapeter 21. Using Controllers with Views. Part 1.
+1. Part Ⅲ. Chapeter 22. Using Controllers with Views. Part 2.
+1. Part Ⅲ. Chapeter 24. Using View Components.
+1. Part Ⅲ. Chapeter 28. Using Model Binding.
+1. Part Ⅲ. Chapeter 29. Using Model Validation.
 
 </details>
