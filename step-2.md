@@ -35,9 +35,9 @@ namespace SportsStore.Models.ViewModels
 {
     public class ProductsListViewModel
     {
-        public IEnumerable<Product> Products { get; set; }
+        public IEnumerable<Product> Products { get; set; } = null!;
 
-        public PagingInfo PagingInfo { get; set; }
+        public PagingInfo PagingInfo { get; set; } = null!;
 
       ➥public string? CurrentCategory { get; set; }
     }
@@ -166,7 +166,7 @@ public class PageLinkTagHelper : TagHelper
   </div>
 ```
 
-- Restart ASP.NET Core and request http://localhost:5000/Products/Soccer/Page1.
+- Restart ASP.NET Core and request http://localhost:5000/Soccer/Page1.
 
 ![](Images/2.4.png)
 
