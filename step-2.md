@@ -425,7 +425,11 @@ namespace SportsStore.Controllers
 ➥app.MapControllerRoute(
       name: "shoppingCart",
       pattern: "Cart",
-      defaults: new { Controller = "Cart", action = "Index" }); 
+      defaults: new { Controller = "Cart", action = "Index" });
+  app.MapControllerRoute(
+      name: "default",
+      pattern: "/",
+      defaults: new { Controller = "Home", action = "Index" });   
   . . .
 ```
 
