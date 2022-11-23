@@ -497,7 +497,7 @@ namespace SportsStore.Infrastructure
 }
 
 ```
--  Register the `PageLinkTagHelper` tag helper in the `ViewImports.cshtml` Razor View file in the `SportsStore/Views` folder.
+-  Register the `PageLinkTagHelper` tag helper in the `_ViewImports.cshtml` Razor View file in the `SportsStore/Views` folder.
 
 ```
   @using SportsStore.Models
