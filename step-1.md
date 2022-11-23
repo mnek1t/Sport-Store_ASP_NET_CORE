@@ -56,14 +56,18 @@ namespace SportsStore.Models
 
 ```
 
-- Add the Entity Framework Core Packages to the `SportsStore` Project. 
+- To install Entity Framework and support using SQL Server run this commands
 
 ```
 $ dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.0
 $ dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.0
+```
 
+- To include the command-line tools required to prepare and create databases for ASP.NET Core applications run this commands (see last [version](https://learn.microsoft.com/en-us/ef/core/what-is-new/))
+
+```
 $ dotnet tool uninstall --global dotnet-ef
-$ dotnet tool install --global dotnet-ef --version 6.0.0
+$ dotnet tool install --global dotnet-ef --version 6.0.0 
 ```
 
 - To define the connection string, add the configuration setting to the `appsettings.json` file to the `SportsStore` folder:
