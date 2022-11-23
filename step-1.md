@@ -62,7 +62,6 @@ namespace SportsStore.Models
 $ dotnet add package Microsoft.EntityFrameworkCore.Design --version 6.0.0
 $ dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 6.0.0
 
-(Optional) 
 $ dotnet tool uninstall --global dotnet-ef
 $ dotnet tool install --global dotnet-ef --version 6.0.0
 ```
