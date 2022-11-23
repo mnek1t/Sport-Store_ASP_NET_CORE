@@ -428,7 +428,7 @@ namespace SportsStore.Controllers
 - Add the `PagingInfo.cs` class file to the `SportsStore/Models/ViewModels` folder.
 
 ```
-namespace SportsStore.Models.VewModels
+namespace SportsStore.Models.ViewModels
 {
   ➥public class PagingInfo
     {
