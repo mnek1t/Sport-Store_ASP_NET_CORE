@@ -720,7 +720,7 @@ The `libman.json` file looks like this.
   <html>
   . . .
   
-➥<script src="~/lib/jquery/dist/jquery.min.js"></script>
+➥<script src="~/lib/jquery/jquery.min.js"></script>
 ➥@await RenderSectionAsync("Scripts", required: false)
   
   </body>
@@ -729,8 +729,9 @@ The `libman.json` file looks like this.
 - Add `_ValidationScriptsPartial.cshtml` Razor Partial View file to the `Views/Shared` folder.
 
 ```
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validationunobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
 ```
 
 - Call `_ValidationScriptsPartial` Razor Partial View in the `Create` Razor View
