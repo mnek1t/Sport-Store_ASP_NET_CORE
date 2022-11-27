@@ -730,7 +730,7 @@ The `libman.json` file looks like this.
 
 ```
 <script src="~/lib/jquery-validate/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validationunobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/lib/jquery-validate-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 ```
 
