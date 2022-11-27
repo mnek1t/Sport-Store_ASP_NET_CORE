@@ -615,7 +615,7 @@ and than add to it an HTML element that the tag helper will process to create th
   
   builder.Services.AddControllersWithViews();
   
-  bbuilder.Services.AddDbContext<StoreDbContext>(opts =>
+  builder.Services.AddDbContext<StoreDbContext>(opts =>
   {
       opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
   });
