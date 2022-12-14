@@ -242,12 +242,13 @@ $ git push
 
 </details>
 
-<details><summary>Books
+</details>
+
+<details><summary>[Pro ASP.NET Core 6. Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition by Adam Freeman](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565/). 
 </summary> 
 
-1. [Adam Freeman Pro ASP.NET Core 6: Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565). Part 2. Chapeter 12. Creating the Example Project.
-1. [Adam Freeman Pro ASP.NET Core 6: Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565). Part 1. Chapeter 7. SportsStore: A Real Application.
-1. [Adam Freeman Pro ASP.NET Core 6: Develop Cloud-Ready Web Applications Using MVC, Blazor, and Razor Pages 9th ed. Edition](https://www.amazon.com/Pro-ASP-NET-Core-Cloud-Ready-Applications/dp/1484279565). Part 3. Chapeter 18. Understanding the ASP.NET
-Core Platform.
+1. Part Ⅰ. Chapeter 7. SportsStore: A Real Application.
+1. Part Ⅱ. Chapeter 12. Creating the Example Project.
+1. Part Ⅲ. Chapeter 18. Understanding the ASP.NET Core Platform.
 
 </details>
