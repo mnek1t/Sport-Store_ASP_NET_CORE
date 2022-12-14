@@ -640,7 +640,7 @@ and than add to it an HTML element that the tag helper will process to create th
 
 ```
 $ git status
-$ git add *.cs *.cshtml *.proj
+$ git add *.cs *.cshtml *.csproj
 $ git diff --staged
 $ git commit -m "Add pagination."
 ```
@@ -796,7 +796,7 @@ public class PageLinkTagHelper : TagHelper
 
 ```
 $ git status
-$ git add *.cs *.cshtml *.proj * *.json
+$ git add *.cs *.cshtml *.csproj * *.json
 $ git diff --staged
 $ git commit -m "Add styling the content."
 ```
