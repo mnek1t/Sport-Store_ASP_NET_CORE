@@ -7,9 +7,17 @@ using SportsStore.Models.ViewModels;
 
 namespace SportsStore.Infrastructure
 {
-    [HtmlTargetElement("div", Attributes = "page-model")]
-  public class PageLinkTagHelper : TagHelper
+      [HtmlTargetElement("div", Attributes = "page-model")]
+      public class PageLinkTagHelper : TagHelper
     {
+        public bool PageClassesEnabled { get; set; } = false;
+
+        public string PageClass { get; set; } = string.Empty;
+
+        public string PageClassNormal { get; set; } = string.Empty;
+
+        public string PageClassSelected { get; set; } = string.Empty;
+
         private IUrlHelperFactory urlHelperFactory;
 
         public PageLinkTagHelper(IUrlHelperFactory helperFactory)
@@ -36,6 +44,14 @@ namespace SportsStore.Infrastructure
                     TagBuilder tag = new TagBuilder("a");
                     tag.Attributes["href"] = urlHelper.Action(PageAction,
                         new { productPage = i });
+                   
+                    if (this.PageClassesEnabled)
+                    {
+                        tag.AddCssClass(this.PageClass);
+                        tag.AddCssClass(i == this.PageModel.CurrentPage
+                            ? this.PageClassSelected : this.PageClassNormal);
+                    }
+
                     tag.InnerHtml.Append(i.ToString());
                     result.InnerHtml.AppendHtml(tag);
                 }
@@ -43,6 +59,5 @@ namespace SportsStore.Infrastructure
                 output.Content.AppendHtml(result.InnerHtml);
             }
         }
-    }
+      }   
 }
-
