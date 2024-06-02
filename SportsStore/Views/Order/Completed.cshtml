@@ -1,0 +1,12 @@
+﻿@model int
+
+@{
+    this.Layout = "_CartLayout";
+}
+
+<div class="text-center">
+    <h2>Thanks!</h2>
+    <p>Thanks for placing order #@Model.</p>
+    <p>We'll ship your goods as soon as possible.</p>
+    <a class="btn btn-primary" asp-route="default">Return to Store</a>
+</div>
