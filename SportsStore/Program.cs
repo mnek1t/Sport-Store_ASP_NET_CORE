@@ -51,6 +51,11 @@ app.MapControllerRoute(
       "Remove",
       new { Controller = "Cart", action = "Remove" });
 
+// Show checkout route
+app.MapControllerRoute(
+      "checkout",
+      "Checkout",
+      new { Controller = "Order", action = "Checkout" });
 
 // Shows the first page of products from all categories
 app.MapControllerRoute(
