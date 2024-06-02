@@ -10,7 +10,6 @@
             </span>
         </h4>
     </div>
-    <div class="card-text p-1">@Model?.Description</div>
     <form id="@Model?.ProductId" asp-controller="Cart" asp-antiforgery="true">
         <input type="hidden" asp-for="ProductId" />
         <input type="hidden" name="returnUrl"
