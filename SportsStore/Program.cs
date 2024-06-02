@@ -45,6 +45,13 @@ app.MapControllerRoute(
       pattern: "Cart",
       defaults: new { Controller = "Cart", action = "Index" });
 
+// Remove from cart route
+app.MapControllerRoute(
+      "remove",
+      "Remove",
+      new { Controller = "Cart", action = "Remove" });
+
+
 // Shows the first page of products from all categories
 app.MapControllerRoute(
     name: "default",
