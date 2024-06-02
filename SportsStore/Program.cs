@@ -11,10 +11,13 @@ builder.Services.AddDbContext<StoreDbContext>(opts => {
 });
 
 builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 var app = builder.Build();
 
 app.UseStaticFiles();
+app.UseSession();
 
 // Shows the specified page (in this case, page 2), showing items from all categories
 app.MapControllerRoute(
@@ -33,6 +36,12 @@ app.MapControllerRoute(
     name: "category",
     pattern: "Products/{category}",
     defaults: new { Controller = "Home", action = "Index", productPage = 1 });
+
+// Show roating for cart
+app.MapControllerRoute(
+      name: "shoppingCart",
+      pattern: "Cart",
+      defaults: new { Controller = "Cart", action = "Index" });
 
 // Shows the first page of products from all categories
 app.MapControllerRoute(
