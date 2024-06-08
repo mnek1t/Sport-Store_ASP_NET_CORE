@@ -1,0 +1,14 @@
+﻿@model IQueryable<Order>
+
+@{
+    Layout = "_AdminLayout";
+    var unshippedOrders = Model.Where(o => !o.Shipped);
+    var shippedOrders = Model.Where(o => o.Shipped);
+}
+
+<partial name="_OrderTable" model='(unshippedOrders, "Unshipped Orders", "Ship", "MarkShipped")' />
+<partial name="_OrderTable" model='(shippedOrders, "Shipped Orders", "Reset", "Reset")' />
+
+<form asp-action="Orders" method="post">
+    <button class="btn btn-info">Refresh Data</button>
+</form>
