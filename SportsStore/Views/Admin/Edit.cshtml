@@ -1,8 +1,12 @@
-﻿@* @model SportsStore.Models.Product
+﻿@model SportsStore.Models.Product
 
 @{
     Layout = "_AdminLayout";
 }
 
-<partial name="_Editor" model='(@Model, "warning", "Edit" , "Edit")' />
- *@
+<partial name="_Editor" model='(Model, "warning", "Edit" , "Edit")' />
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}

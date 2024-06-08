@@ -6,6 +6,7 @@
     <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
+
     <div class="bg-info text-white p-2">
         <div class="container-fluid">
             <span class="navbar-brand">SPORTS STORE Administration</span>
@@ -21,5 +22,7 @@
             </div>
         </div>
     </div>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
