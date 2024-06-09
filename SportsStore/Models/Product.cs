@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿using System.ComponentModel.DataAnnotations.Schema;
-=======
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
->>>>>>> sports-store-application-4
 
 namespace SportsStore.Models
 {
@@ -11,16 +7,6 @@ namespace SportsStore.Models
     {
         public long ProductId { get; set; }
 
-<<<<<<< HEAD
-        public string Name { get; set; } = string.Empty;
-
-        public string Description { get; set; } = string.Empty;
-
-        [Column(TypeName = "decimal(8, 2)")]
-
-        public decimal Price { get; set; }
-
-=======
         [Required(ErrorMessage = "Please enter a product name")]
         public string Name { get; set; } = string.Empty;
 
@@ -33,7 +19,6 @@ namespace SportsStore.Models
         public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Please specify a category")]
->>>>>>> sports-store-application-4
         public string Category { get; set; } = string.Empty;
     }
 }

@@ -31,13 +31,10 @@ namespace SportsStore.Controllers
                 CurrentCategory = category,
               });
 
-<<<<<<< HEAD
-=======
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View();
         }
->>>>>>> sports-store-application-4
     }
 }

@@ -1,14 +1,8 @@
 ﻿namespace SportsStore.Models.Repository
 {
-<<<<<<< HEAD
-    public class EFStoreRepository: IStoreRepository
-    {
-        private StoreDbContext context;
-=======
     public class EFStoreRepository : IStoreRepository
     {
         private readonly StoreDbContext context;
->>>>>>> sports-store-application-4
 
         public EFStoreRepository(StoreDbContext ctx)
         {
@@ -16,9 +10,7 @@
         }
 
         public IQueryable<Product> Products => this.context.Products;
-
-<<<<<<< HEAD
-=======
+        
         public void CreateProduct(Product p)
         {
             this.context.Add(p);
@@ -52,6 +44,5 @@
 
             this.context.SaveChanges();
         }
->>>>>>> sports-store-application-4
     }
 }

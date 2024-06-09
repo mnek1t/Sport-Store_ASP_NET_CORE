@@ -80,12 +80,9 @@ namespace SportsStore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD
-=======
                     b.Property<bool>("Shipped")
                         .HasColumnType("bit");
 
->>>>>>> sports-store-application-4
                     b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

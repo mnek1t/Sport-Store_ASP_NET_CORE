@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-﻿using Microsoft.EntityFrameworkCore;
-=======
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
->>>>>>> sports-store-application-4
 using SportsStore.Models;
 using SportsStore.Models.Repository;
 
@@ -22,13 +18,7 @@ builder.Services.AddSession();
 builder.Services.AddScoped<Cart>(SessionCart.GetCart);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-<<<<<<< HEAD
-var app = builder.Build();
 
-app.UseStaticFiles();
-app.UseSession();
-
-=======
 builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
 
@@ -46,7 +36,6 @@ if (app.Environment.IsProduction())
     app.UseExceptionHandler("/Error");
 }
 
->>>>>>> sports-store-application-4
 // Shows the specified page (in this case, page 2), showing items from all categories
 app.MapControllerRoute(
     name: "pagination",
@@ -89,13 +78,6 @@ app.MapControllerRoute(
     pattern: "/",
     defaults: new { Controller = "Home", action = "Index" });
 
-<<<<<<< HEAD
-app.MapDefaultControllerRoute();
-
-// seed the database when the application starts,
-SeedData.EnsurePopulated(app);
-
-=======
 app.MapControllerRoute(
       "error",
       "Error",
@@ -104,5 +86,4 @@ app.MapControllerRoute(
 // seed the database when the application starts,
 SeedData.EnsurePopulated(app);
 IdentitySeedData.EnsurePopulated(app);
->>>>>>> sports-store-application-4
 app.Run();
