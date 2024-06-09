@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SportsStore.Models.ViewModels;
 
 namespace SportsStore.Controllers
@@ -11,20 +12,24 @@ namespace SportsStore.Controllers
     {
         private readonly UserManager<IdentityUser> userManager;
         private readonly SignInManager<IdentityUser> signInManager;
+        private readonly IConfiguration configuration;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.configuration = configuration;
         }
 
         [Route("Login")]
         [AllowAnonymous]
         public ViewResult Login(Uri returnUrl)
         {
+            string applicationUrl = this.configuration["ApplicationSettings:DefaultReturnUrl"] ?? string.Empty;
+            ValidateDefaultUri(applicationUrl);
             return this.View(new LoginViewModel
             {
-                ReturnUrl = returnUrl ?? new Uri("https://localhost/"),
+                ReturnUrl = returnUrl ?? new Uri(applicationUrl),
             });
         }
 
@@ -59,7 +64,10 @@ namespace SportsStore.Controllers
         public async Task<IActionResult> Logout(Uri returnUrl)
         {
             await this.signInManager.SignOutAsync();
-            return this.Redirect((returnUrl ?? new Uri("https://localhost/")).ToString());
+            string applicationUrl = this.configuration["ApplicationSettings:DefaultReturnUrl"] ?? string.Empty;
+            ValidateDefaultUri(applicationUrl);
+
+            return this.Redirect((returnUrl ?? new Uri(applicationUrl)).ToString());
         }
 
         private static void ValidateViewModel(LoginViewModel loginViewModel) 
@@ -67,6 +75,14 @@ namespace SportsStore.Controllers
             if (loginViewModel is null)
             {
                 throw new ArgumentNullException(nameof(loginViewModel));
+            }
+        }
+
+        private static void ValidateDefaultUri(string applicationUrl)
+        {
+            if (string.IsNullOrEmpty(applicationUrl))
+            {
+                throw new ArgumentNullException(nameof(applicationUrl));
             }
         }
     }
