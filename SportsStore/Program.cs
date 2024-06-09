@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SportsStore.Models;
 using SportsStore.Models.Repository;
 
@@ -17,10 +18,22 @@ builder.Services.AddSession();
 builder.Services.AddScoped<Cart>(SessionCart.GetCart);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
+
 var app = builder.Build();
 
+app.UseStatusCodePages();
 app.UseStaticFiles();
 app.UseSession();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+if (app.Environment.IsProduction())
+{
+    app.UseExceptionHandler("/Error");
+}
 
 // Shows the specified page (in this case, page 2), showing items from all categories
 app.MapControllerRoute(
@@ -64,9 +77,12 @@ app.MapControllerRoute(
     pattern: "/",
     defaults: new { Controller = "Home", action = "Index" });
 
-app.MapDefaultControllerRoute();
+app.MapControllerRoute(
+      "error",
+      "Error",
+      new { Controller = "Home", action = "Error" });
 
 // seed the database when the application starts,
 SeedData.EnsurePopulated(app);
-
+IdentitySeedData.EnsurePopulated(app);
 app.Run();

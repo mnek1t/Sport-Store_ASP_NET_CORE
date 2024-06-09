@@ -6,10 +6,16 @@
     <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 <body>
-
     <div class="bg-info text-white p-2">
         <div class="container-fluid">
-            <span class="navbar-brand">SPORTS STORE Administration</span>
+            <div class="row">
+                <div class="col">
+                    <span class="navbar-brand ml-2">SPORTS STORE Administration</span>
+                </div>
+                <div class="col-2 text-right">
+                    <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Login">Log Out</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="container-fluid">
