@@ -65,13 +65,7 @@ namespace SportsStore.Controllers
         [Route("Products/Edit/{productId:long}")]
         public IActionResult Edit(Product product)
         {
-            if (this.ModelState.IsValid)
-            {
-                this.storeRepository.SaveProduct(product);
-                return this.RedirectToAction("Products");
-            }
-
-            return this.View(product);
+            return this.ProcessProduct(product);
         }
 
         [Route("Products/Create")]
@@ -84,13 +78,7 @@ namespace SportsStore.Controllers
         [Route("Products/Create")]
         public IActionResult Create(Product product)
         {
-            if (this.ModelState.IsValid)
-            {
-                this.storeRepository.SaveProduct(product);
-                return this.RedirectToAction("Products");
-            }
-
-            return this.View(product);
+            return this.ProcessProduct(product);
         }
 
         [Route("Products/Delete/{productId:long}")]
@@ -104,6 +92,17 @@ namespace SportsStore.Controllers
             var product = this.storeRepository.Products.FirstOrDefault(p => p.ProductId == productId);
             this.storeRepository.DeleteProduct(product ?? new Product());
             return this.RedirectToAction("Products");
+        }
+
+        private IActionResult ProcessProduct(Product product)
+        {
+            if (this.ModelState.IsValid)
+            {
+                this.storeRepository.SaveProduct(product);
+                return this.RedirectToAction("Products");
+            }
+
+            return this.View(product);
         }
     }
 }

@@ -17,5 +17,4 @@ namespace SportsStore.Components
             return this.View(this.cart);
         }
     }
-
 }

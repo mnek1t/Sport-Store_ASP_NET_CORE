@@ -34,11 +34,7 @@ namespace SportsStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            if (loginViewModel is null)
-            {
-                throw new ArgumentNullException(nameof(loginViewModel));
-            }
-
+            ValidateViewModel(loginViewModel);
             if (this.ModelState.IsValid)
             {
                 IdentityUser user = await this.userManager.FindByNameAsync(loginViewModel.Name);
@@ -64,6 +60,14 @@ namespace SportsStore.Controllers
         {
             await this.signInManager.SignOutAsync();
             return this.Redirect((returnUrl ?? new Uri("https://localhost/")).ToString());
+        }
+
+        private static void ValidateViewModel(LoginViewModel loginViewModel) 
+        {
+            if (loginViewModel is null)
+            {
+                throw new ArgumentNullException(nameof(loginViewModel));
+            }
         }
     }
 }

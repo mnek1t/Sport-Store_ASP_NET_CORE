@@ -10,11 +10,7 @@ namespace SportsStore.Models
 
         public static async Task EnsurePopulated(IApplicationBuilder app)
         {
-            if (app == null) 
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
-
+            ValidateApp(app);
             using var serviceProvider = app.ApplicationServices.CreateScope();
             AppIdentityDbContext appIdentityDb = serviceProvider.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
             if (appIdentityDb.Database.GetMigrations().Any())
@@ -33,6 +29,14 @@ namespace SportsStore.Models
                 };
 
                 await userManager.CreateAsync(user, AdminPassword);
+            }
+        }
+
+        public static void ValidateApp(IApplicationBuilder app) 
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
             }
         }
     }
