@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using SportsStore.Infrastructure;
 using SportsStore.Models;
 using SportsStore.Models.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+var sportsStoreConnectionString = builder.Configuration["ConnectionStrings:SportsStoreConnection"] ?? string.Empty;
+var identityConnectionString = builder.Configuration["ConnectionStrings:IdentityConnection"] ?? string.Empty;
 
 builder.Services.AddDbContext<StoreDbContext>(opts => 
 {
-    opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
+    opts.UseSqlServer(sportsStoreConnectionString);
 });
 
 builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
@@ -21,10 +21,8 @@ builder.Services.AddSession();
 builder.Services.AddScoped<Cart>(SessionCart.GetCart);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));
+builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(identityConnectionString));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
-
-// builder.Services.Configure<ApplicationSettings>(builder.Configuration.GetSection("ApplicationSettings"));
 
 var app = builder.Build();
 

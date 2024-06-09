@@ -4,6 +4,6 @@
     {
         public Cart? Cart { get; set; } = new();
 
-        public Uri ReturnUrl { get; set; } = new Uri("https://localhost/");
+        public Uri? ReturnUrl { get; set; }
     }
 }
