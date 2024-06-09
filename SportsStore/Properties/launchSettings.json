@@ -15,14 +15,22 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
+<<<<<<< HEAD
         "ASPNETCORE_ENVIRONMENT": "Development"
+=======
+        "ASPNETCORE_ENVIRONMENT": "Production" //Production
+>>>>>>> sports-store-application-4
       }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
+<<<<<<< HEAD
         "ASPNETCORE_ENVIRONMENT": "Development"
+=======
+        "ASPNETCORE_ENVIRONMENT": "Production"
+>>>>>>> sports-store-application-4
       }
     }
   }

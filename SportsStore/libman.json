@@ -7,10 +7,28 @@
       "destination": "wwwroot/lib/bootstrap"
     },
     {
+<<<<<<< HEAD
       "provider": "cdnjs",
       "library": "font-awesome@6.1.2",
       "destination": "wwwroot/lib/font-awesome/"
     }
 
+=======
+      "library": "font-awesome@6.1.2",
+      "destination": "wwwroot/lib/font-awesome/"
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/lib/jquery"
+    },
+    {
+      "library": "jquery-validate@1.20.0",
+      "destination": "wwwroot/lib/jquery-validate"
+    },
+    {
+      "library": "jquery-validation-unobtrusive@4.0.0",
+      "destination": "wwwroot/lib/jquery-validationunobtrusive"
+    }
+>>>>>>> sports-store-application-4
   ]
 }

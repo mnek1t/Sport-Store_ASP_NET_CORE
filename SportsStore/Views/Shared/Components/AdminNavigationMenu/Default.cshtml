@@ -1,0 +1,11 @@
+﻿@model IEnumerable<string>
+
+<div class="d-grid gap-2">
+    @foreach (string category in Model)
+    {
+        <a class="btn @(((string)ViewBag.Selection).Contains(category) ? "btn-primary" : "btn-outline-secondary")"
+            asp-action="@category" asp-controller="Admin">
+        @category
+        </a>
+    }
+</div>

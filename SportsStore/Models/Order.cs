@@ -33,5 +33,12 @@ namespace SportsStore.Models
         public string? Country { get; set; }
 
         public bool GiftWrap { get; set; }
+<<<<<<< HEAD
+=======
+
+        [BindNever]
+        public bool Shipped { get; set; }
+
+>>>>>>> sports-store-application-4
     }
 }
