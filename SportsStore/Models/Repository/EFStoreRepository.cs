@@ -25,13 +25,19 @@
 
         public void SaveProduct(Product p)
         {
+            if (p == null)
+            {
+                throw new ArgumentNullException(nameof(p));
+            }
+
             if (p.ProductId == 0)
             {
                 this.context.Products.Add(p);
             }
             else
             {
-                Product? dbEntry = this.context.Products?.FirstOrDefault(p => p.ProductId == p.ProductId);
+                var productId = p.ProductId;
+                Product? dbEntry = this.context.Products?.FirstOrDefault(p => p.ProductId == productId);
 
                 if (dbEntry != null)
                 {

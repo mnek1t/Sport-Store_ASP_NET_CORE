@@ -8,6 +8,6 @@
 
         public int CurrentPage { get; set; }
 
-        public int TotalPages => (int)Math.Ceiling((decimal)TotalItems / ItemsPerPage);
+        public int TotalPages => (int)Math.Ceiling((decimal)this.TotalItems / this.ItemsPerPage);
     }
 }

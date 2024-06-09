@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SportsStore.Models
 {
@@ -6,9 +7,13 @@ namespace SportsStore.Models
     {
         public static void EnsurePopulated(IApplicationBuilder app)
         {
-            
-            StoreDbContext context = app.ApplicationServices
-                        .CreateScope().ServiceProvider.GetRequiredService<StoreDbContext>();
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            using var serviceProvider = app.ApplicationServices.CreateScope();
+            StoreDbContext context = serviceProvider.ServiceProvider.GetRequiredService<StoreDbContext>();
             if (context.Database.GetPendingMigrations().Any())
             {
                 context.Database.Migrate();
@@ -79,9 +84,7 @@ namespace SportsStore.Models
                         Description = "Gold-plated, diamond-studded King",
                         Category = "Chess",
                         Price = 1200,
-                    }
-                );
-
+                    });
                 context.SaveChanges();
             }
         }

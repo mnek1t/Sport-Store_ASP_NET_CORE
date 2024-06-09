@@ -5,11 +5,10 @@ namespace SportsStore.Models
 {
     public class Order
     {
-        [BindNever]
-        public int OrderId { get; set; }
+        private ICollection<CartLine> lines = new List<CartLine>();
 
         [BindNever]
-        public ICollection<CartLine> Lines { get; set; } = new List<CartLine>();
+        public int OrderId { get; set; }
 
         [Required(ErrorMessage = "Please enter a name")]
         public string? Name { get; set; }
@@ -36,5 +35,12 @@ namespace SportsStore.Models
 
         [BindNever]
         public bool Shipped { get; set; }
+
+        public ICollection<CartLine> Lines => this.lines;
+
+        public void SetLines(ICollection<CartLine> value)
+        {
+            this.lines = value;
+        }
     }
 }

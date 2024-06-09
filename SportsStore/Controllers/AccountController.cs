@@ -20,11 +20,11 @@ namespace SportsStore.Controllers
 
         [Route("Login")]
         [AllowAnonymous]
-        public ViewResult Login(string returnUrl = "/")
+        public ViewResult Login(Uri returnUrl)
         {
-            return View(new LoginViewModel
+            return this.View(new LoginViewModel
             {
-                ReturnUrl = returnUrl
+                ReturnUrl = returnUrl ?? new Uri("https://localhost/"),
             });
         }
 
@@ -34,32 +34,36 @@ namespace SportsStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            if (loginViewModel is null)
+            {
+                throw new ArgumentNullException(nameof(loginViewModel));
+            }
+
             if (this.ModelState.IsValid)
             {
                 IdentityUser user = await this.userManager.FindByNameAsync(loginViewModel.Name);
 
                 if (user != null)
                 {
-                    await signInManager.SignOutAsync();
+                    await this.signInManager.SignOutAsync();
 
-                    if ((await signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false)).Succeeded)
+                    if ((await this.signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false)).Succeeded)
                     {
-                        return RedirectToAction("Products", "Admin");
+                        return this.RedirectToAction("Products", "Admin");
                     }
                 }
 
-                ModelState.AddModelError(string.Empty, "Invalid name or password.");
+                this.ModelState.AddModelError(string.Empty, "Invalid name or password.");
             }
 
-            return View(loginViewModel);
+            return this.View(loginViewModel);
         }
 
         [Route("Logout")]
-        public async Task<IActionResult> Logout(string returnUrl = "/")
+        public async Task<IActionResult> Logout(Uri returnUrl)
         {
             await this.signInManager.SignOutAsync();
-            return RedirectToAction("Login", returnUrl);
+            return this.Redirect((returnUrl ?? new Uri("https://localhost/")).ToString());
         }
     }
 }
-

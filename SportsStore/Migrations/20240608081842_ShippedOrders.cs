@@ -10,6 +10,7 @@ namespace SportsStore.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            ValidateBuilder(migrationBuilder);
             migrationBuilder.AddColumn<bool>(
                 name: "Shipped",
                 table: "Orders",
@@ -21,9 +22,18 @@ namespace SportsStore.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            ValidateBuilder(migrationBuilder);
             migrationBuilder.DropColumn(
                 name: "Shipped",
                 table: "Orders");
+        }
+
+        private static void ValidateBuilder(MigrationBuilder migrationBuilder)
+        {
+            if (migrationBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(migrationBuilder));
+            }
         }
     }
 }

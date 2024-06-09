@@ -6,9 +6,9 @@ namespace SportsStore.Components
     {
         public IViewComponentResult Invoke()
         {
-            ViewBag.Selection = Request.Path.Value ?? "Products";
+            this.ViewBag.Selection = this.Request.Path.Value ?? "Products";
 
-            return View(new List<string> { "Orders", "Products" });
+            return this.View(new List<string> { "Orders", "Products" });
         }
     }
 }

@@ -5,7 +5,7 @@ namespace SportsStore.Components
 {
     public class CartSummaryViewComponent : ViewComponent
     {
-        private Cart cart;
+        private readonly Cart cart;
 
         public CartSummaryViewComponent(Cart cart)
         {
@@ -14,7 +14,7 @@ namespace SportsStore.Components
 
         public IViewComponentResult Invoke()
         {
-            return View(cart);
+            return this.View(this.cart);
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -9,14 +10,12 @@ namespace SportsStore.Infrastructure
 {
       [HtmlTargetElement("div", Attributes = "page-model")]
       public class PageLinkTagHelper : TagHelper
-    {
-        
-        
-        private IUrlHelperFactory urlHelperFactory;
+      {
+        private readonly IUrlHelperFactory urlHelperFactory;
 
         public PageLinkTagHelper(IUrlHelperFactory helperFactory)
         {
-            urlHelperFactory = helperFactory;
+            this.urlHelperFactory = helperFactory;
         }
 
         [ViewContext]
@@ -26,7 +25,8 @@ namespace SportsStore.Infrastructure
         public PagingInfo? PageModel { get; set; }
 
         public string? PageAction { get; set; }
-        public bool PageClassesEnabled { get; set; } = false;
+
+        public bool PageClassesEnabled { get; set; }
 
         public string PageClass { get; set; } = string.Empty;
 
@@ -35,23 +35,21 @@ namespace SportsStore.Infrastructure
         public string PageClassSelected { get; set; } = string.Empty;
 
         public string? PageRoute { get; set; }
+
         [HtmlAttributeName(DictionaryAttributePrefix = "page-url-")]
-        public Dictionary<string, object> PageUrlValues { get; set; } = new Dictionary<string, object>();
+        public Dictionary<string, object> PageUrlValues { get; } = new Dictionary<string, object>();
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            if (ViewContext != null && PageModel != null)
+            if (this.ViewContext != null && this.PageModel != null)
             {
-                IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+                IUrlHelper urlHelper = this.urlHelperFactory.GetUrlHelper(this.ViewContext);
                 TagBuilder result = new TagBuilder("div");
-                for (int i = 1; i <= PageModel.TotalPages; i++)
+                for (int i = 1; i <= this.PageModel.TotalPages; i++)
                 {
                     TagBuilder tag = new TagBuilder("a");
-                    PageUrlValues[key: "productPage"] = i;
-                    tag.Attributes[key: "href"] = urlHelper.Action(action: PageAction, values: PageUrlValues);
-                    tag.Attributes[key: "href"] = urlHelper.RouteUrl(routeName: PageRoute, values: PageUrlValues);
-                    tag.Attributes["href"] = urlHelper.Action(PageAction,
-                        new { productPage = i });
+                    this.PageUrlValues[key: "productPage"] = i;
+                    tag.Attributes[key: "href"] = urlHelper.Action(action: this.PageAction, values: this.PageUrlValues);
                    
                     if (this.PageClassesEnabled)
                     {
@@ -60,8 +58,13 @@ namespace SportsStore.Infrastructure
                             ? this.PageClassSelected : this.PageClassNormal);
                     }
 
-                    tag.InnerHtml.Append(i.ToString());
+                    tag.InnerHtml.Append(i.ToString(CultureInfo.InvariantCulture));
                     result.InnerHtml.AppendHtml(tag);
+                }
+
+                if (output == null) 
+                {
+                    throw new ArgumentNullException(nameof(output));
                 }
 
                 output.Content.AppendHtml(result.InnerHtml);

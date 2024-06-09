@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<StoreDbContext>(opts => {
+builder.Services.AddDbContext<StoreDbContext>(opts => 
+{
     opts.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"]);
 });
 
@@ -17,7 +18,6 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddScoped<Cart>(SessionCart.GetCart);
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
 
 builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"]));
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>();
@@ -85,5 +85,5 @@ app.MapControllerRoute(
 
 // seed the database when the application starts,
 SeedData.EnsurePopulated(app);
-IdentitySeedData.EnsurePopulated(app);
+await IdentitySeedData.EnsurePopulated(app);
 app.Run();

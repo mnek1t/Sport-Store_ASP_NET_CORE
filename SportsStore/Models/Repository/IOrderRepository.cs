@@ -6,5 +6,4 @@
 
         void SaveOrder(Order order);
     }
-
 }

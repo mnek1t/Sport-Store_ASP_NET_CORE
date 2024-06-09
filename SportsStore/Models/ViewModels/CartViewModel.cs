@@ -1,10 +1,11 @@
-﻿namespace SportsStore.Models.ViewModels
+﻿
+namespace SportsStore.Models.ViewModels
 {
     public class CartViewModel
     {
+
         public Cart? Cart { get; set; } = new();
 
-        public string ReturnUrl { get; set; } = "/";
+        public Uri ReturnUrl { get; set; } = new Uri("https://localhost/");
     }
-
 }

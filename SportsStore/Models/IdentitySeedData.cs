@@ -5,35 +5,34 @@ namespace SportsStore.Models
 {
     public static class IdentitySeedData
     {
-        private const string adminUser = "Admin";
-        private const string adminPassword = "Secret123$";
+        private const string AdminUser = "Admin";
+        private const string AdminPassword = "Secret123$";
 
-        public static async void EnsurePopulated(IApplicationBuilder app)
+        public static async Task EnsurePopulated(IApplicationBuilder app)
         {
-            AppIdentityDbContext context = app.ApplicationServices
-                .CreateScope().ServiceProvider
-                .GetRequiredService<AppIdentityDbContext>();
-
-            if (context.Database.GetPendingMigrations().Any())
+            if (app == null) 
             {
-                context.Database.Migrate();
+                throw new ArgumentNullException(nameof(app));
             }
 
-            UserManager<IdentityUser> userManager = app.ApplicationServices
-                .CreateScope().ServiceProvider
-                .GetRequiredService<UserManager<IdentityUser>>();
+            using var serviceProvider = app.ApplicationServices.CreateScope();
+            AppIdentityDbContext appIdentityDb = serviceProvider.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
+            if (appIdentityDb.Database.GetMigrations().Any())
+            {
+                appIdentityDb.Database.Migrate();
+            }
 
-            IdentityUser user = await userManager.FindByNameAsync(adminUser);
-
+            UserManager<IdentityUser> userManager = serviceProvider.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            IdentityUser user = await userManager.FindByNameAsync(AdminUser);
             if (user is null)
             {
                 user = new IdentityUser("Admin")
                 {
                     Email = "admin@example.com",
-                    PhoneNumber = "555-1234"
+                    PhoneNumber = "555-1234",
                 };
 
-                await userManager.CreateAsync(user, adminPassword);
+                await userManager.CreateAsync(user, AdminPassword);
             }
         }
     }

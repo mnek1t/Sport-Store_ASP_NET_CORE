@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using SportsStore.Infrastructure;
 using SportsStore.Models;
 using SportsStore.Models.Repository;
@@ -8,8 +9,7 @@ namespace SportsStore.Controllers
 {
   public class CartController : Controller
     {
-        private IStoreRepository repository;
-        public Cart Cart { get; set; }
+        private readonly IStoreRepository repository;
 
         public CartController(IStoreRepository repository, Cart cart)
         {
@@ -17,48 +17,47 @@ namespace SportsStore.Controllers
             this.Cart = cart;
         }
 
+        public Cart Cart { get; set; }
 
         [HttpGet]
-        public IActionResult Index(string returnUrl)
+        public IActionResult Index(Uri returnUrl)
         {
-            return View(new CartViewModel
+            return this.View(new CartViewModel
             {
-                ReturnUrl = returnUrl ?? "/",
-                Cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart(),
+                ReturnUrl = returnUrl ?? new Uri("https://localhost/"),
+                Cart = this.HttpContext.Session.GetJson<Cart>("cart") ?? new Cart(),
             });
-
         }
 
         [HttpPost]
-        public IActionResult Index(long productId, string returnUrl)
+        public IActionResult Index(long productId, Uri returnUrl)
         {
-            Product? product = repository.Products.FirstOrDefault(p => p.ProductId == productId);
+            Product? product = this.repository.Products.FirstOrDefault(p => p.ProductId == productId);
 
             if (product != null)
             {
                 this.Cart.AddItem(product, 1);
 
-                return View(new CartViewModel
+                return this.View(new CartViewModel
                 {
                     Cart = this.Cart,
-                    ReturnUrl = returnUrl
+                    ReturnUrl = returnUrl ?? new Uri("https://localhost/"),
                 });
             }
 
-            return RedirectToAction("Index", "Home");
+            return this.RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         [Route("Cart/Remove")]
-        public IActionResult Remove(long productId, string returnUrl)
+        public IActionResult Remove(long productId, Uri returnUrl)
         {
-            Cart.RemoveLine(Cart.Lines.First(cl => cl.Product.ProductId == productId).Product);
-            return View("Index", new CartViewModel
+            this.Cart.RemoveLine(this.Cart.Lines.First(cl => cl.Product.ProductId == productId).Product);
+            return this.View("Index", new CartViewModel
             {
-                Cart = Cart,
-                ReturnUrl = returnUrl ?? "/"
+                Cart = this.Cart,
+                ReturnUrl = returnUrl ?? new Uri("https://localhost/"),
             });
         }
-
     }
 }

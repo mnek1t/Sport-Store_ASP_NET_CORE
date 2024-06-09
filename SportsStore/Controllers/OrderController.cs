@@ -6,35 +6,39 @@ namespace SportsStore.Controllers
 {
     public class OrderController : Controller
     {
-        private IOrderRepository orderRepository;
-        private Cart cart;
+        private readonly IOrderRepository orderRepository;
+        private readonly Cart cart;
+
         public OrderController(IOrderRepository orderRepository, Cart cart)
         {
             this.orderRepository = orderRepository;
             this.cart = cart;
         }
-        public ViewResult Checkout() => View(new Order());
+
+        public ViewResult Checkout() => this.View(new Order());
 
         [HttpPost]
         public IActionResult Checkout(Order order)
         {
-            if (!cart.Lines.Any())
+            if (order == null) 
             {
-                ModelState.AddModelError(key: string.Empty, errorMessage: "Sorry, your cart is empty!");
+                throw new ArgumentNullException(nameof(order));
             }
 
-            if (ModelState.IsValid)
+            if (!this.cart.Lines.Any())
             {
-                order.Lines = cart.Lines.ToArray();
-                orderRepository.SaveOrder(order: order);
-                cart.Clear();
-                return View(viewName: "Completed", model: order.OrderId);
+                this.ModelState.AddModelError(key: string.Empty, errorMessage: "Sorry, your cart is empty!");
             }
 
-            return View();
+            if (this.ModelState.IsValid)
+            {
+                order.SetLines(this.cart.Lines.ToArray());
+                this.orderRepository.SaveOrder(order: order);
+                this.cart.Clear();
+                return this.View(viewName: "Completed", model: order.OrderId);
+            }
+
+            return this.View();
         }
-
-
     }
-
 }
